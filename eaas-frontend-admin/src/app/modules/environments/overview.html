@@ -3,7 +3,10 @@
 
 <uib-tabset active="standardEnvsOverviewCtrl.view">
     <uib-tab index="0" heading="{{'CHOOSE_BASEENV_L' | translate}}">
-        <environment-list list="standardEnvsOverviewCtrl.envs" searchPlaceHolder="{{'CHOOSE_ENV_SEARCH' | translate}}" isObjEnv=false></environment-list>
+        <environment-list list="standardEnvsOverviewCtrl.envs" searchPlaceHolder="Search..." isObjEnv=false></environment-list>
+    </uib-tab>
+    <uib-tab index="1" heading="Software Environment">
+        <environment-list list="" searchPlaceHolder="Search..." isObjEnv=false></environment-list>
     </uib-tab>
     <uib-tab index="2" heading="{{'CHOOSE_OBJENV_L' | translate}}" ng-if="standardEnvsOverviewCtrl.config.features.objectEnvironments" >
         <environment-list list="standardEnvsOverviewCtrl.objEnvs" searchPlaceHolder="{{'CHOOSE_ENV_SEARCH' | translate}}" isObjEnv=true></environment-list>
