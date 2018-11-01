@@ -7,6 +7,8 @@ module.exports = ['$rootScope', '$scope', '$window', '$state', '$http', '$uibMod
     vm.type = $stateParams.type;
     vm.emulator = $rootScope.emulator;
 
+    console.log($stateParams.returnToObjects);
+
     if(chosenEnv.data)
     {
         vm.enablePrinting = chosenEnv.data.enablePrinting;

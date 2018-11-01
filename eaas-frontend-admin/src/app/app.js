@@ -81,6 +81,14 @@ export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize'
 
 // .constant('kbLayouts', require('./../public/kbLayouts.json'))
 
+    .component('environmentList', {
+        templateUrl: 'partials/components/environmentList.html',
+        bindings: {
+            list: '=',
+            searchPlaceHolder: '=',
+            isObjEnv: '='
+        }
+    })
 
     .component('inputList', {
         templateUrl: 'partials/components/inputList.html',

@@ -1,0 +1,35 @@
+<table id="base" st-table="envs" st-safe-src="$ctrl.list" class="table">
+        <thead>
+        <tr>
+            <th colspan="6">
+                <input st-search="" class="form-control" placeholder="{{$ctrl.searchPlaceHolder}}" type="text" /><br>
+            </th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr ng-repeat="row in envs">
+            <td>
+                <b><a ui-sref="admin.edit-env({envId: row.envId, objEnv: $ctrl.isObjEnv})">{{row.title}}</b></a>
+
+                <!--Start-->
+                <a ui-sref="admin.emulator({envId: row.envId, objectId: row.objectId, archiveId: row.archiveId, returnToObjects: $ctrl.isObjEnv})">{{'CHOOSE_ENV_PROPOSAL'
+                    | translate}}</a>
+
+                <!--Delete-->
+                <a href="#" ng-click="standardEnvsOverviewCtrl.deleteEnvironment(row.envId)">{{'CHOOSE_ENV_DEL'| translate}}</a>
+
+                <!--Software-->
+                <a ng-click="standardEnvsOverviewCtrl.addSoftware(row.envId)">{{'CHOOSE_ENV_ADDSW'| translate}}</a>
+            </td>
+        </tr>
+        </tbody>
+
+        <tfoot>
+        <tr>
+            <td colspan="5" class="text-center">
+                <div st-pagination="" st-items-by-page="10" st-displayed-pages="10"></div>
+            </td>
+        </tr>
+        </tfoot>
+ </table>

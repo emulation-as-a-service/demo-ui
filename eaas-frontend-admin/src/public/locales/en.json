@@ -3,7 +3,7 @@
   "NEW_CONTAINER_AUTHOR" : "Author",
   "CONTAINER_LANDING_PAGE" : "[Landing Page]",
   "CHOOSE_ENV_L" : "Environments",
-  "CHOOSE_BASEENV_L" : "Virtual machines",
+  "CHOOSE_BASEENV_L" : "Base Environments",
   "CHOOSE_OBJENV_L" : "Object Environments",
   "CHOOSE_ENV_SEARCH" : "Search...",
   "CHOOSE_ENV_PROPOSAL" : "[Run]",
