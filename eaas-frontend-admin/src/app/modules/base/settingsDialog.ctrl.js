@@ -16,6 +16,10 @@ module.exports = ['$state', '$http', '$scope', '$uibModal', 'localConfig', 'kbLa
          );
      };
 
+     vm.openLogs = function(url) {
+         window.open(url);
+     }
+
      vm.syncObjects = function () {
          $scope.$close();
 
