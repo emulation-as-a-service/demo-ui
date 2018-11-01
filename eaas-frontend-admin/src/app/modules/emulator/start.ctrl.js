@@ -63,21 +63,22 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$sce', 'environmentList'
             var envs = [];
             for (let i = 0; i < selectedEnvs.length; i++) {
                 //since we can observe only single environment, keyboardLayout and keyboardModel are not relevant
-                let data = createData(selectedEnvs[i].envId, type, selectedEnvs[i].objectId, selectedEnvs[i].userId, selectedEnvs[i].softwareId);
+                let data = createData(selectedEnvs[i].envId, "default", type, selectedEnvs[i].objectId, selectedEnvs[i].userId, selectedEnvs[i].softwareId);
                 envs.push({data, visualize: false});
             }
 
-
-            let data = createData($stateParams.envId, type, $stateParams.objectId, $stateParams.userId, $stateParams.softwareId, kbLayoutPrefs.language.name, kbLayoutPrefs.layout.name);
+            var archive = (chosenEnv.data) ? chosenEnv.data.archive : "default";
+            let data = createData($stateParams.envId, archive, type, $stateParams.objectId, $stateParams.userId, $stateParams.softwareId, kbLayoutPrefs.language.name, kbLayoutPrefs.layout.name);
 
             if ($stateParams.type == 'saveUserSession') {
                 data.lockEnvironment = true;
                 console.log("locking user session");
             }
 
-            function createData (envId, type, objectId, userId, softwareId, keyboardLayout, keyboardModel) {
+            function createData (envId, archive, type, objectId, userId, softwareId, keyboardLayout, keyboardModel) {
                 let data = {};
                 data.type = type;
+                data.archive = archive;
                 data.environment = envId;
                 data.object = objectId;
                 data.userId = userId;
