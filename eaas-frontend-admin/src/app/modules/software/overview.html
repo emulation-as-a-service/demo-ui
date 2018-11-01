@@ -13,12 +13,7 @@
     <tbody>
         <tr ng-repeat="row in displaySw">
             <td>
-                <b>{{row.label}}</b>
-                <a ui-sref="admin.sw-ingest({swId: row.id})">{{'SW_OVERVIEW_SW_EDIT' | translate}}</a>
-                <!-- <a href="#" ng-click="swOverviewCtrl.deleteEnvironment(row.id)">{{'SW_OVERVIEW_SW_DEL' | translate}}</a>
-                <br>
-                {{row.description}}
-                 -->
+                <b>  <a ui-sref="admin.sw-ingest({swId: row.id})"> {{row.label}} </a></b>
             </td>
         </tr>
     </tbody>
