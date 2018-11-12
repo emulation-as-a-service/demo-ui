@@ -6,27 +6,29 @@
         <table st-table="displayObjects" st-safe-src="objectOverviewCtrl.objectList">
             <thead>
             <tr>
-                <th colspan="5">
+                <th >
                     <input st-search="" class="form-control" placeholder="{{'OBJECTS_SEARCH' | translate}}" type="text"/><br>
                 </th>
             </tr>
             </thead>
 
             <tbody>
+            <div ng-repeat="object in displayObjects" class="object-container">
             <tr>
                 <td>
-                    <div ng-repeat="object in displayObjects" class="object-container">
+
                         <a class="cover-container" ui-sref="admin.edit-object-characterization({objectId: object.id})" >
                             {{object.title}}
                         </a>
-                    </div>
+
                 </td>
             </tr>
+            </div>
             </tbody>
 
             <tfoot>
             <tr>
-                <td colspan="5" class="text-center">
+                <td class="text-center">
                     <div st-pagination="" st-items-by-page="12" st-displayed-pages="7"></div>
                 </td>
             </tr>
