@@ -6,29 +6,33 @@
         <table st-table="displayObjects" st-safe-src="objectOverviewCtrl.objectList">
             <thead>
             <tr>
-                <th >
+                <th colspan="5">
                     <input st-search="" class="form-control" placeholder="{{'OBJECTS_SEARCH' | translate}}" type="text"/><br>
                 </th>
             </tr>
             </thead>
 
             <tbody>
-            <div ng-repeat="object in displayObjects" class="object-container">
             <tr>
                 <td>
-
+                    <div ng-repeat="object in displayObjects" class="object-container">
                         <a class="cover-container" ui-sref="admin.edit-object-characterization({objectId: object.id})" >
-                            {{object.title}}
+                            <img class="cover" ng-src="{{object.thumbnail ? object.thumbnail : 'img/empty-cover.png'}}"></img>
                         </a>
 
+                        <a class="title-container" ui-sref="admin.edit-object-characterization({objectId: object.id})" >
+                            <span class="title">{{object.title}}</span>
+                        </a>
+
+                        <div class="description" ng-bind="object.description" data-ellipsis></div>
+                    </div>
                 </td>
             </tr>
-            </div>
             </tbody>
 
             <tfoot>
             <tr>
-                <td class="text-center">
+                <td colspan="5" class="text-center">
                     <div st-pagination="" st-items-by-page="12" st-displayed-pages="7"></div>
                 </td>
             </tr>
