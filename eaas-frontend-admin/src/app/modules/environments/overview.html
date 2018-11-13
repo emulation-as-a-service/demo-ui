@@ -28,6 +28,14 @@
 
                     <!--Software-->
                     <a ng-click="standardEnvsOverviewCtrl.addSoftware(row.envId)">{{'CHOOSE_ENV_ADDSW'| translate}}</a>
+
+                    <a href="#" ng-if="row.archive == 'remote'">
+                        <span class="glyphicon glyphicon-cloud-download"></span>
+                    </a>
+                    <a href="#" ng-if="row.archive == 'default'">
+                        <span class="glyphicon glyphicon-cloud-upload"></span>
+                    </a>
+
                 </td>
             </tr>
             </tbody>
