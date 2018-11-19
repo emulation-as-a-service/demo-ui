@@ -1,6 +1,6 @@
-module.exports = ['$rootScope', '$http', '$state', '$stateParams', 'environmentList', 'objectEnvironmentList', 'localConfig', 'growl', '$translate',
+module.exports = ['$rootScope', '$timeout', '$http', '$state', '$stateParams', 'environmentList', 'objectEnvironmentList', 'localConfig', 'growl', '$translate',
     '$uibModal', 'softwareList', 'helperFunctions', 'containerEnvironmentList', 'REST_URLS',
-    function ($rootScope, $http, $state, $stateParams, environmentList, objectEnvironmentList,
+    function ($rootScope, $timeout, $http, $state, $stateParams, environmentList, objectEnvironmentList,
         localConfig, growl, $translate, $uibModal, softwareList, helperFunctions, containerEnvironmentList, REST_URLS) {
         var vm = this;
         vm.config = localConfig.data;
@@ -27,6 +27,56 @@ module.exports = ['$rootScope', '$http', '$state', '$stateParams', 'environmentL
                     }
                 });
 
+        };
+
+        vm.checkState = function(_taskId, _modal)
+        {
+            var taskInfo = $http.get(localConfig.data.eaasBackendURL + helperFunctions.formatStr(REST_URLS.getTaskState, _taskId)).then(function(response)
+            {
+                if(response.data.status == "0")
+                {
+                     if(response.data.isDone)
+                     {
+                        console.log("task finished " + _taskId);
+                        growl.success("replication finished.");
+                        $state.go('admin.standard-envs-overview', { }, {reload: true});
+                        _modal.close();
+                     }
+                     else
+                         $timeout(function() {vm.checkState(_taskId, _modal);}, 2500);
+                 }
+                 else
+                 {
+                    growl.error("error replicating image " + response.data.message);
+                    _modal.close();
+                 }
+            });
+        };
+
+        vm.replicateImage = function(envId) {
+            console.log("replicating " + envId);
+            var modal = $uibModal.open({
+                 animation: true,
+                 template: require('./modals/wait.html')
+             });
+            $http.post(localConfig.data.eaasBackendURL + REST_URLS.replicateImage,
+            {
+                replicateList : [envId],
+                destArchive : "public"
+            }).then(function(response) {
+                if(response.data.status === "0")
+                {
+                     console.log(response.data.taskList)
+                     var taskId = response.data.taskList[0];
+                     vm.checkState(taskId, modal);
+                }
+                else
+                {
+                    modal.close();
+                    growl.error("error replicating image");
+                    $state.go('admin.standard-envs-overview');
+                }
+            });
         };
 
         vm.addSoftware = function(envId) {
@@ -64,7 +114,6 @@ module.exports = ['$rootScope', '$http', '$state', '$stateParams', 'environmentL
                     $rootScope.chk.transitionEnable = true;
                     growl.error(_response.data.message, {title: 'Error ' + _response.data.status});
                     $state.go('admin.standard-envs-overview', {}, {reload: true});
-
                 }
             });
         };
