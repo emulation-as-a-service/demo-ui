@@ -23,19 +23,8 @@
                     <a ui-sref="admin.emulator({envId: row.envId, objectId: row.objectId, archiveId: row.archiveId, returnToObjects: false})">{{'CHOOSE_ENV_PROPOSAL'
                         | translate}}</a>
 
-                    <!--Delete-->
-                    <a href="#" ng-click="standardEnvsOverviewCtrl.deleteEnvironment(row.envId)">{{'CHOOSE_ENV_DEL'| translate}}</a>
-
                     <!--Software-->
-                    <a ng-click="standardEnvsOverviewCtrl.addSoftware(row.envId)">{{'CHOOSE_ENV_ADDSW'| translate}}</a>
-
-                    <a ng-click="standardEnvsOverviewCtrl.replicateImage(row.envId)" href="#" ng-if="row.archive == 'remote'">
-                        <span class="glyphicon glyphicon-cloud-download"></span>
-                    </a>
-                    <a ng-click="standardEnvsOverviewCtrl.replicateImage(row.envId)" href="#" ng-if="row.archive == 'default'">
-                        <span class="glyphicon glyphicon-cloud-upload"></span>
-                    </a>
-
+                    <a style="cursor: pointer;" ng-click="standardEnvsOverviewCtrl.addSoftware(row.envId)">[{{'CHOOSE_ENV_ADDSW'| translate}}]</a>
                 </td>
             </tr>
             </tbody>

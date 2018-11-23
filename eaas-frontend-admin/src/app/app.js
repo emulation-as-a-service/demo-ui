@@ -306,9 +306,14 @@ export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize'
 
                 objectEnvironmentList: ($http, localConfig, helperFunctions, REST_URLS) =>
                     $http.get(localConfig.data.eaasBackendURL + helperFunctions.formatStr(REST_URLS.getAllEnvsUrl, "object")),
+
                 containerEnvironmentList: function($http, localConfig, helperFunctions, REST_URLS) {
                     return $http.get(localConfig.data.eaasBackendURL + helperFunctions.formatStr(REST_URLS.getAllEnvsUrl, "container"))
+
                 },
+                softwareList: function($http, localConfig, REST_URLS) {
+                                    return $http.get(localConfig.data.eaasBackendURL + REST_URLS.getSoftwarePackageDescriptions);
+                                }
 
             },
             controller: "BaseController as baseCtrl"
@@ -494,9 +499,7 @@ export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize'
                 showContainers: false
             },
             resolve : {
-                softwareList: function($http, localConfig, REST_URLS) {
-                    return $http.get(localConfig.data.eaasBackendURL + REST_URLS.getSoftwarePackageDescriptions);
-                }
+
             },
             views: {
                 'wizard': {

@@ -1,5 +1,9 @@
-module.exports = ["$http", "$scope", "$state", "$stateParams", "environmentList", "objectEnvironmentList", "localConfig", "growl", "$translate", "objectDependencies", "helperFunctions", "operatingSystemsMetadata", "REST_URLS",
-            function ($http, $scope, $state, $stateParams, environmentList, objectEnvironmentList, localConfig, growl, $translate, objectDependencies, helperFunctions, operatingSystemsMetadata, REST_URLS) {
+module.exports = ["$http", "$rootScope", "$scope", "$state", "$stateParams", "environmentList", "objectEnvironmentList", "localConfig",
+            "growl", "$translate", "objectDependencies", "helperFunctions", "operatingSystemsMetadata", "softwareList", "$uibModal",
+            "$timeout", "REST_URLS",
+            function ($http, $rootScope, $scope, $state, $stateParams, environmentList, objectEnvironmentList, localConfig,
+            growl, $translate, objectDependencies, helperFunctions, operatingSystemsMetadata, softwareList, $uibModal,
+            $timeout, REST_URLS) {
 
            let handlePrefix = "11270/";
            var vm = this;
@@ -71,6 +75,19 @@ module.exports = ["$http", "$scope", "$state", "$stateParams", "environmentList"
                    }
                });
            }
+
+           vm.addSoftware = function(envId) {
+               $uibModal.open({
+                   animation: true,
+                   template: require('./modals/select-sw.html'),
+                   controller: ["$scope", function($scope) {
+                       this.envId = envId;
+                       this.software = softwareList.data.descriptions;
+                       this.returnToObjects = $stateParams.showObjects;
+                   }],
+                   controllerAs: "addSoftwareDialogCtrl"
+               });
+           };
 
            this.saveEdit = function() {
                var timecontext = null;
@@ -180,35 +197,132 @@ module.exports = ["$http", "$scope", "$state", "$stateParams", "environmentList"
                vm.showDateContextPicker = true;
            }
 
-           if ($translate.use() === 'de') {
-               vm.datetimePicker.buttonBar = {
-                   show: true,
-                   now: {
-                       text: 'Jetzt'
-                   },
-                   today: {
-                       text: 'Heute'
-                   },
-                   clear: {
-                       show: false
-                   },
-                   date: {
-                       text: 'Datum'
-                   },
-                   time: {
-                       text: 'Zeit'
-                   },
-                   close: {
-                       text: 'Schließen'
-                   },
-                   cancel: {}
-               }
-           }
-
            vm.openCalendar = function(e) {
                e.preventDefault();
                e.stopPropagation();
 
                vm.isOpen = true;
            };
-       }];
+
+           vm.checkState = function(_taskId, _modal)
+           {
+               var taskInfo = $http.get(localConfig.data.eaasBackendURL + helperFunctions.formatStr(REST_URLS.getTaskState, _taskId)).then(function(response)
+               {
+                   if(response.data.status == "0")
+                   {
+                        if(response.data.isDone)
+                        {
+                           console.log("task finished " + _taskId);
+                           growl.success("replication finished.");
+                           $state.go('admin.standard-envs-overview', { }, {reload: true});
+                           _modal.close();
+                        }
+                        else
+                            $timeout(function() {vm.checkState(_taskId, _modal);}, 2500);
+                    }
+                    else
+                    {
+                       growl.error("error replicating image " + response.data.message);
+                       _modal.close();
+                    }
+               });
+           };
+
+           vm.replicateImage = function(envId) {
+               if (!window.confirm(`Resources published to the EaaSI network cannot be easily removed.
+Do not share software or environments with existing access or license restrictions.
+
+Do you want to publish this environment to the network?`))
+                    return false;
+
+               console.log("replicating " + envId);
+               var modal = $uibModal.open({
+                    animation: true,
+                    template: require('./modals/wait.html')
+                });
+               $http.post(localConfig.data.eaasBackendURL + REST_URLS.replicateImage,
+               {
+                   replicateList : [envId],
+                   destArchive : "public"
+               }).then(function(response) {
+                   if(response.data.status === "0")
+                   {
+                        var taskId = response.data.taskList[0];
+                        vm.checkState(taskId, modal);
+                   }
+                   else
+                   {
+                       modal.close();
+                       growl.error("error replicating image");
+                       $state.go('admin.standard-envs-overview');
+                   }
+               }, function(response) {
+                    modal.close();
+                    growl.error("error replicating image: " + response.data.message);
+                    $state.go('admin.standard-envs-overview');
+               });
+           };
+
+           var confirmDeleteFn = function(envId)
+           {
+               $http.post(localConfig.data.eaasBackendURL + REST_URLS.deleteEnvironmentUrl, {
+                   envId: envId,
+                   deleteMetaData: true,
+                   deleteImage: true,
+                   force: true
+               }).then(function(_response) {
+                   if (_response.data.status === "0") {
+                       // remove env locally
+                       vm.envs = vm.envs.filter(function(env) {
+                           return env.envId !== envId;
+                       });
+                       $rootScope.chk.transitionEnable = true;
+                       growl.success($translate.instant('JS_DELENV_SUCCESS'));
+                       $state.go('admin.standard-envs-overview', {}, {reload: true});
+                   }
+                   else {
+                       $rootScope.chk.transitionEnable = true;
+                       growl.error(_response.data.message, {title: 'Error ' + _response.data.status});
+                       $state.go('admin.standard-envs-overview', {}, {reload: true});
+                   }
+               });
+           };
+
+           vm.deleteEnvironment = function(envId) {
+               $rootScope.chk.transitionEnable = false;
+               if (window.confirm($translate.instant('JS_DELENV_OK'))) {
+                   $http.post(localConfig.data.eaasBackendURL + REST_URLS.deleteEnvironmentUrl, {
+                       envId: envId,
+                       deleteMetaData: true,
+                       deleteImage: true,
+                       force: false
+                   }).then(function(response) {
+                       if (response.data.status === "0") {
+                           $rootScope.chk.transitionEnable = true;
+                           growl.success($translate.instant('JS_DELENV_SUCCESS'));
+                           $state.go('admin.standard-envs-overview', {}, {reload: true});
+                       }
+                       else if (response.data.status === "2") {
+                           $uibModal.open({
+                               animation: true,
+                               templateUrl: './modals/confirm-delete.html',
+                               controller: ["$scope", function($scope) {
+                                   this.envId = envId;
+                                   this.confirmed = confirmDeleteFn;
+                               }],
+                               controllerAs: "confirmDeleteDialogCtrl"
+                           });
+                       }
+                       else {
+                           $rootScope.chk.transitionEnable = true;
+                           growl.error(response.data.message, {title: 'Error ' + response.data.status});
+                           $state.go('admin.standard-envs-overview', {}, {reload: true});
+                       }
+                   }, function (response) {
+                       $rootScope.chk.transitionEnable = true;
+                       growl.error(response.data.message, {title: 'Error ' + response.data.status});
+                       $state.go('admin.standard-envs-overview', {}, {reload: true});
+                   });
+               }
+           };
+ }];

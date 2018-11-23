@@ -16,9 +16,9 @@
   "SAVE_HANDLE" : "Save handle",
   "CHOOSE_ENV_DEL" : "[Delete]",
   "CHOOSE_ENV_VER" : "Version",
-  "CHOOSE_ENV_ADDSW" : "[Add software]",
+  "CHOOSE_ENV_ADDSW" : "Add software",
   "CHOOSE_CONTAINER_L" : "Container",
-  "CHOOSE_ENV_RUN" : "[Run]",
+  "CHOOSE_ENV_RUN" : "Run Environment",
   "CHOOSE_ENV_RUN_MODIFIED" : "[Run modified]",
 
   "ERROR_RETURN_BTN" : "Back to overview",
