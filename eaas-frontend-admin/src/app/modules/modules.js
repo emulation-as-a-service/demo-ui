@@ -35,6 +35,9 @@ emilUIModule.controller('EmulatorActionsController', require('./emulator/actions
 emilUIModule.controller('HandleOverviewController', require('./handle/overview.ctrl.js'));
 emilUIModule.controller('EditHandleController', require('./handle/edit.ctrl.js'));
 
+// oai pmh
+emilUIModule.controller('MetadataController', require('./metadata/metadata.ctrl.js'));
+
 // objects
 emilUIModule.controller('ObjectsOverviewController', require('./objects/overview.ctrl.js'));
 

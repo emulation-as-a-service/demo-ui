@@ -508,6 +508,19 @@ export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize'
                 }
             }
         })
+        .state('admin.metadata', {
+            url: "/metadata",
+            resolve : {
+                oaiHarvesterList: ($http, localConfig, helperFunctions, REST_URLS) =>
+                    $http.get(localConfig.data.oaipmhServiceBaseUrl + "harvesters")
+            },
+            views: {
+                'wizard': {
+                    template: require('./modules/metadata/metadata.html'),
+                    controller: "MetadataController as metadataCtrl"
+                }
+            }
+        })
         .state('admin.edit-env', {
             url: "/edit-env",
             params: {

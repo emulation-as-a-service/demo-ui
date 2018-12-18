@@ -64,7 +64,7 @@
   "BASE_MENU_CONTAINER" : "Import Container",
   "BASE_MENU_CONTAINER_ENVS" : "Containers",
   "BASE_MENU_NEW_OBJECT" : "Import Object",
-
+  "BASE_MENU_MD" : "OAI PMH",
 
   "SETTINGS_DLG_SET_KEYBOARD_LAYOUT": "Change Keyboard Layout",
   "SETTINGS_DLG_IMPORT_ENVS" : "Import Environments",
@@ -338,5 +338,8 @@
   "OBJECT_INGEST_REPO_HEADER" : "Object IDs to be imported",
   "OBJECT_INGEST_REPO_EMPTY" : "Empty list",
   "OBJECT_INGEST_REPO_PH" : "Object ID",
-  "OBJECT_INGEST_REPO_BUTTON" : "Add"
+  "OBJECT_INGEST_REPO_BUTTON" : "Add",
+
+  "METADATA_L" : "Metadata Harvesting",
+  "METADATA_PROVIDER_TH" : "Configured Endpoints"
 }
