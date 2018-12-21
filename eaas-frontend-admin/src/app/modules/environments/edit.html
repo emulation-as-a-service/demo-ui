@@ -20,7 +20,9 @@
 
         <div>
             <span style="float: right; display: block;">
-                <button class="btn btn-default" type="button" ui-sref="admin.emulator({envId: editEnvCtrl.env.envId})">{{'CHOOSE_ENV_RUN' | translate}}</button>
+                <button ng-show="editEnvCtrl.env.archive != 'remote'" class="btn btn-default"
+                        type="button" ui-sref="admin.emulator({envId: editEnvCtrl.env.envId})">{{'CHOOSE_ENV_RUN' | translate}}</button>
+
                 <button class="btn btn-default" type="button" ng-click="editEnvCtrl.addSoftware(editEnvCtrl.env.envId)">{{'CHOOSE_ENV_ADDSW' | translate}}</button>
                 <button class="btn btn-default" type="button"
                         ng-click="editEnvCtrl.replicateImage(editEnvCtrl.env.envId)"
