@@ -20,11 +20,11 @@
                     <b><a ui-sref="admin.edit-env({envId: row.envId, objEnv: false})">{{row.title}}</b></a>
 
                     <!--Start-->
-                    <a ui-sref="admin.emulator({envId: row.envId, objectId: row.objectId, archiveId: row.archiveId, returnToObjects: false})">{{'CHOOSE_ENV_PROPOSAL'
+                    <a ng-if="row.archive != 'remote'" ui-sref="admin.emulator({envId: row.envId, objectId: row.objectId, archiveId: row.archiveId, returnToObjects: false})">{{'CHOOSE_ENV_PROPOSAL'
                         | translate}}</a>
 
                     <!--Software-->
-                    <a style="cursor: pointer;" ng-click="standardEnvsOverviewCtrl.addSoftware(row.envId)">[{{'CHOOSE_ENV_ADDSW'| translate}}]</a>
+                    <a ng-if="row.archive != 'remote'" style="cursor: pointer;" ng-click="standardEnvsOverviewCtrl.addSoftware(row.envId)">[{{'CHOOSE_ENV_ADDSW'| translate}}]</a>
                     <br>
                     Archive: {{row.archive}}
                 </td>
