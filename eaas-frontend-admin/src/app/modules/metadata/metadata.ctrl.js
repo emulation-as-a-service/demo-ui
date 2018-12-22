@@ -8,8 +8,8 @@ module.exports = ['$scope' , '$state', '$stateParams', 'oaiHarvesterList', '$tra
     {
         console.log("sync " + harvester);
         $http.post(localConfig.data.oaipmhServiceBaseUrl + "harvesters/" +  harvester).then(function(response) {
-           $http.post(localConfig.data.initEmilEnvironmentsURL).then(function response) {
-               console.log(response.data);
+           $http.post(localConfig.data.initEmilEnvironmentsURL).then(function (response2) {
+               console.log(response2.data);
            });
         });
     }
