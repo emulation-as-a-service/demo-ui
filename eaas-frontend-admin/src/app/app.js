@@ -164,7 +164,6 @@ export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize'
     };
 
     if(auth0config.AUTH_CONFIGURED) {
-        console.log("checking token");
         authService.handleAuthentication();
     }
 
@@ -179,8 +178,8 @@ export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize'
             console.log(data.id_token);
             localStorage.setItem('id_token', data.id_token);
           }
-          else
-            localStorage.removeItem('id_token');
+         // else
+         //   localStorage.removeItem('id_token');
       });
 
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
