@@ -189,10 +189,10 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'en
 
             let environmentRenderer = '<select ng-model="selected" ng-change="switchAction(data.id, selected)">' +
                 '  <option disabled hidden selected value="">{{\'CHOOSE_ACTION\'| translate}}</option>' +
-                '  <option value="run">{{\'CHOOSE_ENV_PROPOSAL\'| translate}}</option>' +
+                '  <option ng-if="data.archive !=\'remote\'" value="run">{{\'CHOOSE_ENV_PROPOSAL\'| translate}}</option>' +
                 '  <option value="edit">{{\'CHOOSE_ENV_EDIT\'| translate}}</option>' +
-                '  <option value="deleteEnvironment">{{\'CHOOSE_ENV_DEL\'| translate}}</option>' +
-                '  <option value="addSoftware">{{\'CHOOSE_ENV_ADDSW\'| translate}}</option>' +
+                '  <option ng-if="data.archive ==\'default\'" value="deleteEnvironment">{{\'CHOOSE_ENV_DEL\'| translate}}</option>' +
+                '  <option ng-if="data.archive !=\'remote\'" value="addSoftware">{{\'CHOOSE_ENV_ADDSW\'| translate}}</option>' +
                 '  <option ng-if="landingPage" value="openLandingPage">{{\'CONTAINER_LANDING_PAGE\'| translate}}</option>' +
                 '</select>';
 
