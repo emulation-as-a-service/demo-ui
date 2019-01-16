@@ -198,19 +198,19 @@
 
     </div>
 
-    <div class="form-group" ng-if="editEnvCtrl.showAdvanced">
-        <input disabled="editEnvCtrl.editMode" type="checkbox" ng-model="editEnvCtrl.useXpra">
+    <div class="form-group" ng-if="editEnvCtrl.showAdvanced" disabled="editEnvCtrl.editMode">
+        <input type="checkbox" ng-model="editEnvCtrl.useXpra">
         <label>{{'EDITENV_XPRA' | translate}}</label>
     </div>
 
 
-    <div class="form-group" ng-if="editEnvCtrl.showAdvanced">
-        <input disabled="editEnvCtrl.editMode" type="checkbox" ng-model="editEnvCtrl.connectEnvs">
+    <div class="form-group" ng-if="editEnvCtrl.showAdvanced" disabled="editEnvCtrl.editMode">
+        <input type="checkbox" ng-model="editEnvCtrl.connectEnvs">
         <label>{{'EDITENV_CANCONNECTENVS' | translate}}</label>
     </div>
 
-    <div class="form-group" ng-if="editEnvCtrl.showAdvanced">
-        <input disabled="editEnvCtrl.editMode" type="checkbox" ng-model="editEnvCtrl.shutdownByOs">
+    <div class="form-group" ng-if="editEnvCtrl.showAdvanced" disabled="editEnvCtrl.editMode" >
+        <input type="checkbox" ng-model="editEnvCtrl.shutdownByOs">
         <label>{{'EDITENV_SHUTDOWNBYOS' | translate}}</label>
     </div>
 
