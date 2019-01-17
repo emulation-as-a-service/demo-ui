@@ -3,36 +3,53 @@
 -->
 <form id="editEnvForm" name="editEnvCtrl.editEnvForm" ng-submit="editEnvCtrl.saveEdit()">
 
+    <div style="text-align: right;">
+
+        <button type="button" ng-if="!editEnvCtrl.editMode && editEnvCtrl.env.archive != 'remote'"
+                class="btn btn-outline-dark" ng-click="editEnvCtrl.editMode = true;">Edit</button>
+
+        <button ng-show="editEnvCtrl.env.archive != 'remote'" class="btn btn-outline-dark"
+                type="button" ui-sref="admin.emulator({envId: editEnvCtrl.env.envId})">{{'CHOOSE_ENV_RUN' | translate}}</button>
+
+        <button ng-show="editEnvCtrl.env.archive != 'remote'" class="btn btn-outline-dark"
+                type="button" ng-click="editEnvCtrl.addSoftware(editEnvCtrl.env.envId)">{{'CHOOSE_ENV_ADDSW' | translate}}</button>
+        <button class="btn btn-outline-dark" type="button"
+                ng-click="editEnvCtrl.replicateImage(editEnvCtrl.env.envId)"
+                ng-if="editEnvCtrl.env.archive == 'default'">Publish
+        </button>
+        <button class="btn btn-outline-dark" type="button"
+                ng-click="editEnvCtrl.replicateImage(editEnvCtrl.env.envId)"
+                ng-if="editEnvCtrl.env.archive == 'remote'">Replicate
+        </button>
+    </div>
+    <hr>
     <h3>
-        <span id="title_l" ng-if="!editEnvCtrl.editMode">
-                {{editEnvCtrl.envTitle}}
-                <a href="" ng-if="!editEnvCtrl.editMode && editEnvCtrl.env.archive != 'remote'" ng-click="editEnvCtrl.editMode = true;">[Edit]</a>
-        </span>
+         <span id="title_l" ng-if="!editEnvCtrl.editMode"> {{editEnvCtrl.envTitle}} </span>
         <span ng-if="editEnvCtrl.editMode">
-            <input id="tagi" type="text" style="max-width: 300px;"
+            <input id="tagi" type="text" style="max-width: 350px;"
                    ng-model="editEnvCtrl.envTitle"
                    placeholder="{{'EDITENV_TAG_PH' | translate}}">
         </span>
     </h3>
 
-    <div>
-            <span style="float: right; display: block;">
-                <button ng-show="editEnvCtrl.env.archive != 'remote'" class="btn btn-default"
-                        type="button" ui-sref="admin.emulator({envId: editEnvCtrl.env.envId})">{{'CHOOSE_ENV_RUN' | translate}}</button>
-
-                <button ng-show="editEnvCtrl.env.archive != 'remote'" class="btn btn-default"
-                        type="button" ng-click="editEnvCtrl.addSoftware(editEnvCtrl.env.envId)">{{'CHOOSE_ENV_ADDSW' | translate}}</button>
-                <button class="btn btn-default" type="button"
-                        ng-click="editEnvCtrl.replicateImage(editEnvCtrl.env.envId)"
-                        ng-disabled="editEnvCtrl.env.archive == 'public'">Publish / Replicate
-                </button>
-            </span>
+<!--
+    <div class="form-group">
+        <label>{{'NEW_CONTAINER_AUTHOR' | translate}}</label> <span ng-if="!editEnvCtrl.editMode"> {{editEnvCtrl.author}}</span>
+        <input type="text" ng-if="editEnvCtrl.editMode" class="form-control" ng-model="editEnvCtrl.author">
     </div>
+-->
 
-    <label>{{'EDITENV_ID' | translate}}:</label> {{editEnvCtrl.env.envId}}
-    <p ng-if="editEnvCtrl.handle">
-        <label>Handle:</label> <span id="osl" ng-if="!editEnvCtrl.editOsMode">{{editEnvCtrl.handle}}</span>
-    </p>
+    <div>
+        <label>{{'EDITENV_ID' | translate}}:</label> {{editEnvCtrl.env.envId}}
+    </div>
+    <div>
+        <label>Handle:</label> <span id="osl" ng-if="editEnvCtrl.handle">{{editEnvCtrl.handle}}</span>
+       <b> ---  <a ng-if="editEnvCtrl.showAdvanced==false"
+              ng-if="!editEnvCtrl.handle"
+              ng-click="editEnvCtrl.createHandle()"
+              style="cursor: pointer;">{{'EDITEN_CREATE_HANDLE' | translate}}</a>
+       </b>
+    </div>
 
     <div>
         <label>{{'EDITENV_DESC' | translate}}</label> <span ng-if="!editEnvCtrl.editMode" ng-bind-html="editEnvCtrl.envDescription"></span>
@@ -41,25 +58,6 @@
                       placeholder="{{'EDITENV_DESC_PH' | translate}}" required></text-angular>
     </div>
 
-    <p ng-if="!editEnvCtrl.handle">
-        <label><a ng-if="editEnvCtrl.showAdvanced==false" ng-click="editEnvCtrl.createHandle()" style="cursor: pointer;">{{'EDITEN_CREATE_HANDLE' |
-            translate}}</a></label>
-    </p>
-
-    <!--
-    <div class="form-group">
-        <label>{{'NEW_CONTAINER_AUTHOR' | translate}}</label> <input type="text" disabled="editEnvCtrl.editMode" class="form-control" ng-model="editEnvCtrl.author">
-    </div>
-    <div>
-        <label>{{'EDITENV_OS' | translate}}:</label> <span ng-if="!editEnvCtrl.editMode">{{editEnvCtrl.os.label}}</span>
-        <ui-select ng-if="editEnvCtrl.editMode" ng-model="editEnvCtrl.os" theme="bootstrap" title="{{'EDITENV_OS' | translate}}" required>
-            <ui-select-match placeholder="{{'EDITENV_OS' | translate}}">{{$select.selected.label}}</ui-select-match>
-            <ui-select-choices repeat="os in editEnvCtrl.operatingSystemsMetadata | filter: $select.search">
-                <span ng-bind-html="os.label | highlight: $select.search"></span>
-            </ui-select-choices>
-        </ui-select>
-    </div>
-    -->
     <div>
         <label>{{'EDITENV_DATE_CONTEXT' | translate}}</label> <span ng-if="!editEnvCtrl.editMode">{{editEnvCtrl.datetimePicker.date}}</span>
         <div>
@@ -78,37 +76,17 @@
             </div>
         </div>
     </div>
-    <p>
 
-    <div class="form-group" ng-if="editEnvCtrl.showAdvanced">
-        <h4>Hardware Configuration</h4>
-        <span ng-if="!editEnvCtrl.editMode">{{editEnvCtrl.nativeConfig}}</span>
-        <textarea ng-if="editEnvCtrl.editMode" type="text"
-                  class="form-control" ng-model="editEnvCtrl.nativeConfig"></textarea>
-    </div>
-    </p>
 
-    <div class="form-group" ng-if="editEnvCtrl.showAdvanced">
-        <label>{{'EDITENV_OS' | translate}}:</label>
-        <ui-select ng-model="editEnvCtrl.os" theme="bootstrap" title="{{'EDITENV_OS' | translate}}" required>
+    <div>
+        <label>{{'EDITENV_OS' | translate}}:</label> <span ng-if="!editEnvCtrl.editMode">{{editEnvCtrl.os.label}}</span>
+        <ui-select ng-if="editEnvCtrl.editMode" ng-model="editEnvCtrl.os" theme="bootstrap" title="{{'EDITENV_OS' | translate}}" required>
             <ui-select-match placeholder="{{'EDITENV_OS' | translate}}">{{$select.selected.label}}</ui-select-match>
             <ui-select-choices repeat="os in editEnvCtrl.operatingSystemsMetadata | filter: $select.search">
                 <span ng-bind-html="os.label | highlight: $select.search"></span>
             </ui-select-choices>
         </ui-select>
     </div>
-
-    <!--Container emulator-->
-    <p ng-if="editEnvCtrl.showAdvanced">
-        <label>{{'EDITENV_CONTAINER_EMULATOR' | translate}}:</label>
-        <ui-select ng-model="editEnvCtrl.emulatorContainer" theme="bootstrap" title="{{'EDITENV_CONTAINER_EMULATOR' | translate}}" required>
-            <ui-select-match placeholder="{{'EDITENV_CONTAINER_EMULATOR' | translate}}">{{$select.selected.key}}</ui-select-match>
-            <ui-select-choices repeat="index in editEnvCtrl.nameIndexes  | filter: $select.search">
-                <span ng-bind-html="index.key
-                 | highlight: $select.search"></span>
-            </ui-select-choices>
-        </ui-select>
-    </p>
 
     <!--
     <p ng-if="editEnvCtrl.showAdvanced">
@@ -123,97 +101,117 @@
         <button ng-if="editEnvCtrl.editTagMode" ng-click="editEnvCtrl.editTagMode = false">{{'EDITENV_TAG_DONE' | translate}}</button>
     </p>
     -->
-    <p/>
 
-    <h4>Environment Settings</h4>
-    <p ng-if="editEnvCtrl.showAdvanced">
+    <h4 ng-if="editEnvCtrl.showAdvanced">Environment Settings</h4>
+
+    <div>
         <label>{{'EDITENV_EMULATOR' | translate}}:</label>
         {{editEnvCtrl.env.emulator}}
-    </p>
+    </div>
+
+    <!--Container emulator-->
+    <div ng-show="editEnvCtrl.nameIndexes" ng-if="editEnvCtrl.showAdvanced">
+        <label>{{'EDITENV_CONTAINER_EMULATOR' | translate}}:</label> <span ng-if="!editEnvCtrl.editMode">{{editEnvCtrl.emulatorContainer.key}}</span>
+        <ui-select ng-if="editEnvCtrl.editMode" ng-model="editEnvCtrl.emulatorContainer" theme="bootstrap" class="form-control" title="{{'EDITENV_CONTAINER_EMULATOR' | translate}}" required>
+            <ui-select-match placeholder="{{'EDITENV_CONTAINER_EMULATOR' | translate}}">{{$select.selected.key}}</ui-select-match>
+            <ui-select-choices repeat="index in editEnvCtrl.nameIndexes  | filter: $select.search">
+                <span ng-bind-html="index.key
+                 | highlight: $select.search"></span>
+            </ui-select-choices>
+        </ui-select>
+    </div>
 
     <div class="form-group" ng-if="editEnvCtrl.showAdvanced">
-        <input type="checkbox" disabled="editEnvCtrl.editMode" ng-model="editEnvCtrl.enablePrinting">
+        <label>Emulator Configuration:</label>
+        <span ng-if="!editEnvCtrl.editMode">{{editEnvCtrl.nativeConfig}}</span>
+        <textarea ng-if="editEnvCtrl.editMode" type="text"
+                  class="form-control" ng-model="editEnvCtrl.nativeConfig"></textarea>
+    </div>
+
+    <div class="form-group"  ng-if="editEnvCtrl.showAdvanced">
+        <input type="checkbox" ng-disabled="!editEnvCtrl.editMode" ng-model="editEnvCtrl.enablePrinting">
         <label>{{'EDITENV_PRINTING' | translate}}</label>
     </div>
 
-    <div class="form-group" disabled="editEnvCtrl.editMode" ng-if="editEnvCtrl.showAdvanced">
-        <input type="checkbox" ng-model="editEnvCtrl.enableRelativeMouse">
+    <div class="form-group" ng-if="editEnvCtrl.showAdvanced">
+        <input type="checkbox" ng-disabled="!editEnvCtrl.editMode" ng-model="editEnvCtrl.enableRelativeMouse">
         <label>{{'EDITENV_RELMOUSE' | translate}}</label>
     </div>
 
-    <div class="form-group" disabled="editEnvCtrl.editMode" ng-if="editEnvCtrl.showAdvanced">
-        <input type="checkbox" ng-model="editEnvCtrl.enableInternet">
+    <div class="form-group"  ng-if="editEnvCtrl.showAdvanced">
+        <input type="checkbox" ng-disabled="!editEnvCtrl.editMode" ng-model="editEnvCtrl.enableInternet">
         <label>{{'EDITENV_ENABLE_INTERNET' | translate}}</label>
     </div>
 
-    <div class="form-group" disabled="editEnvCtrl.editMode" ng-if="editEnvCtrl.showAdvanced">
-        <input type="checkbox" ng-model="editEnvCtrl.serverMode">
+    <div class="form-group" ng-if="editEnvCtrl.showAdvanced">
+        <input type="checkbox" ng-disabled="!editEnvCtrl.editMode" ng-model="editEnvCtrl.serverMode">
         <label>{{'EDITENV_ENABLE_SERVERMODE' | translate}}</label>
     </div>
 
 
-    <div class="form-group" disabled="editEnvCtrl.editMode" ng-if="editEnvCtrl.showAdvanced">
-        <input type="checkbox" ng-model="editEnvCtrl.canProcessAdditionalFiles">
+    <div class="form-group" ng-if="editEnvCtrl.showAdvanced">
+        <input type="checkbox" ng-disabled="!editEnvCtrl.editMode" ng-model="editEnvCtrl.canProcessAdditionalFiles">
         <label>Supports custom file-input</label>
     </div>
 
     <div ng-show="editEnvCtrl.showAdvanced" ng-if="editEnvCtrl.serverMode">
 
         <div class="form-group">
-            <input type="checkbox" disabled="editEnvCtrl.editMode" ng-model="editEnvCtrl.enableSocks">
+            <input type="checkbox" ng-disabled="!editEnvCtrl.editMode" ng-model="editEnvCtrl.enableSocks">
             <label>{{'EDITENV_ENABLE_SOCKS' | translate}}</label>
         </div>
 
         <div class="form-group">
-            <input type="checkbox"  disabled="editEnvCtrl.editMode" ng-model="editEnvCtrl.localServerMode">
+            <input type="checkbox"  ng-disabled="!editEnvCtrl.editMode" ng-model="editEnvCtrl.localServerMode">
             <label>{{'EDITENV_ENABLE_LOCAL_MODE' | translate}}</label>
         </div>
 
-        <div class="form-group" disabled="editEnvCtrl.editMode" ng-if="!editEnvCtrl.enableSocks">
-            <label>{{'EDITENV_SERVER_IP' | translate}}</label> <input type="text"
-                                                                      class="form-control" ng-model="editEnvCtrl.serverIp">
+        <div class="form-group" ng-if="!editEnvCtrl.enableSocks">
+            <label>{{'EDITENV_SERVER_IP' | translate}}</label>
+            <input type="text" ng-disabled="!editEnvCtrl.editMode" class="form-control" ng-model="editEnvCtrl.serverIp">
         </div>
 
-        <div class="form-group" disabled="editEnvCtrl.editMode" ng-if="!editEnvCtrl.enableSocks">
+        <div class="form-group" ng-if="!editEnvCtrl.enableSocks">
             <label>{{'EDITENV_SERVER_PORT' | translate}}</label>
-            <input type="text" class="form-control" ng-model="editEnvCtrl.serverPort">
+            <input type="text" ng-disabled="!editEnvCtrl.editMode" class="form-control" ng-model="editEnvCtrl.serverPort">
         </div>
 
         <div class="form-group">
             <label>{{'EDITENV_GW_PRIVATE_IP' | translate}}</label>
-            <input type="text" disabled="editEnvCtrl.editMode"  class="form-control" ng-model="editEnvCtrl.gwPrivateIp">
+            <input type="text" ng-disabled="!editEnvCtrl.editMode"  class="form-control" ng-model="editEnvCtrl.gwPrivateIp">
         </div>
 
         <div class="form-group">
             <label>{{'EDITENV_GW_PRIVATE_MASK' | translate}}</label>
-            <input type="text" disabled="editEnvCtrl.editMode"  class="form-control" ng-model="editEnvCtrl.gwPrivateMask">
+            <input type="text" ng-disabled="!editEnvCtrl.editMode"  class="form-control" ng-model="editEnvCtrl.gwPrivateMask">
         </div>
 
         <p>
             <b>{{'EDITENV_HELPTEXT' | translate}}:</b> <br/>
             Symbols $$host$$ and $$port$$ would be substituted to real values on deployment. <br>
             Example: $$host$$:$$port$$/myPath/myPage.html = testserver:8080/myPath/myPage.html
-            <text-angular ng-model="editEnvCtrl.envHelpText" disabled="editEnvCtrl.editMode" ></text-angular>
+            <text-angular ng-model="editEnvCtrl.envHelpText" ng-disabled="!editEnvCtrl.editMode" ></text-angular>
         </p>
 
     </div>
 
-    <div class="form-group" ng-if="editEnvCtrl.showAdvanced" disabled="editEnvCtrl.editMode">
-        <input type="checkbox" ng-model="editEnvCtrl.useXpra">
+    <div class="form-group" ng-if="editEnvCtrl.showAdvanced">
+        <input type="checkbox" ng-model="editEnvCtrl.useXpra" ng-disabled="!editEnvCtrl.editMode">
         <label>{{'EDITENV_XPRA' | translate}}</label>
     </div>
 
 
-    <div class="form-group" ng-if="editEnvCtrl.showAdvanced" disabled="editEnvCtrl.editMode">
-        <input type="checkbox" ng-model="editEnvCtrl.connectEnvs">
+    <div class="form-group" ng-if="editEnvCtrl.showAdvanced">
+        <input type="checkbox" ng-model="editEnvCtrl.connectEnvs" ng-disabled="!editEnvCtrl.editMode">
         <label>{{'EDITENV_CANCONNECTENVS' | translate}}</label>
     </div>
 
-    <div class="form-group" ng-if="editEnvCtrl.showAdvanced" disabled="editEnvCtrl.editMode" >
-        <input type="checkbox" ng-model="editEnvCtrl.shutdownByOs">
+    <div class="form-group" ng-if="editEnvCtrl.showAdvanced">
+        <input type="checkbox" ng-model="editEnvCtrl.shutdownByOs" ng-disabled="!editEnvCtrl.editMode">
         <label>{{'EDITENV_SHUTDOWNBYOS' | translate}}</label>
     </div>
 
+    <hr>
     <h4>Configured Software</h4>
     <div ng-show="editEnvCtrl.env.installedSoftwareIds.length > 0" ng-if="editEnvCtrl.showAdvanced">
         <ul>
@@ -226,6 +224,7 @@
         </p>
     </div>
 
+    <hr>
     <h4>Revision History</h4>
     <div class="form-group" ng-show="editEnvCtrl.env.revisions.length > 0" ng-if="editEnvCtrl.showAdvanced">
         <p>

@@ -93,6 +93,10 @@ html.wait, body.wait {
     margin: 10px 0 0 90px;
 }
 
+#container-loading-spinner {
+    margin: 10px 0 0 45px;
+}
+
 /* ==========================================================================
         Error Page
    ========================================================================== */
@@ -369,4 +373,56 @@ button:focus#printerbutton    {
 
 .ag-header-cell-label{
     font-size: 14px;
+}
+
+.dropbtn {
+    color: black;
+    border: none;
+    cursor: pointer;
+    margin: auto;
+    width: 100%;
+    padding: 0px;
+    text-indent:0px;
+    max-width:190px;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    max-width:190px;
+}
+
+.dropdown-content {
+    display: none;
+    position: fixed;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    /*min-width: 185px;*/
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 5px 6px;
+    text-decoration: none;
+    display: block;
+    left: 0px;
+    right: 0px;
+    width: inherit;
+}
+
+.dropdown-content a:hover {
+    color: #0000FF;
+    background-color: #f1f1f1;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown:hover .dropbtn {
+    background-color: black;
+    color: whitesmoke;
 }

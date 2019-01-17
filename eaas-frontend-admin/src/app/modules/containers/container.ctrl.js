@@ -120,6 +120,12 @@ module.exports = ['$rootScope', '$scope', '$sce', '$state','$http', '$stateParam
                     };
                     this.onFileUpload = function () {
                         for (var i = 0; i < this.uploadFiles.length; i++) {
+
+                            if (/\s/.test(this.uploadFiles[i].destination)) {
+                                growl.error('File name should not contain space! Please, choose a custom name');
+                                return;
+                            }
+
                             // Have to remember the chosen destination and action for the file
                             Upload.upload({
                                 url: localConfig.data.eaasBackendURL + "EmilContainerData/uploadUserInput",

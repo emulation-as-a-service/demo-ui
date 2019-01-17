@@ -12,7 +12,7 @@
       "screenshots" : false,
       "snapshots": false,
       "containers" : false,
-      "objectEnvironments": true,,
+      "objectEnvironments": true,
       "objects" : true,
       "network" : false,
       "software" : true,
@@ -23,7 +23,7 @@
     },
 
     "auth0Config" : {
-        clientID: '',
-        domain: '.auth0.com',
+        "clientID": "",
+        "domain": ".auth0.com"
     }
 }

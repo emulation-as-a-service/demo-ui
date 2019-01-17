@@ -105,10 +105,6 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'en
                 });
             } else {
                 $rootScope.chk.transitionEnable = true;
-                $state.go('admin.standard-envs-overview', {
-                    showContainers: true,
-                    showObjects: false
-                }, {reload: true});
             }
         };
 
@@ -135,15 +131,14 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'en
 
                         $uibModal.open({
                             animation: true,
-                            templateUrl: './modals/confirm-delete.html',
+                            template: require ('./modals/confirm-delete.html'),
                             controller: ["$scope", function($scope) {
                                 this.envId = envId;
                                 this.confirmed = confirmDeleteFn;
                             }],
                             controllerAs: "confirmDeleteDialogCtrl"
                         });
-                    }
-                    else {
+                    } else {
                         $rootScope.chk.transitionEnable = true;
                         growl.error(response.data.message, {title: 'Error ' + response.data.status});
                         $state.go('admin.standard-envs-overview', {}, {reload: true});
@@ -152,7 +147,7 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'en
             } else {
                 $rootScope.chk.transitionEnable = true;
                 $state.go('admin.standard-envs-overview', {showContainers: false,
-                    showObjects: false}, {reload: true});
+                    showObjects: false}, {reload: false});
             }
         };
 
@@ -182,27 +177,36 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'en
         };
         $scope.selected = "";
 
+
+
         function actionsCellRendererFunc(params) {
             params.$scope.switchAction = switchAction;
             params.$scope.selected = $scope.selected;
             params.$scope.landingPage = vm.landingPage;
 
-            let environmentRenderer = '<select ng-model="selected" ng-change="switchAction(data.id, selected)">' +
-                '  <option disabled hidden selected value="">{{\'CHOOSE_ACTION\'| translate}}</option>' +
-                '  <option ng-if="data.archive !=\'remote\'" value="run">{{\'CHOOSE_ENV_PROPOSAL\'| translate}}</option>' +
-                '  <option value="edit">{{\'CHOOSE_ENV_EDIT\'| translate}}</option>' +
-                '  <option ng-if="data.archive ==\'default\'" value="deleteEnvironment">{{\'CHOOSE_ENV_DEL\'| translate}}</option>' +
-                '  <option ng-if="data.archive !=\'remote\'" value="addSoftware">{{\'CHOOSE_ENV_ADDSW\'| translate}}</option>' +
-                '  <option ng-if="landingPage" value="openLandingPage">{{\'CONTAINER_LANDING_PAGE\'| translate}}</option>' +
-                '</select>';
+
+            $(function() {
+                $("#dropdown-content").width(300);
+            });
+
+            let environmentRenderer = '<div class="dropdown">\n' +
+                '  <button class="dropbtn">{{\'CHOOSE_ACTION\'| translate}}</button>\n' +
+                '  <div class="dropdown-content">\n' +
+                '  <a ng-if="data.archive !=\'remote\'" ng-click="switchAction(data.id, \'run\')">{{\'CHOOSE_ENV_PROPOSAL\'| translate}}</a>\n' +
+                '  <a ng-click="switchAction(data.id, \'edit\')">{{\'CHOOSE_ENV_EDIT\'| translate}}</a>\n' +
+                '  <a ng-if="data.archive ==\'default\'" ng-click="switchAction(data.id, \'deleteEnvironment\')">{{\'CHOOSE_ENV_DEL\'| translate}}</a>\n' +
+                '  <a ng-if="data.archive !=\'remote\'" ng-click="switchAction(data.id, \'addSoftware\')">{{\'CHOOSE_ENV_ADDSW\'| translate}}</a>\n' +
+                '  <a ng-if="landingPage" target="_blank" ng-click="switchAction(data.id, \'openLandingPage\')">{{\'CONTAINER_LANDING_PAGE\'| translate}}</a>\n' +
+                '  </div>\n' +
+                '</div>';
 
             let container = '<select ng-model="selected" ng-change="switchAction(data.id, selected)">' +
-                '  <option disabled hidden selected value="">{{\'CHOOSE_ACTION\'| translate}}</option>' +
-                '  <option value="run">{{\'CHOOSE_ENV_RUN\'| translate}}</option>' +
-                '  <option value="edit">{{\'CHOOSE_ENV_EDIT\'| translate}}</option>' +
-                '  <option value="deleteContainer">{{\'CHOOSE_ENV_DEL\'| translate}}</option>' +
-                '  <option ng-if="landingPage" value="openLandingPage">{{\'CONTAINER_LANDING_PAGE\'| translate}}</option>' +
-                '</select>';
+                            '  <option disabled hidden selected value="">{{\'CHOOSE_ACTION\'| translate}}</option>' +
+                            '  <option value="run">{{\'CHOOSE_ENV_RUN\'| translate}}</option>' +
+                            '  <option value="edit">{{\'CHOOSE_ENV_EDIT\'| translate}}</option>' +
+                            '  <option value="deleteContainer">{{\'CHOOSE_ENV_DEL\'| translate}}</option>' +
+                            '  <option ng-if="landingPage" value="openLandingPage">{{\'CONTAINER_LANDING_PAGE\'| translate}}</option>' +
+                            '</select>';
 
             if (vm.view == 2)
                 return container;
@@ -210,9 +214,8 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'en
                 return environmentRenderer;
         }
 
+
         function switchAction(id, selected) {
-            console.log(id);
-            console.log(selected);
             vm[selected](id);
         }
 
@@ -246,15 +249,20 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'en
 
         vm.openLandingPage = function (id) {
             window.open(vm.landingPage + "?id=" + id);
-            $state.go('admin.standard-envs-overview', {showContainers: false,
-                showObjects: false}, {reload: true});
         };
 
 
         vm.updateData = function () {
             $scope.gridOptions.api.setRowData(vm.initRowData());
             $scope.gridOptions.api.setColumnDefs(vm.initColumnDefs());
+            vm.updateLayout();
+        };
+
+        vm.updateLayout = function () {
+            $scope.gridOptions.api.setDomLayout('null');
             $scope.gridOptions.api.sizeColumnsToFit();
+            $scope.gridOptions.api.redrawRows();
+            $scope.gridOptions.api.setDomLayout('print');
         };
 
         vm.initRowData = function () {
@@ -315,6 +323,8 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'en
         $scope.gridOptions = {
             columnDefs: vm.initColumnDefs(),
             rowData: vm.initRowData(),
+            rowHeight: 30,
+            groupUseEntireRow:  true,
             rowSelection: 'multiple',
             angularCompileRows: true,
             rowMultiSelectWithClick: true,
@@ -324,10 +334,14 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'en
             enableCellChangeFlash: true,
             onRowSelected: onRowSelected,
             suppressRowClickSelection: true,
-            domLayout: 'autoHeight',
+            domLayout: 'print',
+            suppressHorizontalScroll: true,
             animateRows: true,
             onGridReady: function (params) {
-                $scope.gridOptions.api.sizeColumnsToFit();
+                vm.updateLayout();
+                window.onresize = () => {
+                    $scope.gridApi.sizeColumnsToFit();
+                }
             },
             pagination: true,
             paginationPageSize: 20,
@@ -342,6 +356,13 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'en
             else
                 $('#overviewDeleteButton').hide();
         }
+        // setup the grid after the page has finished loading
+        document.addEventListener('DOMContentLoaded', function () {
+            var gridDiv = document.querySelector('#myGrid');
+            new agGrid.Grid(gridDiv, gridOptions);
+            gridOptions.api.sizeColumnsToFit();
+        });
+
 
 
     }];

@@ -71,7 +71,6 @@ module.exports = ["$http", "$rootScope", "$scope", "$state", "$stateParams", "en
                 this.env.containerVersion);
         else  vm.emulatorContainer = vm.getNameIndexObj("latest", null, null);
 
-
         console.log(" vm.nameIndexes ",  vm.nameIndexes);
         console.log(" nameIndexes ",  nameIndexes);
         console.log(" vm.vm.emulatorContainer ",  vm.emulatorContainer);

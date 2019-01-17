@@ -52,24 +52,16 @@
             </label>
             <br>
             <label>
-                <input disabled type="radio" ng-model="advancedDialogCtrl.imageType" value="url">
+                <input type="radio" ng-model="advancedDialogCtrl.imageType" value="readymade">
                 <span>{{'SW_NEW_CONTAINER_IMAGE_URL' | translate}}</span>
             </label>
             <br>
 
 
-            <div ng-hide="advancedDialogCtrl.imageType != 'url'">
-                <input type="text" placeholder="{{'SW_NEW_CONTAINER_DOCKER_IMAGE_URL' | translate}}" class="form-control" ng-model="advancedDialogCtrl.imageUrl" ng-disabled="advancedDialogCtrl.imageType != 'url'" ng-required="advancedDialogCtrl.imageType == 'url'"/>
-                <label>{{'SW_NEW_CONTAINER_COMMAND' | translate}}</label>
-                <input type="text" placeholder="{{'SW_NEW_CONTAINER_COMMAND_PH' | translate}}" class="form-control" ng-model="advancedDialogCtrl.imageCommand" ng-disabled="advancedDialogCtrl.imageType != 'url'" ng-required="advancedDialogCtrl.imageType == 'url'"/>
-                <label>{{'SW_NEW_CONTAINER_INPUT' | translate}}</label>
-                <input type="text" placeholder="{{'SW_NEW_CONTAINER_INPUT_PH' | translate}}" class="form-control" ng-model="advancedDialogCtrl.imageInput" ng-disabled="advancedDialogCtrl.imageType != 'url'" ng-required="advancedDialogCtrl.imageType == 'url'"/>
-                <label>{{'SW_NEW_CONTAINER_OUTPUT' | translate}}</label>
-                <input type="text" placeholder="{{'SW_NEW_CONTAINER_OUTPUT_PH' | translate}}" class="form-control" ng-model="advancedDialogCtrl.imageOutput" ng-disabled="advancedDialogCtrl.imageType != 'url'" ng-required="advancedDialogCtrl.imageType == 'url'"/>
-            </div>
+            <div ng-if="advancedDialogCtrl.imageType">
 
-            <div ng-hide="advancedDialogCtrl.imageType != 'dockerhub'">
-                <div class="panel panel-default">
+                <!--DOCKER-->
+                <div class="panel panel-default" ng-hide="advancedDialogCtrl.imageType != 'dockerhub'">
                     <div class="panel-heading">{{'SW_NEW_CONTAINER_DOCKER' | translate}}</div>
                     <div class="panel-body">
                         <div class="tekst">
@@ -85,6 +77,44 @@
                     </div>
                 </div>
 
+
+
+                <!--READY-MADE-->
+
+
+                <div class="panel panel-default" ng-hide="advancedDialogCtrl.imageType != 'readymade'">
+                    <div class="panel-heading">{{'SW_NEW_CONTAINER_DOCKER' | translate}}</div>
+                    <div class="panel-body">
+
+                        <label>
+                            <input type="radio" ng-model="advancedDialogCtrl.importMethod" value="url">
+                            <span>{{'SW_NEW_CONTAINER_DOCKER_IMAGE_IMPORT_URL' | translate}}</span>
+                        </label>
+                        <br>
+                        <label>
+                            <input type="radio" ng-model="advancedDialogCtrl.importMethod" value="file">
+                            <span>{{'SW_NEW_CONTAINER_DOCKER_IMAGE_IMPORT_FILE' | translate}}</span>
+                        </label>
+
+                        <div class="tekst">
+                            <input type="text" placeholder="{{'SW_NEW_CONTAINER_DOCKER_IMAGE_URL' | translate}}"
+                                   class="form-control" ng-model="advancedDialogCtrl.imageUrl"
+                                   ng-disabled="advancedDialogCtrl.importMethod != 'url'"
+                                   ng-required="advancedDialogCtrl.importMethod == 'url'"/>
+                        </div>
+
+                        <div class="tekst">
+                            <button type="button" class="btn btn-default" ng-show="advancedDialogCtrl.importMethod == 'file'"
+                                    ngf-select="advancedDialogCtrl.onImportFilesChosen($file)">Select Files
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+                <!--Emulator Options-->
                 <div class="form-group">
                     <label>{{'ADVANCED_IMPORT_EMULATOR_TYPE' | translate}}</label>
                     <select class="form-control" name="repeatSelect" id="repeatSelect" ng-model="advancedDialogCtrl.emulatorType">

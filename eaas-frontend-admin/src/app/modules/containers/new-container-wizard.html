@@ -18,16 +18,11 @@
             <ui-select ng-model="newContainerCtrl.selectedSystem" on-select="newContainerCtrl.onSelectRuntime($item, $model)" theme="bootstrap"
                        title="{{'SW_NEW_CONTAINER_CHOOSE_ORIGIN_RUNTIME_PH' | translate}}" required>
                 <ui-select-match placeholder="{{'SW_NEW_CONTAINER_CHOOSE_ORIGIN_RUNTIME_PH' | translate}}">{{$select.selected.name}}</ui-select-match>
-                <ui-select-choices ng-click="newContainerCtrl.imageType = ''" repeat="obj in newContainerCtrl.runtimes | filter: $select.search">
+                <ui-select-choices ng-click="newContainerCtrl.imageType = '';newContainerCtrl.archiveType = ''" repeat="obj in newContainerCtrl.runtimes | filter: $select.search">
                     <span ng-bind-html="obj.name | highlight: $select.search"></span>
                 </ui-select-choices>
             </ui-select>
         </div>
-
-        <br>
-
-        <label>{{'SW_NEW_IMAGE_NAME_LBL' | translate}}</label>
-        <input type="text" class="form-control" ng-model="newContainerCtrl.name" ng-required="true" />
 
         <br>
 
@@ -59,13 +54,13 @@
                 </div>
 
                 <label>{{'SW_NEW_CONTAINER_ARCHIVE_T' | translate}}</label>
-                <select style="max-width: 300px;" class="form-control" theme="bootstrap" ng-model="newContainerCtrl.archiveType" required ng-disabled="newContainerCtrl.imageType != 'url'">
+                <select style="max-width: 300px;" class="form-control" theme="bootstrap" ng-model="newContainerCtrl.archiveType" required ng-disabled="newContainerCtrl.importMethod == ''">
                     <option value="rootfs">RootFS TAR(GZ/BZ2)</option>
                     <option disabled value="simg">Singularity Image (simg)</option>
                 </select>
 
-                <br>
-                <input type="checkbox" name="isGui" value="gui" ng-model="newContainerCtrl.gui">{{'SW_NEW_CONTAINER_RUNC_GUI' | translate}} <br>
+                <!--<br>-->
+                <!--<input type="checkbox" name="isGui" value="gui" ng-model="newContainerCtrl.gui">{{'SW_NEW_CONTAINER_RUNC_GUI' | translate}} <br>-->
 
                 <br>
                 <input-list list="newContainerCtrl.env"
@@ -91,11 +86,11 @@
                 -->
                 <label>{{'SW_NEW_CONTAINER_INPUT' | translate}}</label>
                 <input type="text" placeholder="{{'SW_NEW_CONTAINER_INPUT_PH' | translate}}" class="form-control" ng-model="newContainerCtrl.imageInput"
-                       ng-disabled="newContainerCtrl.imageType != 'url'" ng-required="newContainerCtrl.imageType == 'url'"/>
+                       ng-disabled="newContainerCtrl.importMethod == ''" ng-required="newContainerCtrl.imageType == 'url'"/>
 
                 <label>{{'SW_NEW_CONTAINER_OUTPUT' | translate}}</label>
                 <input type="text" placeholder="{{'SW_NEW_CONTAINER_OUTPUT_PH' | translate}}" class="form-control" ng-model="newContainerCtrl.imageOutput"
-                       ng-disabled="newContainerCtrl.imageType != 'url'" ng-required="newContainerCtrl.imageType == 'url'"/>
+                       ng-disabled="newContainerCtrl.importMethod == ''" ng-required="newContainerCtrl.imageType == 'url'"/>
             </div>
         </div>
         <div class="panel panel-default" ng-show=newContainerCtrl.runtime==1>
@@ -211,19 +206,19 @@
                     <option value="simg">Singularity Image (simg)</option>
                 </select>
                 <br>
-                <input-list list="newContainerCtrl.args"
-                            heading="{{'SW_NEW_CONTAINER_ARGUMENTS_H' | translate}}"
-                            list-empty-note="{{'SW_NEW_CONTAINER_ARGUMENTS_NOTE' | translate}}"
-                            input-placeholder="{{'SW_NEW_CONTAINER_ARGUMENTS_PH' | translate}}"
-                            add-button-text="+">
-                </input-list>
+
                 <input-list list="newContainerCtrl.env"
                             heading="{{'SW_NEW_CONTAINER_ENVIRONMENT_H' | translate}}"
                             list-empty-note="{{'SW_NEW_CONTAINER_ENVIRONMENT_NOTE' | translate}}"
                             input-placeholder="{{'SW_NEW_CONTAINER_ENVIRONMENT_PH' | translate}}"
                             add-button-text="+">
                 </input-list>
-
+                <input-list list="newContainerCtrl.args"
+                            heading="{{'SW_NEW_CONTAINER_ARGUMENTS_H' | translate}}"
+                            list-empty-note="{{'SW_NEW_CONTAINER_ARGUMENTS_NOTE' | translate}}"
+                            input-placeholder="{{'SW_NEW_CONTAINER_ARGUMENTS_PH' | translate}}"
+                            add-button-text="+">
+                </input-list>
 
 
                 <label>{{'SW_NEW_CONTAINER_INPUT' | translate}}</label>
@@ -235,8 +230,8 @@
         <br>
 
         <div style="text-align: right;">
-            <button type="button" class="btn btn-default" ui-sref="admin.standard-envs-overview">{{'SW_NEW_IMAGE_CANCEL_BUTTON' | translate}}</button>
-            <button type="button" class="btn btn-primary"   ng-click="newContainerCtrl.import()">{{'SW_NEW_IMAGE_START_BUTTON' | translate}}</button>
+            <button type="button" ng-if="newContainerCtrl.runtime" class="btn btn-default" ui-sref="admin.standard-envs-overview">{{'SW_NEW_IMAGE_CANCEL_BUTTON' | translate}}</button>
+            <button type="button" ng-if="newContainerCtrl.runtime" class="btn btn-primary"   ng-click="newContainerCtrl.import()">{{'SW_NEW_IMAGE_START_BUTTON' | translate}}</button>
         </div>
 
         <br>

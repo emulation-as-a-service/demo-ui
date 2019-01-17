@@ -2,12 +2,15 @@ module.exports = ["$http", "$scope", "$state", "$stateParams", "systemList", "so
     function ($http, $scope, $state, $stateParams, systemList, softwareList, growl, localConfig, $uibModal, $timeout, helperFunctions, REST_URLS) {
      var vm = this;
 
+
+
      vm.systems = systemList.data.systems;
      vm.softwareList = softwareList.data.descriptions;
 
      // initialize default values of the form
      vm.hdsize = 1024;
-     vm.hdtype = 'size';
+     vm.hdtype = 'url';
+     vm.native_config = "";
 
      vm.imageId = "";
      vm.onSelectSystem = function(item, model) {
@@ -35,6 +38,22 @@ module.exports = ["$http", "$scope", "$state", "$stateParams", "systemList", "so
          });
      };
 
+        vm.changeKvmState = function () {
+            if (typeof vm.native_config !== 'undefined') {
+                if (vm.native_config.includes('-enable-kvm')) {
+                    vm.native_config = vm.native_config.replace(' -enable-kvm', '');
+                } else {
+                    vm.native_config = vm.native_config.concat(' -enable-kvm');
+                }
+            } else console.error("naive config is not defined")
+        };
+
+        vm.checkeKvmState = function () {
+            if (vm.native_config){
+            return vm.native_config.includes('-enable-kvm');
+            } else return false;
+        };
+
      vm.start = function() {
          if (vm.hdtype == 'new') {
              $http.post(localConfig.data.eaasBackendURL + REST_URLS.createEnvironmentUrl, {
@@ -59,9 +78,10 @@ module.exports = ["$http", "$scope", "$state", "$stateParams", "systemList", "so
                      if(response.data.status == "0") {
                          var taskId = response.data.taskId;
                         var modal = $uibModal.open({
-                             animation: true,
-                             template: require('./modals/wait.html')
-                         });
+                            animation: true,
+                            backdrop: 'static',
+                            template: require('./modals/wait.html')
+                        });
                          vm.checkState(taskId, modal);
                      }
                      else

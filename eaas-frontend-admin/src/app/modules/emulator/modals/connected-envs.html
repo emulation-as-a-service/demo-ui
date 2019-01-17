@@ -4,7 +4,11 @@
 </div>
 
 <div class="modal-body">
-
+        <label>
+            <p>
+                You can connect additional environments via virtual LAN cable.<br> (Note: you will see only the chosen one)
+            </p>
+        </label>
         <ui-select multiple ng-model="selectedEnvs" theme="bootstrap" on-remove="OnRemoveSelect($item)" ui-outer-click="cancel()" on-select="OnClickSelect($item)"  close-on-select="true"  ng-disabled="disabled" style="width: 550px;" title="Choose environment">
             <ui-select-match placeholder="Select environment or leave it empty...">
                 <p align="left"><br>ID: {{$item.envId}}<br>Title: {{$item.title}}}</p>

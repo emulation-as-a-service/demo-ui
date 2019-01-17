@@ -20,7 +20,7 @@
   "CHOOSE_CONTAINER_L" : "Container",
   "CHOOSE_ENV_RUN" : "Run",
   "CHOOSE_ENV_RUN_MODIFIED" : "[Run modified]",
-  "CHOOSE_ACTION" : "Choose action...",
+  "CHOOSE_ACTION" : "Choose action",
   "CHOOSE_DELETE_SELECTED" : "Delete selected",
 
   "ERROR_RETURN_BTN" : "Back to overview",
@@ -69,6 +69,7 @@
   "BASE_MENU_MD" : "OAI PMH",
 
   "ADVANCED_IMPORT_EMULATOR": "Import Emulator",
+  "ADVANCED_IMPORT_EMULATOR_READYMADE": "URL to read-made image",
   "ADVANCED_IMPORT_EMULATOR_VERSION": "Emulator version",
   "ADVANCED_IMPORT_EMULATOR_ALIAS": "Emulator alias",
   "ADVANCED_IMPORT_EMULATOR_ALIAS_PLC": "latest",
@@ -142,6 +143,7 @@
   "SW_NEW_IMAGE_CANCEL_BUTTON" : "Cancel",
   "SW_NEW_IMAGE_START_BUTTON" : "Start",
   "SW_NEW_IMAGE_ROM_LBL" : "ROM File",
+  "SW_NEW_IMAGE_KVM" : "Enable kvm (Kernel-based Virtual Machine)",
 
   "SW_NEW_CONTAINER_HEADER" : "Create new Container",
   "SW_NEW_CONTAINER_CHOOSE_ORIGIN_RUNTIME" : "Choose Origin Runtime",
@@ -166,8 +168,9 @@
   "SW_NEW_CONTAINER_IMAGE_STRUCTURE" : "Additionally, paths for input and output directories are required.",
   "SW_NEW_CONTAINER_FORMAT_DOCKER" : "EaaS can process Docker images from Docker registries. Registry hosted images are referenced via name and tag.",
   "SW_NEW_CONTAINER_DOCKER" : "Specify container name and tag:",
+  "SW_NEW_CONTAINER_READYMADE" : "Upload your ready-made image or provide a URL",
   "SW_NEW_CONTAINER_FORMAT_SINGULARITY" : "EaaS processes Singularity images in the standard Singularity Format (http://singularity.lbl.gov/docs-build-container). Additionally a command can be specified, otherwise the default singularity runscript is used.",
-  "SW_NEW_CONTAINER_FORMAT_RUNC" : "(WIP) needs clarification, tar-archive or image file",
+  "SW_NEW_CONTAINER_FORMAT_RUNC" : "Please provide a tar.gz archive with RunC rootfs filesystem without corresponding parent directory.",
   "SW_NEW_CONTAINER_ARCHIVE_T" : "Type",
   "SW_NEW_CONTAINER_ENVIRONMENT_H" : "Environment variables",
   "SW_NEW_CONTAINER_ENVIRONMENT_NOTE" : "Enter environment variables for to be set inside the container",
@@ -180,7 +183,7 @@
   "EDITENV_L" : "Edit Environment",
   "EDITENV_ID": "ID",
   "EDITENV_NAME" : "Name",
-  "EDITEN_CREATE_HANDLE" : "Create handle",
+  "EDITEN_CREATE_HANDLE" : "create",
   "EDITENV_NAME_PH" : "Environment name",
   "EDITENV_DESC" : "Description",
   "EDITENV_DESC_PH" : "Environment description",
@@ -202,7 +205,7 @@
   "EDITENV_TAG_DONE" : "done",
   "EDITENV_OBJ_DEPENDENCIES" : "Manually assigned objects",
   "EDITENV_NATIVE_CONFIG" : "Native config",
-  "EDITENV_CONTAINER_EMULATOR" : "Container Emulator",
+  "EDITENV_CONTAINER_EMULATOR" : "Emulator Version",
   "EDITENV_XPRA": "XPRA Video (Experimental)",
 
   "EDITENV_CANCONNECTENVS": "Can be connected with other environments (Experimental)",

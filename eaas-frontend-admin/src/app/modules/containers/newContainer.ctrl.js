@@ -39,8 +39,8 @@ module.exports = ['$http', '$scope', '$state', '$stateParams', 'runtimeList', 'g
                 return false;
             }
 
-            if (!container.name) {
-                growl.error("container name is required");
+            if (!container.archiveType && !container.imageType == "dockerhub") {
+                growl.error("container type is required");
                 return false;
             }
 
@@ -200,7 +200,7 @@ module.exports = ['$http', '$scope', '$state', '$stateParams', 'runtimeList', 'g
                 {
                     urlString: container.imageUrl,
                     runtimeID: container.runtime,
-                    name: container.name,
+                    name: (container.name) ? container.name : "tmp",
                     tag: container.tag,
                     processArgs: container.args,
                     processEnvs: container.env,

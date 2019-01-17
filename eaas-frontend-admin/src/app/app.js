@@ -33,6 +33,12 @@ import '../../node_modules/jquery.json-viewer/json-viewer/jquery.json-viewer.css
 import * as agGrid from 'ag-grid-community';
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-balham.css";
+import "ag-grid-community/dist/styles/ag-theme-balham-dark.css";
+import "ag-grid-community/dist/styles/ag-theme-blue.css";
+import "ag-grid-community/dist/styles/ag-theme-bootstrap.css";
+import "ag-grid-community/dist/styles/ag-theme-material.css";
+import "ag-grid-community/dist/styles/ag-theme-fresh.css";
+
 
 
 

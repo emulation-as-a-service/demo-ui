@@ -1,10 +1,13 @@
+
+
 <div id="emulator-loading-container">
-	<img id="emulator-loading-spinner" height="144" width="144" src="img/gears.gif" />
+	<img id="container-loading-spinner" height="144" width="144" src="img/gears.gif" />
+</div>
+<br>
+<div id="container-running">
+    please wait... container is running.
 </div>
 
-<div id="container-running">
-	please wait... container is running.
-</div>
 <br>
 <div id="emulator-container" class="eaas-emulator-container-transcursor"></div>
 
@@ -13,6 +16,5 @@
 
 	<p>{{'CONTAINER_STOPPED_T' | translate}}</p>
 
-	<button ng-click="startContainerCtrl.downloadLink()">Download result</button>
+	<button ng-hide="hideme" ng-click="hideme=true;startContainerCtrl.downloadLink()">Download result</button>
 </div>
-

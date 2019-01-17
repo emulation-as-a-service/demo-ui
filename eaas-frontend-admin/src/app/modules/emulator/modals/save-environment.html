@@ -29,6 +29,14 @@
                       placeholder="{{'SAVEENV_DESC_PH' | translate}}" required></text-angular>
         </div>
 
+        <div ng-show="openSaveEnvironmentDialogCtrl.type == 'saveCreatedEnvironment'
+        || openSaveEnvironmentDialogCtrl.type == 'saveImport'">
+            <label>
+                <input type="checkbox" ng-model="openSaveEnvironmentDialogCtrl.isRelativeMouse">
+                <span>{{'EDITENV_RELMOUSE' | translate}}</span>
+            </label>
+        </div>
+
 
 
 

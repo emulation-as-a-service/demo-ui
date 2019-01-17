@@ -26,6 +26,7 @@
             <select ng-click="onPageSizeChanged()" ng-model="standardEnvsOverviewCtrl.pageSize">
                 <option value="5">5</option>
                 <option value="10">10</option>
+                <option value="15">15</option>
                 <option value="25">25</option>
                 <option value="100">100</option>
                 <option value="500">500</option>
@@ -34,9 +35,9 @@
     </div>
 </div>
 
-<div style="width: 100%;"
+<div ng-if="standardEnvsOverviewCtrl.initRowData().length > 0" style="width: 100%;"
      ag-grid="gridOptions"
-     class="ag-theme-balham ag-basic">
+     class="ag-theme-balham">
 </div>
 <div id="overviewDeleteButton" hidden class="modal-footer">
     <button type="button" class="btn btn-default" ng-click="standardEnvsOverviewCtrl.deleteSelected()">

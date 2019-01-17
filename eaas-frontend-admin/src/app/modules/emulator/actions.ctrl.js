@@ -158,24 +158,28 @@ module.exports = ['$rootScope', '$scope', '$window', '$state', '$http', '$uibMod
     vm.checkpoint = function ()
     {
         window.onbeforeunload = null;
-        window.eaasClient.disconnect();
-        window.eaasClient.checkpoint({
-            type: "newEnvironment",
-            envId: $stateParams.envId,
-       })
-       .then(function(newEnvId) {
-            if(!newEnvId)
-            {
-                growl.error(status, {title: "Snapshot failed"});
-                $state.go('admin.standard-envs-overview', {}, {reload: true});
+        jQuery.when(
+        window.eaasClient.disconnect(),
+        jQuery.Deferred(function (deferred) {
+            jQuery(deferred.resolve);
+        })).done(function () {
+            window.eaasClient.checkpoint({
+                type: "newEnvironment",
+                envId: $stateParams.envId,
+            }).then(function (newEnvId) {
+                    if (!newEnvId) {
+                    growl.error(status, {title: "Snapshot failed"});
+                    $state.go('admin.standard-envs-overview', {}, {reload: true});
+                    window.eaasClient.release();
+                }
+                console.log("Checkpointed environment saved as: " + newEnvId);
+                growl.success(status, {title: "New snapshot created."});
                 window.eaasClient.release();
-            }
-            console.log("Checkpointed environment saved as: " + newEnvId);
-            growl.success(status, {title: "New snapshot created."});
-            window.eaasClient.release();
-            $state.go('admin.edit-env', {envId: newEnvId}, {reload: true});
-       });
-    };
+                $state.go('admin.edit-env', {envId: newEnvId, objEnv: $stateParams.returnToObjects}, {reload: true});
+            });
+        });
+    }
+
 
     vm.openSaveEnvironmentDialog = function() {
         $('#emulator-container').hide();
@@ -185,13 +189,12 @@ module.exports = ['$rootScope', '$scope', '$window', '$state', '$http', '$uibMod
                 animation: true,
                 template: require('./modals/save-environment.html'),
                 controller: ["$scope", function($scope) {
-
                     this.type = $stateParams.type;
                     if(!this.type)
                         alert("ERROR: invalid type");
 
                     this.isSavingEnvironment = false;
-
+                    this.isRelativeMouse = false;
 
                     this.saveEnvironment = function() {
 
@@ -209,6 +212,7 @@ module.exports = ['$rootScope', '$scope', '$window', '$state', '$http', '$uibMod
                         postReq.softwareId = $stateParams.softwareId;
                         postReq.objectId = $stateParams.objectId;
                         postReq.userId = $stateParams.userId;
+                        postReq.isRelativeMouse = this.isRelativeMouse;
 
                         var snapshotDoneFunc = (data, status) => {
                             console.log("error status: " + status);
