@@ -383,34 +383,30 @@ button:focus#printerbutton    {
     width: 100%;
     padding: 0px;
     text-indent:0px;
-    max-width:190px;
+    background-color: #A9A9A9;
+    max-width: 190px;
+;
+
+}
+
+.dropbtn2 {
+    border: none;
+    cursor: pointer;
+    margin: auto;
+    width: 100%;
+    background-color: black;
+    color: whitesmoke;
+    max-width: 190px;
 }
 
 .dropdown {
     position: relative;
     display: inline-block;
     width: 100%;
-    max-width:190px;
 }
 
 .dropdown-content {
-    display: none;
-    position: fixed;
-    background-color: #f9f9f9;
-    cursor: pointer;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-    /*min-width: 185px;*/
-}
-
-.dropdown-content a {
-    color: black;
-    padding: 5px 6px;
-    text-decoration: none;
-    display: block;
-    left: 0px;
-    right: 0px;
-    width: inherit;
+    cursor: default;
 }
 
 .dropdown-content a:hover {
@@ -418,11 +414,19 @@ button:focus#printerbutton    {
     background-color: #f1f1f1;
 }
 
-.dropdown:hover .dropdown-content {
+.dropdown-content:hover  {
     display: block;
+    background-color: black;
 }
 
 .dropdown:hover .dropbtn {
-    background-color: black;
+    border: black;
+    border-style: solid;
+    border-width: thin;
     color: whitesmoke;
+}
+
+
+.ag-ltr .ag-cell-focus:last-child{
+    border: none !important;
 }
