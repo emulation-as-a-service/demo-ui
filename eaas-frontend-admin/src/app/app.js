@@ -184,9 +184,7 @@ export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize'
             console.log(data.id_token);
             localStorage.setItem('id_token', data.id_token);
           }
-         // else
-         //   localStorage.removeItem('id_token');
-      });
+    });
 
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
         if (!$rootScope.chk.transitionEnable) {
@@ -204,6 +202,7 @@ export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize'
 .service('authService', function($state, angularAuth0, $timeout) {
 
       this.login = function (data) {
+          data.redirectUri = auth0config.REDIRECT_URL;
           angularAuth0.authorize(data);
       };
 
@@ -211,12 +210,10 @@ export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize'
           angularAuth0.parseHash(function(err, authResult) {
             if (authResult && authResult.idToken && authResult.accessToken) {
               setSession(authResult);
-              $state.go('admin.dashboard');
             } else if (err) {
               $timeout(function() {
                 $state.go('login');
                });
-              console.log(err);
               alert('Error: ' + err.error + '. Check the console for further details.');
             }
           });
@@ -379,7 +376,6 @@ export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize'
             controller: function(authService) {
                 var vm = this;
                 vm.authService = authService;
-              //  vm.angularAuth0.authorize({connection: 'twitter'});
             },
             controllerAs: "loginCtrl"
         })

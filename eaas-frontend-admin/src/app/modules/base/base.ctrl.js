@@ -1,4 +1,4 @@
-module.exports = ["$uibModal", "localConfig", "kbLayouts", "buildInfo", "userInfo", function($uibModal, localConfig, kbLayouts, buildInfo, userInfo) {
+module.exports = ["$uibModal", "localConfig", "kbLayouts", "buildInfo", "userInfo", "authService", function($uibModal, localConfig, kbLayouts, buildInfo, userInfo, authService) {
     var vm = this;
 
     vm.open = function() {
@@ -27,6 +27,11 @@ module.exports = ["$uibModal", "localConfig", "kbLayouts", "buildInfo", "userInf
             },
             controller: "SettingsDialogController as settingsDialogCtrl"
         });
+    };
+
+    vm.logout = function()
+    {
+        authService.logout();
     };
 
     vm.showAdvancedDialog = function() {
