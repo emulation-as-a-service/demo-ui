@@ -1,6 +1,8 @@
-module.exports = ["$uibModal", "localConfig", "kbLayouts", "buildInfo", "userInfo", "authService", function($uibModal, localConfig, kbLayouts, buildInfo, userInfo, authService) {
+module.exports = ["$uibModal", "localConfig", "kbLayouts", "buildInfo", "userInfo", "authService",
+function($uibModal, localConfig, kbLayouts, buildInfo, userInfo, authService) {
     var vm = this;
-
+    vm.authEnabled = auth0config.AUTH_CONFIGURED;
+    
     vm.open = function() {
         $uibModal.open({
             animation: false,

@@ -38,7 +38,7 @@
                             <hr/>
                             <li><a href="{{baseCtrl.config.eaasBackendURL.substring(0, baseCtrl.config.eaasBackendURL.length - 5)}}" target="_blank">{{'BASE_MENU_HELP' | translate}}</a></li>
                             <hr/>
-                            <li><a href="" ng-if="auth0config.AUTH_CONFIGURED" ng-click="baseCtrl.logout()">Logout</a> </li>
+                            <li ng-if="baseCtrl.authEnabled"><a href="" ng-click="baseCtrl.logout()">Logout</a> </li>
                         </ul>
                     </div>
                 </div>
