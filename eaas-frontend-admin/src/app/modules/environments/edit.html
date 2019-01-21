@@ -112,7 +112,7 @@
     <!--Container emulator-->
     <div ng-show="editEnvCtrl.nameIndexes" ng-if="editEnvCtrl.showAdvanced">
         <label>{{'EDITENV_CONTAINER_EMULATOR' | translate}}:</label> <span ng-if="!editEnvCtrl.editMode">{{editEnvCtrl.emulatorContainer.key}}</span>
-        <ui-select ng-if="editEnvCtrl.editMode" ng-model="editEnvCtrl.emulatorContainer" theme="bootstrap" class="form-control" title="{{'EDITENV_CONTAINER_EMULATOR' | translate}}" required>
+        <ui-select ng-if="editEnvCtrl.editMode" ng-model="editEnvCtrl.emulatorContainer" theme="bootstrap" title="{{'EDITENV_CONTAINER_EMULATOR' | translate}}" required>
             <ui-select-match placeholder="{{'EDITENV_CONTAINER_EMULATOR' | translate}}">{{$select.selected.key}}</ui-select-match>
             <ui-select-choices repeat="index in editEnvCtrl.nameIndexes  | filter: $select.search">
                 <span ng-bind-html="index.key
@@ -212,7 +212,7 @@
     </div>
 
     <hr>
-    <h4>Configured Software</h4>
+    <h4  ng-if="editEnvCtrl.showAdvanced">Configured Software</h4>
     <div ng-show="editEnvCtrl.env.installedSoftwareIds.length > 0" ng-if="editEnvCtrl.showAdvanced">
         <ul>
             <li ng-repeat="softwareId in editEnvCtrl.env.installedSoftwareIds">{{softwareId}}</li>
@@ -225,7 +225,7 @@
     </div>
 
     <hr>
-    <h4>Revision History</h4>
+    <h4 ng-if="editEnvCtrl.showAdvanced">Revision History</h4>
     <div class="form-group" ng-show="editEnvCtrl.env.revisions.length > 0" ng-if="editEnvCtrl.showAdvanced">
         <p>
             <label>{{'EDITENV_REVS' | translate}}:</label>
