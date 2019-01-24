@@ -45,12 +45,14 @@ module.exports = ["$http", "$rootScope", "$scope", "$state", "$stateParams", "en
 
         vm.showDateContextPicker = false;
 
-        nameIndexes.data.entries.entry.forEach(function (element, i) {
-            console.log("element.key ", element.key);
-            console.log("element ", element);
-            if (!element.key.toLowerCase().includes(vm.emulator.toLowerCase()))
-                delete nameIndexes.data.entries.entry[i];
-        });
+        if(nameIndexes.data.entries.entry) {
+            nameIndexes.data.entries.entry.forEach(function (element, i) {
+                console.log("element.key ", element.key);
+                console.log("element ", element);
+                if (!element.key.toLowerCase().includes(vm.emulator.toLowerCase()))
+                    delete nameIndexes.data.entries.entry[i];
+            });
+        }
 
         vm.nameIndexes = nameIndexes.data.entries.entry ?  nameIndexes.data.entries.entry : [];
         vm.getNameIndexObj = function(key, name, version){
