@@ -170,6 +170,7 @@ export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize'
     };
 
     if(auth0config.AUTH_CONFIGURED) {
+        console.log("authService", auth0config);
         authService.handleAuthentication();
     }
 
@@ -290,7 +291,7 @@ export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize'
 
     // Please note we're annotating the function so that the $injector works when the file is minified
     jwtOptionsProvider.config({
-      // whiteListedDomains: "localhost",
+      whiteListedDomains: "localhost",
       tokenGetter: [ 'options', function(options) {
         if (options && options.url.substr(options.url.length - 5) == '.html') {
             return null;

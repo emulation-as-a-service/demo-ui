@@ -8,6 +8,7 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'en
         vm.pageSize = 10;
         vm.landingPage = localConfig.data.landingPage;
         vm.view = 0;
+        vm.viewArchive = 0;
         if($stateParams.showContainers)
             vm.view = 2;
         else if($stateParams.showObjects)
@@ -269,6 +270,8 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'en
 
 
         vm.updateData = function () {
+
+            console.log("view: " + vm.viewArchive);
             if ($scope.gridOptions.api != null) {
                 $scope.gridOptions.api.setRowData(vm.initRowData());
                 $scope.gridOptions.api.setColumnDefs(vm.initColumnDefs());
@@ -283,19 +286,22 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'en
                 vm.envs.forEach(function (element) {
                     if(element.envType != 'base')
                         return;
-                    rowData.push({name: element.title, id: element.envId, archive: element.archive, owner: (element.owner) ? element.owner : "shared"})
+                    if((element.archive == 'default' && vm.viewArchive === 0) ||
+                        (element.archive == "public" && vm.viewArchive === 1) ||
+                        (element.archive == "remote" && vm.viewArchive === 2))
+                            rowData.push({name: element.title, id: element.envId, owner: (element.owner) ? element.owner : "shared"});
                 })
             else if (vm.view == 1) {
                 vm.envs.forEach(function (element) {
                     if(element.envType != 'object')
                         return;
-                    rowData.push({name: element.title, id: element.envId, archive: element.archive, owner: (element.owner) ? element.owner : "shared", objectId : element.objectId})
+                    rowData.push({name: element.title, id: element.envId, owner: (element.owner) ? element.owner : "shared", objectId : element.objectId})
                 })
             } else if (vm.view == 2) {
                 vm.envs.forEach(function (element) {
                     if(element.envType != 'container')
                         return;
-                    rowData.push({name: element.title, id: element.envId, archive: element.archive, owner: (element.owner) ? element.owner : "shared", objectId : element.objectId})
+                    rowData.push({name: element.title, id: element.envId, owner: (element.owner) ? element.owner : "shared", objectId : element.objectId})
                 })
             }
             return rowData;
@@ -308,7 +314,6 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'en
                     suppressMenu: true},
                 {headerName: "Name", field: "name"},
                 {headerName: "ID", field: "id"},
-                {headerName: "Archive", field: "archive"}
             ];
 
             if (vm.view == 0 || vm.view == 1) {
@@ -351,6 +356,7 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'en
             animateRows: true,
             onGridReady: function (params) {
                 $scope.gridOptions.api.sizeColumnsToFit();
+                $scope.gridOptions.api.redrawRows();
             },
             pagination: true,
             paginationPageSize: 20,

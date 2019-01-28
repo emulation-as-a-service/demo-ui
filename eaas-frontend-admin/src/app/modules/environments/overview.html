@@ -12,8 +12,14 @@
     <uib-tab index="2" ng-click="standardEnvsOverviewCtrl.updateData()" heading="Containers">
     </uib-tab>
     -->
-
 </uib-tabset>
+<p></p>
+<uib-tabset ng-if="standardEnvsOverviewCtrl.view === 0" active="standardEnvsOverviewCtrl.viewArchive" type="pills">
+    <uib-tab index="0" heading="Private" ng-click="standardEnvsOverviewCtrl.updateData()"></uib-tab>
+    <uib-tab index="1" heading="Public" ng-click="standardEnvsOverviewCtrl.updateData()"></uib-tab>
+    <uib-tab index="2" heading="Remote" ng-click="standardEnvsOverviewCtrl.updateData()"></uib-tab>
+</uib-tabset>
+
 <div class="tekstMore"></div>
 <div style="float: right;">
     <input type="text" class="form-control" ng-model="gridOptions.quickFilterText"

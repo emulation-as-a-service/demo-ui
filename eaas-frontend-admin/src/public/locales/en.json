@@ -96,7 +96,7 @@
   "SW_OVERVIEW_HEADER" : "Software",
   "SW_OVERVIEW_ADD" : "Add new software",
   "SW_OVERVIEW_SEARCH" : "Search...",
-  "SW_OVERVIEW_SW_EDIT" : "[edit]",
+  "SW_OVERVIEW_SW_EDIT" : "Edit",
   "SW_OVERVIEW_SW_DEL" : "[delete]",
 
   "ERROR_MODAL_TITLE": "Information",
