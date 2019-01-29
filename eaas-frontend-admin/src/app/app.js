@@ -163,7 +163,7 @@ export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize'
         };
     })
 
-.run(function($rootScope, $state, $http, authService) {
+.run(async function($rootScope, $state, $http, authService) {
     $rootScope.emulator = {
         state : '',
         mode : null
@@ -171,7 +171,7 @@ export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize'
 
     if(auth0config.AUTH_CONFIGURED) {
         console.log("authService", auth0config);
-        authService.handleAuthentication();
+        await authService.handleAuthentication();
     }
 
     $rootScope.chk = {};
@@ -207,17 +207,24 @@ export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize'
           angularAuth0.authorize(data);
       };
 
-      this.handleAuthentication = function () {
-          angularAuth0.parseHash(function(err, authResult) {
+      this.handleAuthentication = async function () {
+        let resolve, reject;
+        const promise = new Promise((_resolve, _reject) => {resolve = _resolve; reject = _reject;});
+
+        angularAuth0.parseHash(
+        function(err, authResult) {
             if (authResult && authResult.idToken && authResult.accessToken) {
-              setSession(authResult);
+                setSession(authResult);
+                resolve();
             } else if (err) {
-              $timeout(function() {
+                $timeout(function() {
                 $state.go('login');
-               });
-              alert('Error: ' + err.error + '. Check the console for further details.');
-            }
-          });
+           });
+           console.log('Error: ' + err.error + '. Check the console for further details.');
+        }
+        });
+
+        await promise;
      }
 
     function setSession(authResult) {
