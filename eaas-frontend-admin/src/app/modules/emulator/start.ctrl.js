@@ -103,6 +103,7 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$sce', 'environmentList'
                     $rootScope.emulator.mode = eaasClient.mode;
                     console.log( $rootScope.emulator);
                     console.log(eaasClient.networkTcpInfo);
+                    $scope.apply();
                     if (eaasClient.networkTcpInfo) {
                         var url = new URL(eaasClient.networkTcpInfo.replace(/^info/, 'http'));
 
