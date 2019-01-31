@@ -163,7 +163,7 @@ export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize'
         };
     })
 
-.run(async function($rootScope, $state, $http, authService) {
+.run(function($rootScope, $state, $http, authService) {
     $rootScope.emulator = {
         state : '',
         mode : null
@@ -171,7 +171,7 @@ export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize'
 
     if(auth0config.AUTH_CONFIGURED) {
         console.log("authService", auth0config);
-        await authService.handleAuthentication();
+        authService.handleAuthentication();
     }
 
     $rootScope.chk = {};
