@@ -360,10 +360,10 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'en
         };
 
         function onRowSelected(event) {
-            if ($scope.gridOptions.api.getSelectedRows().length > 0)
-                $('#overviewDeleteButton').show();
-            else
-                $('#overviewDeleteButton').hide();
+         //   if ($scope.gridOptions.api.getSelectedRows().length > 0)
+         //       $('#overviewDeleteButton').show();
+         //   else
+         //       $('#overviewDeleteButton').hide();
         }
         // setup the grid after the page has finished loading
         document.addEventListener('DOMContentLoaded', function () {
