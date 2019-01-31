@@ -355,5 +355,12 @@
   "OBJECT_INGEST_REPO_BUTTON" : "Add",
 
   "METADATA_L" : "Metadata Harvesting",
-  "METADATA_PROVIDER_TH" : "Configured Endpoints"
+  "METADATA_PROVIDER_TH" : "Configured Endpoints",
+  "METADATA_ADD_BTN" : "Add OAI-PMH Endpoint",
+  "METADATA_ADD_H" : "Add OAI-PMH Endpoint",
+  "METADATA_ADD_HOST" : "Hostname",
+  "METADATA_ADD_HOSTNAME" : "Name",
+  "METADATA_OK" : "Add",
+  "METADATA_CANCEL" : "Cancel"
+
 }

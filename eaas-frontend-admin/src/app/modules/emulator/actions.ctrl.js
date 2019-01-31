@@ -15,8 +15,6 @@ module.exports = ['$rootScope', '$scope', '$window', '$state', '$http', '$uibMod
     else
         vm.isKVM = false;
 
-    vm.mode = $rootScope.emulator.mode;
-
     if (chosenEnv.data)
     {
         vm.enablePrinting = chosenEnv.data.enablePrinting;
