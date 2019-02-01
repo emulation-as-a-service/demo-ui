@@ -283,7 +283,7 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'en
                     if((element.archive == 'default' && vm.viewArchive === 0) ||
                         (element.archive == "public" && vm.viewArchive === 1) ||
                         (element.archive == "remote" && vm.viewArchive === 2))
-                            rowData.push({name: element.title, id: element.envId, owner: (element.owner) ? element.owner : "shared"});
+                            rowData.push({name: element.title, id: element.envId, archive: element.archive, owner: (element.owner) ? element.owner : "shared"});
                 })
             else if (vm.view == 1) {
                 vm.envs.forEach(function (element) {
