@@ -308,6 +308,7 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'en
                     suppressMenu: true},
                 {headerName: "Name", field: "name"},
                 {headerName: "ID", field: "id"},
+                {headerName: "Archive", field: "archive", hide: true}
             ];
 
             if (vm.view == 0 || vm.view == 1) {

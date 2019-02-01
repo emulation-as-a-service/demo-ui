@@ -1,7 +1,7 @@
 {
-  "eaasBackendURL": "http://127.0.0.1:8080/emil/",
-  "stopEmulatorRedirectURL":"http://127.0.0.1:8080/demo-ui",
-  "dashboardClusterAPIBaseURL" : "http://127.0.0.1:8080/eaas/api/v1/clusters/",
+  "eaasBackendURL": "http://localhost:8080/emil/",
+  "stopEmulatorRedirectURL":"http://localhost:8080/demo-ui",
+  "dashboardClusterAPIBaseURL" : "http://localhost:8080/eaas/api/v1/clusters/",
   "dashboardAccessToken": "secret",
   "baseEmulatorUrl" : "http://localhost:8080/demo-ui/",
   "landingPage": "http://localhost:8080/demo-ui/citar-headless-client/",
@@ -27,3 +27,4 @@
         "domain": ".auth0.com"
     }
 }
+
