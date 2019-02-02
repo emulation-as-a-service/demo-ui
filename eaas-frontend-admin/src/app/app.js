@@ -169,11 +169,6 @@ export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize'
         mode : null
     };
 
-    if(auth0config.AUTH_CONFIGURED) {
-        console.log("authService", auth0config);
-        authService.handleAuthentication();
-    }
-
     $rootScope.chk = {};
     $rootScope.chk.transitionEnable = true;
     $rootScope.waitingForServer = true;
@@ -198,6 +193,11 @@ export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize'
 //                console.log("$stateChangeStart: "+toState.name);
 //            }
     });
+
+     if(auth0config.AUTH_CONFIGURED) {
+            console.log("authService", auth0config);
+            authService.handleAuthentication();
+     }
 })
 
 .service('authService', function($state, angularAuth0, $timeout) {

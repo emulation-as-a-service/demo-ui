@@ -21,7 +21,6 @@
             <ul id="providerList">
                 <li ng-repeat="p in addEnvironmentCtrl.providers">{{revision.text}}
                     <label>{{p}}</label>
-                    <button class="btn btn-primary" type="button" ng-click="$close();addEnvironmentCtrl.confirmed(p);" >{{'METADATA_OK' | translate}}</button>
                 </li>
             </ul>
         </div>
@@ -29,5 +28,6 @@
 </div>
 
 <div class="modal-footer">
+    <button class="btn btn-primary" ng-disabled="!addEnvironmentCtrl.success" type="button" ng-click="$close();addEnvironmentCtrl.confirmed();" >{{'METADATA_OK' | translate}}</button>
     <button class="btn btn-default" type="button" ng-click="$close()">{{'METADATA_CANCEL' | translate}}</button>
 </div>
