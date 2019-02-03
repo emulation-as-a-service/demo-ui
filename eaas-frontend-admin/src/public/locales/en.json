@@ -361,6 +361,7 @@
   "METADATA_ADD_HOST" : "Hostname",
   "METADATA_ADD_HOSTNAME" : "Name",
   "METADATA_OK" : "Add",
-  "METADATA_CANCEL" : "Cancel"
+  "METADATA_CANCEL" : "Cancel",
+  "METADATA_PROVIDER_LIST_H" : "Metadata provider"
 
 }
