@@ -46,9 +46,13 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$sce', 'environmentList'
 
             let params = {};
             if (chosenEnv.data) {
-                params.hasTcpGateway = chosenEnv.data.serverMode;
+                if (chosenEnv.data.localServerMode) {
+                    params.hasTcpGateway = false;
+                } else {
+                    params.hasTcpGateway = chosenEnv.data.serverMode;
+                }
                 params.hasInternet = chosenEnv.data.enableInternet;
-                if (params.hasTcpGateway) {
+                if (params.hasTcpGateway || chosenEnv.data.localServerMode) {
                     params.tcpGatewayConfig = {
                         socks: chosenEnv.data.enableSocks,
                         gwPrivateIp: chosenEnv.data.gwPrivateIp,
@@ -104,7 +108,7 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$sce', 'environmentList'
                     console.log( $rootScope.emulator);
                     console.log(eaasClient.networkTcpInfo);
                     $scope.$apply();
-                    if (eaasClient.networkTcpInfo) {
+                    if (eaasClient.networkTcpInfo || eaasClient.tcpGatewayConfig) (async () => {
                         var url = new URL(eaasClient.networkTcpInfo.replace(/^info/, 'http'));
 
                         console.log(url.hostname);
@@ -112,8 +116,16 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$sce', 'environmentList'
                         var pathArray = url.pathname.split('/');
                         console.log(pathArray);
 
-                        $("#emulator-info-container").text("connect to: " + url.hostname + " protocol " + pathArray[1] + " port " + pathArray[2]);
-                    }
+                        document.querySelector("#emulator-info-container").append(
+                            Object.assign(document.createElement("a"),
+                                {textContent: `connect to: ${url.hostname} protocol ${pathArray[1]} port ${pathArray[2]}`,
+                                href: `http://${url.hostname}:${pathArray[2]}`,
+                                target: "_blank", rel: "noopener"}),
+                            ' // ',
+                            Object.assign(document.createElement("a"),
+                                {textContent: "start eaas-proxy", href: await eaasClient.getProxyURL()}),
+                        );
+                    })();
 
                     if (eaasClient.params.pointerLock === "true") {
                         growl.info($translate.instant('EMU_POINTER_LOCK_AVAILABLE'));
