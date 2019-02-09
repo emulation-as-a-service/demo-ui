@@ -24,8 +24,11 @@ module.exports = ['$rootScope', '$scope', '$window', '$state', '$http', '$uibMod
         vm.enablePrinting = false;
 
      vm.screenshot = async function() {
-        const pic = await fetch(window.eaasClient.getScreenshotUrl());
-        //    , {headers : { authorization : "Bearer " +  localStorage.id_token}});
+
+        let _header = localStorage.getItem('id_token') ? {"Authorization" : "Bearer " + localStorage.getItem('id_token')} : {};
+        const pic = await fetch(window.eaasClient.getScreenshotUrl(), {
+            headers: _header,
+        });
 
         const picBlob = await pic.blob();
         window.open(URL.createObjectURL(picBlob));
@@ -39,9 +42,14 @@ module.exports = ['$rootScope', '$scope', '$window', '$state', '$http', '$uibMod
             controller: ["$scope", function($scope) {
                 this.printJobs = data;
 
-                this.download = function(label)
+                this.download = async function(label)
                 {
-                    window.open(window.eaasClient.downloadPrint(label));
+                      let _header = localStorage.getItem('id_token') ? {"Authorization" : "Bearer " + localStorage.getItem('id_token')} : {};
+                      const pdf = await fetch(window.eaasClient.downloadPrint(label),{
+                         headers: _header,
+                     });
+                    const pdfBlob = await pdf.blob();
+                    window.open(URL.createObjectURL(pdfBlob));
                 }
             }],
             controllerAs: "openPrintDialogCtrl"
