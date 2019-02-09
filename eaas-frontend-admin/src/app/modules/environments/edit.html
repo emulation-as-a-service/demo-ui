@@ -14,11 +14,11 @@
         <button ng-show="editEnvCtrl.env.archive != 'remote'" class="btn btn-outline-dark"
                 type="button" ng-click="editEnvCtrl.addSoftware(editEnvCtrl.env.envId)">{{'CHOOSE_ENV_ADDSW' | translate}}</button>
         <button class="btn btn-outline-dark" type="button"
-                ng-click="editEnvCtrl.replicateImage(editEnvCtrl.env.envId)"
+                ng-click="editEnvCtrl.replicateImage(editEnvCtrl.env.envId, 'publish')"
                 ng-if="!editEnvCtrl.isObjectEnv && editEnvCtrl.env.archive == 'default'">Publish
         </button>
         <button class="btn btn-outline-dark" type="button"
-                ng-click="editEnvCtrl.replicateImage(editEnvCtrl.env.envId)"
+                ng-click="editEnvCtrl.replicateImage(editEnvCtrl.env.envId, 'import')"
                 ng-if="editEnvCtrl.env.archive == 'remote'">Replicate
         </button>
     </div>

@@ -316,12 +316,21 @@ module.exports = ["$http", "$rootScope", "$scope", "$state", "$stateParams", "en
               });
           };
 
-          vm.replicateImage = function(envId) {
-              if (!window.confirm(`Resources published to the EaaSI network cannot be easily removed.
+          vm.replicateImage = function(envId, replicationType) {
+              if(replicationType === "import")
+              {
+                if (!window.confirm(`Replication will copy environment data to local storage. Environments copied from the EaaSI Network cannot be deleted from storage once replicated.
+
+Do you want to replicate this environment from the Network.`))
+                   return false;
+              }
+              else {
+                if (!window.confirm(`Resources published to the EaaSI network cannot be easily removed.
 Do not share software or environments with existing access or license restrictions.
 
 Do you want to publish this environment to the network?`))
                    return false;
+              }
 
               console.log("replicating " + envId);
               var modal = $uibModal.open({
