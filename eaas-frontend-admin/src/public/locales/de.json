@@ -211,7 +211,7 @@
   "EDITENV_SERVER_PORT" : "Interner Server Port",
   "EDITENV_GW_PRIVATE_IP" : "Interne IP des Gateways",
   "EDITENV_GW_PRIVATE_MASK" : "Interne IP Maske des Gateways (dezimal)",
-
+  "EDITENV_CLOSE" : "Zurück zur Übersicht",
 
   "CHAR_L" : "Objektcharakterisierung",
   "CHAR_UPDATE_PROPOSAL" : "Umgebungen neu berechnen",

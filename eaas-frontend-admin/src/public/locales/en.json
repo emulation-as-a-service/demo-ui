@@ -207,6 +207,7 @@
   "EDITENV_NATIVE_CONFIG" : "Native config",
   "EDITENV_CONTAINER_EMULATOR" : "Emulator Version",
   "EDITENV_XPRA": "XPRA Video (Experimental)",
+  "EDITENV_CLOSE" : "Back to overview",
 
   "EDITENV_CANCONNECTENVS": "Can be connected with other environments (Experimental)",
   "EDITENV_ENABLE_INTERNET" : "Enable Internet access",

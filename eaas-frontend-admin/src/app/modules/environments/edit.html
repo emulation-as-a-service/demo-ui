@@ -268,9 +268,14 @@
              <button class="btn btn-danger" type="button" ng-click="editEnvCtrl.deleteEnvironment(editEnvCtrl.env.envId)">Delete Environment</button>
         </span>
         <span style="float: right;">
-            <button class="btn btn-default"  ui-sref="admin.standard-envs-overview({showObjects: editEnvCtrl.isObjectEnv})">
-            {{'EDITENV_CANCEL' |translate}}</button>
-            <button type="submit" ng-disabled="!editEnvCtrl.editMode" class="btn btn-primary">{{'EDITENV_SAVE'| translate}}</button>
+            <button class="btn btn-default" ng-if="editEnvCtrl.editMode" type="button"
+                    ui-sref="admin.edit-env({envId: editEnvCtrl.env.envId, objEnv: editEnvCtrl.isObjectEnv})" ui-sref-opts="{reload: true}">
+                    {{'EDITENV_CANCEL' |translate}}</button>
+
+            <button type="submit" ng-if="editEnvCtrl.editMode" class="btn btn-primary">{{'EDITENV_SAVE'| translate}}</button>
+
+            <button type="button" class="btn btn-primary"
+                    ui-sref="admin.standard-envs-overview({showObjects: editEnvCtrl.isObjectEnv})">{{'ERROR_RETURN_BTN' | translate}}</button>
         </span>
     </div>
 </form>

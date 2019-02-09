@@ -8,6 +8,7 @@ module.exports = ["$http", "$rootScope", "$scope", "$state", "$stateParams", "en
            let handlePrefix = "11270/";
            var vm = this;
 
+           vm.editMode = false;
            let emulatorContainerVersionSpillter = "|";
 
            vm.showAdvanced = false;
@@ -193,11 +194,7 @@ module.exports = ["$http", "$rootScope", "$scope", "$state", "$stateParams", "en
                    } else {
                        growl.error(response.data.message, {title: 'Error ' + response.data.status});
                    }
-
-                   if (vm.isObjectEnv)
-                       $state.go('admin.standard-envs-overview', {showObjects: true}, {reload: true});
-                   else
-                       $state.go('admin.standard-envs-overview', {}, {reload: true});
+                   $state.go('admin.edit-env', {envId: $stateParams.envId, objEnv: vm.isObjectEnv}, {reload: true});
                });
            };
 
