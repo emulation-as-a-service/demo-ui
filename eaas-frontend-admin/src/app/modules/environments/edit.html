@@ -235,7 +235,7 @@
                 <a href="#"
                    ng-click="editEnvCtrl.fork(revision.id)"> [ fork ] </a>
 
-                <a style="cursor: pointer;"
+                <a ng-if="editEnvCtrl.env.archive === 'default' && revision.archive === 'default'" style="cursor: pointer;"
                    ng-click="editEnvCtrl.revert(editEnvCtrl.env.envId, revision.id)"> [ revert to this version ] </a>
 
             </li>
