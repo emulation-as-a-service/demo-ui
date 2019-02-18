@@ -209,11 +209,11 @@ module.exports = function makeWebpackConfig() {
 
       // Reference: https://webpack.js.org/plugins/uglifyjs-webpack-plugin/
       // Minify all javascript, disable renaming/mangling
-      new UglifyJSPlugin({
+      /* new UglifyJSPlugin({
         uglifyOptions: {
 		  // mangle: false
 		}
-      }),
+      }), */
 
       // Copy assets from the public folder
       // Reference: https://github.com/kevlened/copy-webpack-plugin

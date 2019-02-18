@@ -123,7 +123,8 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$sce', 'environmentList'
                                 target: "_blank", rel: "noopener"}),
                             ' // ',
                             Object.assign(document.createElement("a"),
-                                {textContent: "start eaas-proxy", href: await eaasClient.getProxyURL()}),
+                                {textContent: "start eaas-proxy", href: await eaasClient.getProxyURL(),
+                                target: "_blank",}),
                         );
                     })();
 
