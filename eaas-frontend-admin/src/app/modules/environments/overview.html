@@ -2,25 +2,25 @@
 <h2 class="m-t-0">{{'CHOOSE_ENV_L' | translate}}</h2>
 
 <uib-tabset active="standardEnvsOverviewCtrl.view">
-    <uib-tab index="0" ng-click="standardEnvsOverviewCtrl.updateData()" heading="{{'CHOOSE_BASEENV_L' | translate}}">
+    <uib-tab index="0" ng-click="standardEnvsOverviewCtrl.updateData()" heading="{{'CHOOSE_BASEENV_L' | translate}}" data-id="t-vms">
 
     </uib-tab>
-    <uib-tab index="1" heading="{{'CHOOSE_OBJENV_L' | translate}}" ng-click="standardEnvsOverviewCtrl.updateData()" ng-if="standardEnvsOverviewCtrl.config.features.objectEnvironments" >
+    <uib-tab index="1" heading="{{'CHOOSE_OBJENV_L' | translate}}" ng-click="standardEnvsOverviewCtrl.updateData()" ng-if="standardEnvsOverviewCtrl.config.features.objectEnvironments" data-id="t-objects">
     </uib-tab>
-    <uib-tab index="2" ng-click="standardEnvsOverviewCtrl.updateData()" heading="Containers">
+    <uib-tab index="2" ng-click="standardEnvsOverviewCtrl.updateData()" heading="Containers" data-id="t-containers">
     </uib-tab>
 </uib-tabset>
 <p></p>
 <uib-tabset ng-if="standardEnvsOverviewCtrl.view === 0" active="standardEnvsOverviewCtrl.viewArchive" type="pills">
-    <uib-tab index="0" heading="Private" ng-click="standardEnvsOverviewCtrl.updateData()"></uib-tab>
-    <uib-tab index="1" heading="Public" ng-click="standardEnvsOverviewCtrl.updateData()"></uib-tab>
-    <uib-tab index="2" heading="Remote" ng-click="standardEnvsOverviewCtrl.updateData()"></uib-tab>
+    <uib-tab index="0" heading="Private" ng-click="standardEnvsOverviewCtrl.updateData()" data-id="t-archive-private"></uib-tab>
+    <uib-tab index="1" heading="Public" ng-click="standardEnvsOverviewCtrl.updateData()" data-id="t-archive-public"></uib-tab>
+    <uib-tab index="2" heading="Remote" ng-click="standardEnvsOverviewCtrl.updateData()" data-id="t-archive-remote"></uib-tab>
 </uib-tabset>
 
 <div class="tekstMore"></div>
 <div style="float: right;">
     <input type="text" class="form-control" ng-model="gridOptions.quickFilterText"
-           placeholder="{{'CHOOSE_ENV_SEARCH' | translate}}"/>
+           placeholder="{{'CHOOSE_ENV_SEARCH' | translate}}" data-id="i-search"/>
 </div>
 <div style="padding: 4px;">
     <div class="ag-theme-balham"><b>Number of Environments: {{standardEnvsOverviewCtrl.initRowData().length;}}</b></div>
@@ -41,6 +41,7 @@
 
 <div ng-if="standardEnvsOverviewCtrl.initRowData().length > 0" style="width: 100%;"
      ag-grid="gridOptions"
+     data-id="g-envs"
      class="ag-theme-balham">
 </div>
 <div id="overviewDeleteButton" hidden class="modal-footer">
