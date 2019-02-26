@@ -272,7 +272,8 @@
 
     <div>
         <span style="text-align: left;">
-             <button class="btn btn-danger" type="button" ng-click="editEnvCtrl.deleteEnvironment(editEnvCtrl.env.envId)">Delete Environment</button>
+             <button class="btn btn-danger" ng-if="editEnvCtrl.env.archive === 'default'" type="button"
+                     ng-click="editEnvCtrl.deleteEnvironment(editEnvCtrl.env.envId)">Delete Environment</button>
         </span>
         <span style="float: right;">
             <button class="btn btn-default" ng-if="editEnvCtrl.editMode" type="button"
