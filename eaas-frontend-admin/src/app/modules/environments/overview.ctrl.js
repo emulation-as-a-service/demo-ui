@@ -190,17 +190,17 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'en
                 <button id="single-button" type="button"  ng-class="{true: 'dropbtn2', false: 'dropbtn'}[status.isopen]" uib-dropdown-toggle ng-disabled="disabled">
                   {{'CHOOSE_ACTION'| translate}} <span class="caret"></span>
                 </button>
-               
+
                 <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="single-button">
                   <li ng-if="data.archive !='remote'" role="menuitem dropdown-content">
-                        <a class="dropdown-content" ng-click="switchAction(data.id, \'run\')">{{\'CHOOSE_ENV_PROPOSAL\'| translate}}</a>
+                        <a class="dropdown-content" ng-click="switchAction(data.id, \'run\')" data-id="m-run">{{\'CHOOSE_ENV_PROPOSAL\'| translate}}</a>
                   </li>
-                  
-                  <li role="menuitem"><a class="dropdown-content" ng-click="switchAction(data.id, \'edit\')">{{\'CHOOSE_ENV_EDIT\'| translate}}</a></li>
+
+                  <li role="menuitem"><a class="dropdown-content" ng-click="switchAction(data.id, \'edit\')" data-id="m-edit">{{\'CHOOSE_ENV_EDIT\'| translate}}</a></li>
                   <li ng-if="data.archive == 'default'" role="menuitem"><a class="dropdown-content" ng-click="switchAction(data.id, \'deleteEnvironment\')">{{\'CHOOSE_ENV_DEL\'| translate}}</a></li>
                   <li ng-if="data.archive != 'remote'" role="menuitem"><a class="dropdown-content" ng-click="switchAction(data.id, \'addSoftware\')">{{\'CHOOSE_ENV_ADDSW\'| translate}}</a></li>
                 </ul>
-                
+
              </div>`;
 
             let container = `
@@ -209,7 +209,7 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'en
                   {{\'CHOOSE_ACTION\'| translate}} <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="single-button">
-                
+
                   <li role="menuitem"><a class="dropdown-content" ng-click="switchAction(data.id, \'run\')">{{\'CHOOSE_ENV_PROPOSAL\'| translate}}</a></li>
                   <li role="menuitem"><a class="dropdown-content" ng-click="switchAction(data.id, \'edit\')">{{\'CHOOSE_ENV_EDIT\'| translate}}</a></li>
                   <li role="menuitem"><a class="dropdown-content" ng-click="switchAction(data.id, \'deleteContainer\')">{{\'CHOOSE_ENV_DEL\'| translate}}</a></li>
