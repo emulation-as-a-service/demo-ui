@@ -61,6 +61,8 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$sce', 'environmentList'
                         serverIp: chosenEnv.data.serverIp
                     };
                 }
+
+                params.xpraEncoding = chosenEnv.data.xpraEncoding;
             }
             console.log(params);
 

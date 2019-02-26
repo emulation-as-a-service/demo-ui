@@ -49,6 +49,7 @@ emilAdminUIHelpersModule.service('REST_URLS', function () {
     this.getOriginRuntimeList = "EmilContainerData/getOriginRuntimeList";
     this.importContainerUrl = "EmilContainerData/importContainer";
     this.importEmulator = "EmilContainerData/importEmulator";
+    this.updateLatestEmulator = "EmilContainerData/updateLatestEmulator";
     this.getContainerTaskState = "EmilContainerData/taskState?taskId={0}";
     this.updateContainerUrl = "EmilContainerData/updateContainer";
     this.deleteContainerUrl = "EmilContainerData/delete";

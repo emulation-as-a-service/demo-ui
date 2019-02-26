@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<body>
+
+<h2 class="m-t-0">{{emusDetCtrl.title}}</h2>
+
+<div class="tekstMore"></div>
+<input type="text" class="form-control" ng-model="gridOptions.quickFilterText"
+       placeholder="{{'CHOOSE_ENV_SEARCH' | translate}}"/>
+
+<div style="padding: 4px;">
+    <div class="ag-theme-balham"><b>{{'EMULATORS_AVAILABLE_NUMBER' | translate}} {{emusDetCtrl.emulators.length;}}</b></div>
+</div>
+
+<div style="width: 100%;"
+     ag-grid="gridOptions"
+     class="ag-theme-fresh">
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" ui-sref="admin.emulators">
+        {{'EMULATORS_BACK' | translate}}
+    </button>
+</div>
+</body>
+</html>

@@ -32,6 +32,7 @@
   "ACTIONS_CHANGE_MEDIA" : "Medienwechsel",
   "ACTIONS_SAVE_ENV" : "Umgebung speichern",
   "ACTIONS_CTRLALTDEL" : "Ctr-Alt-Del",
+  "ACTIONS_ESC" : "Esc",
   "ACTIONS_SAVESESSION_HELP" : "Die Sitzung kann erst gespeichert werden, wenn das Betriebssystem der Bereitstellungs-Sitzung heruntergefahren wurde. Eine Anleitung zum Herunterfahren finden Sie in der 'Hilfe zur Bereitstellungsumgebung'",
   "ACTIONS_SNAPSHOT": "Snapshot",
 
@@ -64,6 +65,8 @@
   "BASE_MENU_CONTAINER_ENVS" : "Container",
   "BASE_MENU_NEW_OBJECT" : "Objekt importieren",
   "BASE_MENU_MD" : "OAI PMH",
+  "BASE_EMULATORS" : "Emulators",
+
   "ADVANCED_IMPORT_EMULATOR": "Emulator importieren",
   "ADVANCED_IMPORT_EMULATOR_READYMADE": "URL zu fertigem Images",
   "ADVANCED_IMPORT_EMULATOR_VERSION": "Emulator version",
@@ -201,6 +204,7 @@
   "EDITENV_NATIVE_CONFIG" : "Native config",
   "EDITENV_CONTAINER_EMULATOR" : "Container Emulator",
   "EDITENV_XPRA": "XPRA Video (Experimental)",
+  "EDITENV_XPRA_ENCODING": "XPRA Encoding",
 
   "EDITENV_CANCONNECTENVS": "Umgebung verbinden (Experimental)",
   "EDITENV_ENABLE_INTERNET" : "Internetzugang aktivieren",
@@ -357,5 +361,10 @@
   "METADATA_ADD_HOSTNAME" : "Name",
   "METADATA_OK" : "Hinzufügen",
   "METADATA_CANCEL" : "Abbrechen",
-  "METADATA_PROVIDER_LIST_H" : "Metadata provider"
+  "METADATA_PROVIDER_LIST_H" : "Metadata provider",
+  "EMULATORS_TITLE": "Unterstützt Emulators",
+  "EMULATORS_AVAILABLE_NUMBER": "Verfügbar Emulators:",
+  "EMULATORS_SHOW_NUMBER": "Anzahl der angezeigten Emulatoren:",
+  "EMULATORS_DETAILS": "Einzelheiten",
+  "EMULATORS_BACK" : "Zurück zur Emulatoren Übersicht"
 }

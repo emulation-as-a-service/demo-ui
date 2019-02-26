@@ -61,6 +61,14 @@ const appendScript = function(scriptText) {
     document.body.appendChild(script);
 };
 
+// a list of supported emulators (advanced-dialog, emulators overview)
+Object.defineProperty(window, "EMULATORS_LIST", {
+    value: ["qemu-system", "basilisk2", "beebem", "hatari", "kegs-sdl", "pce-atari-st", "pce-ibmpc", "sheepshaver", "vice-sdl", "contralto"],
+    writable: false,
+    enumerable: true,
+    configurable: true
+});
+
 import guacamolejs from 'raw-loader!../../../eaas-client/guacamole/guacamole.js';
 appendScript(guacamolejs);
 
@@ -743,7 +751,35 @@ export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize'
                     controller: "EditHandleController as handleOverview"
                 }
             }
-    });
-
+        })
+        .state('admin.emulators', {
+            url: "/emulators",
+            params: {},
+            resolve: {
+                nameIndexes: ($http, localConfig, REST_URLS) =>
+                    $http.get(localConfig.data.eaasBackendURL + REST_URLS.getNameIndexes)
+            },
+            views: {
+                'wizard': {
+                    template: require('./modules/emulators/overview.html'),
+                    controller: "EmulatorsController as emusCtrl"
+                }
+            }
+        })
+        .state('admin.emulators_details', {
+            url: "/emulators",
+            params: {entries: null, emuName: null},
+            resolve: {
+                nameIndexes: ($http, localConfig, REST_URLS) =>
+                    $http.get(localConfig.data.eaasBackendURL + REST_URLS.getNameIndexes)
+            },
+            views: {
+                'wizard': {
+                    template: require('./modules/emulators/details.html'),
+                    controller: "EmulatorsDetailsController as emusDetCtrl"
+                }
+            }
+        })
+    ;
     growlProvider.globalTimeToLive(5000);
 }]);

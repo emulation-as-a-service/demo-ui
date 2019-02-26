@@ -68,6 +68,10 @@ module.exports = ['$rootScope', '$scope', '$window', '$state', '$http', '$uibMod
         $state.reload();
     };
 
+    vm.sendEsc = function() {
+        window.eaasClient.sendEsc();
+    };
+
     vm.sendCtrlAltDel = function() {
         window.eaasClient.sendCtrlAltDel();
     };

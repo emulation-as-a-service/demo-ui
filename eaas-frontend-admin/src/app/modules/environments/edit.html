@@ -198,8 +198,15 @@
     <div class="form-group" ng-if="editEnvCtrl.showAdvanced">
         <input type="checkbox" ng-model="editEnvCtrl.useXpra" ng-disabled="!editEnvCtrl.editMode">
         <label>{{'EDITENV_XPRA' | translate}}</label>
+        <select ng-if="editEnvCtrl.useXpra" ng-model="editEnvCtrl.xpraEncoding" ng-disabled="!editEnvCtrl.editMode">
+            <option value="jpeg">jpeg</option>
+            <option value="png">png</option>
+            <option value="rgb24">rgb24</option>
+            <option value="rgb32">rgb32</option>
+            <option value="h264">h264</option>
+            <option value="auto">auto</option>
+        </select>
     </div>
-
 
     <div class="form-group" ng-if="editEnvCtrl.showAdvanced">
         <input type="checkbox" ng-model="editEnvCtrl.connectEnvs" ng-disabled="!editEnvCtrl.editMode">

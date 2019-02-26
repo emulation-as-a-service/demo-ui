@@ -426,6 +426,10 @@ button:focus#printerbutton    {
     color: whitesmoke;
 }
 
+pre#json-renderer {
+    border: 1px solid #aaa;
+    padding: 0.5em 1.5em;
+}
 
 .ag-ltr .ag-cell-focus:last-child{
     border: none !important;

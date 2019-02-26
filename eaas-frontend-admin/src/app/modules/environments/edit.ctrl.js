@@ -42,6 +42,10 @@ module.exports = ["$http", "$rootScope", "$scope", "$state", "$stateParams", "en
 
         vm.emulator = this.env.emulator;
 
+        if (typeof this.env.xpraEncoding != "undefined" && this.env.xpraEncoding != null)
+           vm.xpraEncoding = this.env.xpraEncoding;
+        else
+           vm.xpraEncoding = "jpeg";
 
         vm.showDateContextPicker = false;
 
@@ -187,8 +191,9 @@ module.exports = ["$http", "$rootScope", "$scope", "$state", "$stateParams", "en
                    connectEnvs : this.connectEnvs,
                    processAdditionalFiles : vm.canProcessAdditionalFiles,
                    containerEmulatorName : vm.emulatorContainer.value.name,
-                   containerEmulatorVersion : vm.emulatorContainer.value.version
-           }).then(function(response) {
+                   containerEmulatorVersion : vm.emulatorContainer.value.version,
+                   xpraEncoding: vm.xpraEncoding
+               }).then(function(response) {
                    if (response.data.status === "0") {
                        growl.success($translate.instant('JS_ENV_UPDATE'));
                    } else {

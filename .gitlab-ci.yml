@@ -1,0 +1,12 @@
+image: node
+
+variables:
+ GIT_SUBMODULE_STRATEGY: recursive
+
+build:
+  script:
+  - ./build.sh
+  artifacts:
+    paths:
+    - eaas-frontend-admin/dist/
+    - eaas-frontend-user/dist/

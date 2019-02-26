@@ -6,7 +6,7 @@ module.exports = ['$state', '$http', '$scope', '$uibModal', '$timeout', 'localCo
         vm.fstype = "ext4";
         vm.alias = "";
         vm.version = null;
-        vm.emulators = ["qemu-system", "basilisk2", "beebem", "hatari", "kegs-sdl", "pce-atari-st", "pce-ibmpc", "sheepshaver", "vice-sdl"];
+        vm.emulators = window.EMULATORS_LIST;
         $scope.runtime = 0;
         $scope.hideTextArea = true;
         // FIXME combine showDatabase functions, remove hardcoded className
