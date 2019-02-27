@@ -179,19 +179,25 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'en
         $scope.selected = "";
 
 
-
         function actionsCellRendererFunc(params) {
             params.$scope.switchAction = switchAction;
             params.$scope.selected = $scope.selected;
             params.$scope.landingPage = vm.landingPage;
+            params.$scope.changeClass = function (id) {
+                if (($("#dropdowm" + id).is(":visible"))) {
+                    return "dropbtn2";
+                } else {
+                    return "dropbtn";
+                }
+            };
 
             let environmentRenderer = `
-             <div class="btn-group" uib-dropdown dropdown-append-to-body is-open="status.isopen">
-                <button id="single-button" type="button"  ng-class="{true: 'dropbtn2', false: 'dropbtn'}[status.isopen]" uib-dropdown-toggle ng-disabled="disabled">
+             <div class="btn-group" uib-dropdown dropdown-append-to-body>
+                <button id="single-button{{data.id}}" type="button" ng-class="changeClass(data.id)" uib-dropdown-toggle ng-disabled="disabled">
                   {{'CHOOSE_ACTION'| translate}} <span class="caret"></span>
                 </button>
 
-                <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="single-button">
+                <ul class="dropdown-menu" id="dropdowm{{data.id}}" uib-dropdown-menu role="menu" aria-labelledby="single-button">
                   <li ng-if="data.archive !='remote'" role="menuitem dropdown-content">
                         <a class="dropdown-content" ng-click="switchAction(data.id, \'run\')" data-id="m-run">{{\'CHOOSE_ENV_PROPOSAL\'| translate}}</a>
                   </li>
@@ -204,11 +210,11 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'en
              </div>`;
 
             let container = `
-             <div class="btn-group" uib-dropdown dropdown-append-to-body is-open="status.isopen">
-                <button id="single-button" type="button"  ng-class="{true: 'dropbtn2', false: 'dropbtn'}[status.isopen]" uib-dropdown-toggle ng-disabled="disabled">
+             <div class="btn-group" uib-dropdown dropdown-append-to-body>
+                <button id="single-button{{data.id}}" type="button"  ng-class="changeClass(data.id)" uib-dropdown-toggle ng-disabled="disabled">
                   {{\'CHOOSE_ACTION\'| translate}} <span class="caret"></span>
                 </button>
-                <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="single-button">
+                <ul class="dropdown-menu" id="dropdowm{{data.id}}" uib-dropdown-menu role="menu" aria-labelledby="single-button">
 
                   <li role="menuitem"><a class="dropdown-content" ng-click="switchAction(data.id, \'run\')">{{\'CHOOSE_ENV_PROPOSAL\'| translate}}</a></li>
                   <li role="menuitem"><a class="dropdown-content" ng-click="switchAction(data.id, \'edit\')">{{\'CHOOSE_ENV_EDIT\'| translate}}</a></li>
@@ -284,7 +290,7 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'en
                         (element.archive == "public" && vm.viewArchive === 1) ||
                         (element.archive == "remote" && vm.viewArchive === 2))
                             rowData.push({name: element.title, id: element.envId, archive: element.archive, owner: (element.owner) ? element.owner : "shared"});
-                })
+                });
             else if (vm.view == 1) {
                 vm.envs.forEach(function (element) {
                     if(element.envType != 'object')

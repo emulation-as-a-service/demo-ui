@@ -3,18 +3,7 @@ module.exports = ['$scope' , '$state', '$stateParams', 'oaiHarvesterList', '$tra
 
     var vm = this;
 
-    vm.oaiHarvesterList = [];
-    if(oaiHarvesterList.data)
-    {
-        oaiHarvesterList.data.forEach(function(element){
-            console.log(element);
-            var names = element.split('-');
-            console.log(names);
-            if(vm.oaiHarvesterList.indexOf(names[0]) < 0)
-                vm.oaiHarvesterList.push(names[0]);
-        });
-    }
-
+    vm.oaiHarvesterList = oaiHarvesterList.data;
     vm.sync = function(harvester)
     {
         console.log("sync " + harvester);
@@ -23,10 +12,12 @@ module.exports = ['$scope' , '$state', '$stateParams', 'oaiHarvesterList', '$tra
              backdrop: 'static',
              template: require('./modals/wait.html')
         });
-        $http.post(localConfig.data.oaipmhServiceBaseUrl + "harvesters/" +  harvester + "-images").then(function(response) {
-            $http.post(localConfig.data.oaipmhServiceBaseUrl + "harvesters/" +  harvester + "-environments").then(function(response) {
-                modal.close();
-            });
+        $http.post(localConfig.data.oaipmhServiceBaseUrl + "harvesters/" +  harvester).then(function(response) {
+            modal.close();
+        },
+        function(data) {
+            modal.close();
+            $state.go('error', {errorMsg: data});
         });
     }
 
@@ -41,22 +32,24 @@ module.exports = ['$scope' , '$state', '$stateParams', 'oaiHarvesterList', '$tra
                 this.confirmed = function()
                 {
                     console.log(_this.providers);
-                    _this.name = _this.name.replace("-", "_");
+                    var data = {};
+                    data.name = _this.name;
+                    data.streams = [];
                     _this.providers.forEach(function(p) {
                         // we only support images and environments
                         if(p === 'images' || p === 'environments' ) {
-                            var data = {};
-                            data.name = _this.name + "-" + p;
-                            data.source = {};
-                            data.source.url = _this.host + "/" + p;
-                            data.sink = {}
-                            data.sink.base_url = localConfig.data.eaasBackendURL + "metadata-repositories/remote-" + p;
-                            console.log(data);
-
-                            $http.post(localConfig.data.oaipmhServiceBaseUrl +  "harvesters/", data).then(function() {
-                                $state.go('admin.metadata', {}, {reload: true});
-                            });
+                            var stream = {};
+                            stream.source = {};
+                            stream.source.url = _this.host + "/" + p;
+                            stream.sink = {}
+                            stream.sink.base_url = localConfig.data.eaasBackendURL + "metadata-repositories/remote-" + p;
+                            data.streams.push(stream);
                        }
+
+                    });
+                    console.log(data);
+                    $http.post(localConfig.data.oaipmhServiceBaseUrl +  "harvesters/", data).then(function() {
+                        $state.go('admin.metadata', {}, {reload: true});
                     });
                 }
 
