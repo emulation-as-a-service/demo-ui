@@ -22,7 +22,6 @@ function ($stateParams, $state, $http, localConfig, growl, objectList, softwareO
 
           vm.softwareObj.objectId = vm.selectedObject.id;
           vm.softwareObj.label = vm.selectedObject.title;
-          vm.softwareObj.qid = vm.selectedObject.qid;
 
           if(vm.softwareObj.isOperatingSystem && vm.operatingSystemId)
           {
