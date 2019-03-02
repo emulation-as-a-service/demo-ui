@@ -8,8 +8,7 @@ module.exports = ['$state', '$http', '$scope', '$uibModal', 'localConfig', 'kbLa
      vm.fstype = "ext4";
      vm.alias = "";
      vm.version = null;
-     vm.emulators = ["qemu-system", "basilisk2", "beebem", "hatari", "kegs-sdl", "pce-atari-st",
-        "pce-ibmpc", "sheepshaver", "vice-sdl", "fs-uae", "contralto", "visualboyadvance", "linapple", "vmacmini", "previous"];
+
     $scope.runtime = 0;
 
      vm.serverLogUrl = localConfig.data.eaasBackendURL + "Emil/serverLog";
