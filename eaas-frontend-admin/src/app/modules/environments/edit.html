@@ -245,7 +245,10 @@
             <label>{{'EDITENV_REVS' | translate}}:</label>
         </p>
         <ul id="editEnvSoftwareList">
-            <li ng-repeat="revision in editEnvCtrl.env.revisions">{{revision.text}}
+            <li ng-repeat="revision in editEnvCtrl.env.revisions">
+                <ng-bind-html
+                    ng-bind-html="revision.text">
+                </ng-bind-html>
                 <a href="#"
                    ng-click="editEnvCtrl.fork(revision.id)"> [ fork ] </a>
 
