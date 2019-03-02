@@ -246,9 +246,9 @@
         </p>
         <ul id="editEnvSoftwareList">
             <li ng-repeat="revision in editEnvCtrl.env.revisions">
-                <ng-bind-html
-                    ng-bind-html="revision.text">
-                </ng-bind-html>
+
+                    {{revision.text| htmlToPlaintext}}
+
                 <a href="#"
                    ng-click="editEnvCtrl.fork(revision.id)"> [ fork ] </a>
 

@@ -261,6 +261,12 @@ export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize'
      }
 })
 
+.filter('htmlToPlaintext', function() {
+   return function(text) {
+     return  text ? String(text).replace(/<[^>]+>/gm, '') : '';
+   };
+ })
+
 .config(['$stateProvider', '$urlRouterProvider', 'growlProvider', '$httpProvider', '$translateProvider', '$provide', 'jwtOptionsProvider', 'cfpLoadingBarProvider', '$locationProvider', 'angularAuth0Provider',
         function($stateProvider, $urlRouterProvider, growlProvider, $httpProvider, $translateProvider, $provide, jwtOptionsProvider, cfpLoadingBarProvider, $locationProvider, angularAuth0Provider) {
     /*
