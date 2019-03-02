@@ -99,7 +99,7 @@
   "SW_OVERVIEW_ADD" : "Add new software",
   "SW_OVERVIEW_SEARCH" : "Search...",
   "SW_OVERVIEW_SW_EDIT" : "Edit",
-  "SW_OVERVIEW_SW_DEL" : "[delete]",
+  "SW_OVERVIEW_SW_DEL" : "Delete",
 
   "ERROR_MODAL_TITLE": "Information",
   "ERROR_MODAL_TEXT": "The EAAS service is currently not ready. As soon as it becomes ready you can automatically resume.",

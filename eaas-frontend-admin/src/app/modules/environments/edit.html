@@ -42,6 +42,7 @@
     <div>
         <label>{{'EDITENV_ID' | translate}}:</label> {{editEnvCtrl.env.envId}}
     </div>
+    <!--
     <div>
         <label>Handle:</label> <span id="osl" ng-if="editEnvCtrl.handle">{{editEnvCtrl.handle}}</span>
        <b> ---  <a ng-if="editEnvCtrl.showAdvanced==false"
@@ -50,6 +51,7 @@
               style="cursor: pointer;">{{'EDITEN_CREATE_HANDLE' | translate}}</a>
        </b>
     </div>
+    -->
 
     <div>
         <label>{{'EDITENV_DESC' | translate}}</label> <span ng-if="!editEnvCtrl.editMode" ng-bind-html="editEnvCtrl.envDescription"></span>
@@ -143,6 +145,7 @@
         <label>{{'EDITENV_ENABLE_INTERNET' | translate}}</label>
     </div>
 
+    <!--
     <div class="form-group" ng-if="editEnvCtrl.showAdvanced">
         <input type="checkbox" ng-disabled="!editEnvCtrl.editMode" ng-model="editEnvCtrl.serverMode">
         <label>{{'EDITENV_ENABLE_SERVERMODE' | translate}}</label>
@@ -194,6 +197,7 @@
         </p>
 
     </div>
+    -->
 
     <div class="form-group" ng-if="editEnvCtrl.showAdvanced">
         <input type="checkbox" ng-model="editEnvCtrl.useXpra" ng-disabled="!editEnvCtrl.editMode">
@@ -208,10 +212,13 @@
         </select>
     </div>
 
+    <!--
     <div class="form-group" ng-if="editEnvCtrl.showAdvanced">
         <input type="checkbox" ng-model="editEnvCtrl.connectEnvs" ng-disabled="!editEnvCtrl.editMode">
         <label>{{'EDITENV_CANCONNECTENVS' | translate}}</label>
     </div>
+
+    -->
 
     <div class="form-group" ng-if="editEnvCtrl.showAdvanced">
         <input type="checkbox" ng-model="editEnvCtrl.shutdownByOs" ng-disabled="!editEnvCtrl.editMode">
