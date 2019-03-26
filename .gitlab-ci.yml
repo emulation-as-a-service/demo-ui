@@ -10,3 +10,20 @@ build:
     paths:
     - eaas-frontend-admin/dist/
     - eaas-frontend-user/dist/
+    - citar-headless-client/dist/
+
+build_multi_user_admin_ui:
+  script:
+  - mv eaas-frontend-admin/auth.env.template eaas-frontend-admin/auth.env
+  - sed -i 's/myClientId/'"$UI_CLIENT_ID"'/g' eaas-frontend-admin/auth.env
+  - ./build.sh
+  only:
+   refs:
+     - master
+   variables:
+     - $CI_PROJECT_NAMESPACE == "openslx"
+  artifacts:
+    paths:
+    - eaas-frontend-admin/dist/
+    - eaas-frontend-user/dist/
+    - citar-headless-client/dist/

@@ -182,7 +182,7 @@ export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize'
     $rootScope.chk.transitionEnable = true;
     $rootScope.waitingForServer = true;
 
-    $http.get("config.json")
+    $http.get(localStorage.eaasConfigURL || "config.json")
       .success(function(data, status, headers, config) {
           if(data.id_token)
           {
@@ -212,7 +212,7 @@ export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize'
 .service('authService', function($state, angularAuth0, $timeout) {
 
       this.login = function (data) {
-          data.redirectUri = auth0config.REDIRECT_URL;
+          data.redirectUri = String( new URL(auth0config.REDIRECT_URL, location));
           angularAuth0.authorize(data);
       };
 
@@ -407,7 +407,7 @@ export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize'
             url: "/admin",
             template: require('./modules/base/base.html'),
             resolve: {
-                localConfig: ($http) => $http.get("config.json"),
+                localConfig: ($http) => $http.get(localStorage.eaasConfigURL || "config.json"),
                 kbLayouts: ($http) => $http.get("kbLayouts.json"),
                 buildInfo: ($http, localConfig, REST_URLS) => $http.get(localConfig.data.eaasBackendURL + REST_URLS.buildVersionUrl),
 
@@ -556,7 +556,7 @@ export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize'
         .state('admin.object-overview', {
             url: "/objects",
             resolve: {
-                localConfig: ($http) => $http.get("config.json"),
+                localConfig: ($http) => $http.get(localStorage.eaasConfigURL || "config.json"),
                 objectList: ($http, localConfig, REST_URLS) =>
                      $http.get(localConfig.data.eaasBackendURL + REST_URLS.getObjectListURL)
             },
@@ -583,7 +583,7 @@ export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize'
             url: "/user-sessions",
             resolve: {
                 localConfig: function($http) {
-                    return $http.get("config.json");
+                    return $http.get(localStorage.eaasConfigURL || "config.json");
                 },
                 sessionList: function($http, localConfig, REST_URLS) {
                     return $http.get(localConfig.data.eaasBackendURL + REST_URLS.userSessionListUrl);
@@ -736,7 +736,7 @@ export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize'
         .state('admin.handles', {
             url: "/handles",
             resolve: {
-                localConfig: ($http) => $http.get("config.json"),
+                localConfig: ($http) => $http.get(localStorage.eaasConfigURL || "config.json"),
                 handles: ($http, localConfig, REST_URLS) => $http.get(localConfig.data.eaasBackendURL + REST_URLS.getHandleList)
             },
             views: {

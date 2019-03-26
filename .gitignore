@@ -13,3 +13,4 @@ config.json
 config.json
 sublime.sublime-workspace
 sublime.sublime-project
+auth.env
