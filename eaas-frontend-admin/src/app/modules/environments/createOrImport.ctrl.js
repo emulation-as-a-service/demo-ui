@@ -54,8 +54,8 @@ module.exports = ["$http", "$scope", "$state", "$stateParams", "systemList", "so
             } else return false;
         };
 
-     vm.start = function() {
-         if (vm.hdtype == 'new') {
+     vm.start = function(type) {
+         if (type == 'create') {
              $http.post(localConfig.data.eaasBackendURL + REST_URLS.createEnvironmentUrl, {
                  size: vm.hdsize + 'M',
                  templateId: vm.selectedSystem.id,

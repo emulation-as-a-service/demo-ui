@@ -516,8 +516,8 @@ export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize'
                 }
             }
         })
-        .state('admin.new-image', {
-            url: "/new-image",
+        .state('admin.import-image', {
+            url: "/import-image",
             resolve: {
                 systemList: function($http, localConfig, REST_URLS) {
                     return $http.get(localConfig.data.eaasBackendURL + REST_URLS.getEnvironmentTemplates);
@@ -525,7 +525,21 @@ export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize'
             },
             views: {
                 'wizard': {
-                    template: require('./modules/environments/createOrImport.html'),
+                    template: require('./modules/environments/import.html'),
+                    controller: "CreateOrImportEnvironmentController as newImageCtrl"
+                }
+            }
+        })
+        .state('admin.create-image', {
+            url: "/create-image",
+            resolve: {
+                systemList: function($http, localConfig, REST_URLS) {
+                    return $http.get(localConfig.data.eaasBackendURL + REST_URLS.getEnvironmentTemplates);
+                }
+            },
+            views: {
+                'wizard': {
+                    template: require('./modules/environments/create.html'),
                     controller: "CreateOrImportEnvironmentController as newImageCtrl"
                 }
             }

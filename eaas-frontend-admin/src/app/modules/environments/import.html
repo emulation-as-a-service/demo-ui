@@ -30,33 +30,6 @@
         <div class="panel-heading">{{'SW_NEW_IMAGE_HD_HEADER' | translate}}</div>
         <div class="panel-body">
             <div class="form-group">
-                <!--<div class="panel panel-default">-->
-                    <!--<div class="panel-heading">-->
-                        <!--<label class="m-b-0">-->
-                            <!--<input type="radio" ng-model="newImageCtrl.hdtype" value="new">-->
-                            <!--<span>{{'SW_NEW_IMAGE_NEW_HD_LBL' | translate}}</span>-->
-                        <!--</label>-->
-                    <!--</div>-->
-
-                    <!--<div class="panel-body">-->
-                        <!--<div class="form-group">-->
-                            <!--<label>{{'SW_NEW_IMAGE_NEW_HD_SIZE_LBL' | translate}}</label>-->
-                            <!--<input type="text" class="form-control" ng-model="newImageCtrl.hdsize" ng-disabled="newImageCtrl.hdtype != 'new'"-->
-                                   <!--ng-required="newImageCtrl.hdtype == 'new'" ui-mask="?9?9?9?9?9?9?9?9 MB" ui-mask-placeholder ui-mask-placeholder-char="​\u200B"/>-->
-
-                            <!--<br>-->
-                            <!--<label>{{'SW_NEW_IMAGE_NEW_HD_OBJECT_LBL' | translate}}</label>-->
-                            <!--<ui-select ng-model="newImageCtrl.selectedSoftware" theme="bootstrap" title="{{'SW_NEW_IMAGE_CHOOSE_SOFTWARE_PH' | translate}}"-->
-                                       <!--ng-disabled="newImageCtrl.hdtype != 'new'" ng-required="newImageCtrl.hdtype == 'new'">-->
-                                <!--<ui-select-match placeholder="{{'SW_NEW_IMAGE_CHOOSE_SOFTWARE_PH' | translate}}">{{$select.selected.label}}</ui-select-match>-->
-                                <!--<ui-select-choices repeat="obj in newImageCtrl.softwareList | filter: {isOperatingSystem:true}| filter: $select.search">-->
-                                    <!--<span ng-bind-html="obj.label | highlight: $select.search"></span>-->
-                                <!--</ui-select-choices>-->
-                            <!--</ui-select>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                <!--</div>-->
-
                 Allowed images:<br>
                 <ul>
                     <li>RAW disk images</li>
@@ -82,11 +55,6 @@
                     <span>{{'SW_NEW_IMAGE_ROM_LBL' | translate}}</span>
                 </label>
                 <input type="text" class="form-control" ng-model="newImageCtrl.rom" ng-disabled="!newImageCtrl.hasRom">
-
-
-
-
-
             </div>
         </div>
     </div>
@@ -98,7 +66,7 @@
 
     <div style="text-align: right;">
         <button type="button" class="btn btn-default" ui-sref="admin.standard-envs-overview">{{'SW_NEW_IMAGE_CANCEL_BUTTON' | translate}}</button>
-        <button type="button" class="btn btn-primary" ng-click="newImageCtrl.start()" ng-disabled="!newImageCtrl.form.$valid">{{'SW_NEW_IMAGE_START_BUTTON' | translate}}</button>
+        <button type="button" class="btn btn-primary" ng-click="newImageCtrl.start('import')" ng-disabled="!newImageCtrl.form.$valid">{{'SW_NEW_IMAGE_START_BUTTON' | translate}}</button>
     </div>
 </form>
 
