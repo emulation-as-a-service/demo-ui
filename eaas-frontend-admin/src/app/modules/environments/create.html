@@ -32,8 +32,8 @@
             <div class="form-group">
 
                 <label>{{'SW_NEW_IMAGE_NEW_HD_LBL' | translate}} {{'SW_NEW_IMAGE_NEW_HD_SIZE_LBL' | translate}}</label>
-                <input type="text" class="form-control" ng-model="newImageCtrl.hdsize" ng-disabled="newImageCtrl.hdtype != 'new'"
-                ng-required="newImageCtrl.hdtype == 'new'" ui-mask="?9?9?9?9?9?9?9?9 MB" ui-mask-placeholder ui-mask-placeholder-char="​\u200B"/>
+                <input type="text" class="form-control" ng-model="newImageCtrl.hdsize" 
+                ng-required ui-mask="?9?9?9?9?9?9?9?9 MB" ui-mask-placeholder ui-mask-placeholder-char="​\u200B"/>
 
                 <br>
                 <label>{{'SW_NEW_IMAGE_NEW_HD_OBJECT_LBL' | translate}}</label>
