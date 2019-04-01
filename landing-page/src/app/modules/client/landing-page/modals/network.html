@@ -1,0 +1,61 @@
+<div class="modal-header">
+    <h3 class="modal-title">Network</h3>
+</div>
+
+<div class="ex1">
+    <text-angular ta-toolbar="[]" ta-bind="text" ng-readonly=true
+                  ng-model="networkModalCtrl.networkHelp"></text-angular>
+</div>
+
+<div class="modal-body">
+    <p ng-hide="networkModalCtrl.localServerMode">As soon as emulator boots, you would be able to connect with following address:</p>
+
+    <p ng-hide="!networkModalCtrl.localServerMode">Please note!<br> for local connection you would need: <br> <b>1)</b> Download and run following software
+        <br> <a href="https://gitlab.com/emulation-as-a-service/eaas-proxy/-/jobs/artifacts/master/raw/eaas-proxy/eaas-proxy.app.zip?job=build" ng-show="networkModalCtrl.localServerMode" target="eaas-proxy"> MAC</a>
+        <br> <a href="https://gitlab.com/emulation-as-a-service/eaas-proxy/-/jobs/artifacts/master/raw/eaas-proxy/eaas-proxy.exe?job=build" ng-show="networkModalCtrl.localServerMode" target="eaas-proxy"> Windows </a>
+        <br> <a href="https://gitlab.com/emulation-as-a-service/eaas-proxy/-/jobs/artifacts/master/raw/eaas-proxy/eaas-proxy?job=build" ng-show="networkModalCtrl.localServerMode" target="eaas-proxy"> Linux </a>
+    </p>
+    <p ng-hide="!networkModalCtrl.localServerMode"> <b>2)</b> Select a port and initialize a local connection </p>
+    <a href="{{networkModalCtrl.network}}" ng-hide="networkModalCtrl.localServerMode" target="_blank">{{networkModalCtrl.hostname}}:{{networkModalCtrl.port}}</a>
+    <p ng-if="networkModalCtrl.env.enableSocks" ng-hide="networkModalCtrl.localServerMode"><br> Please note!<br> Socks connection could be accessible with following commands (Linux): <br>
+        <i>export ALL_PROXY="socks5://{{networkModalCtrl.hostname}}:{{networkModalCtrl.port}}"<br>
+           <div ng-if="networkModalCtrl.env.enableSocks && networkModalCtrl.env.serverIp && networkModalCtrl.env.serverPort"> curl "{{networkModalCtrl.env.serverIp}}:{{networkModalCtrl.env.serverPort}}" </div> </i></p>
+    <input ng-show="networkModalCtrl.localServerMode" type="number" ng-model="networkModalCtrl.localConnectionPort">
+    <button ng-show="networkModalCtrl.localServerMode" ng-click="networkModalCtrl.getLocalProxy()" class="btn btn-default">Initialize local connection</button>
+    <br ng-show="networkModalCtrl.localServerMode">
+    <div ng-if="networkModalCtrl.proxy"><b>3)</b> Wait untill machine is booted and press on
+    <a target="_blank" ng-if="networkModalCtrl.proxy" href="http://localhost:{{networkModalCtrl.localConnectionPort}}">Your Link</a>
+    </div>
+    <iframe id="eaas-proxy-iframe" name="eaas-proxy" hidden sandbox></iframe>
+
+</div>
+
+    <div class="ex1">
+        <form id="inputForm" name="contentForm"
+              ng-submit="networkModalCtrl.detach()">
+            <div class="tekst">
+                <div class="input-group">
+
+                    Detach session for:
+                    <select class="form-control" theme="bootstrap" required
+                            ng-model="networkModalCtrl.detachTime">
+                        <option disabled hidden value=""></option>
+                        <option value="2">2 minutes</option>
+                        <option value="15">15 minutes</option>
+                        <option value="30">30 minutes</option>
+                        <option value="60">1 hour</option>
+                        <option value="120">2 hours</option>
+                    </select>
+                </div>
+            </div>
+            <b class="tekst">You would be able to close this windows after detach</b>
+
+            <button class="btn btn-primary" type="submit">Detach</button>
+        </form>
+    </div>
+
+
+
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="$close()">OK</button>
+</div>

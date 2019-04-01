@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+</head>
+<body>
+
+    <div class="modal-title">
+        <div class="ex3">
+            <div id="header"><img height="70" src="img/logo.png"/></div>
+        </div>
+    </div>
+
+<wizard class="test" on-finish="finished()" hide-indicators="true" name="containerWizard">
+
+    <wz-step id="STEP1" wz-title="STEP1" wz-order="1">
+        <div class="ex3">
+
+        <div class="header">
+            <h3 class="modal-title">{{'CONTAINER_TITLE' | translate}}</h3>
+            <font size="+0.1">{{containerLandingCtrl.env.title}}</font>
+
+        </div>
+        <div class="header">
+            <h3 class="modal-title">{{'CONTAINER_AUTHOR' | translate}}</h3>
+            {{containerLandingCtrl.env.author}}
+        </div>
+            <h3 class="modal-title">{{'CONTAINER_DESCRIPTION' | translate}}</h3>
+            <div class="ex1">
+
+                <div  ng-model="containerLandingCtrl.content"></div>
+
+                <text-angular ta-toolbar="[]" ta-bind="text" ng-readonly=true
+                              ng-model="containerLandingCtrl.env.description"></text-angular>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" id="leave1stStep" ng-hide="hideme" class="btn btn-primary"
+                        ng-click="hideme=true;
+                        containerLandingCtrl.canProcessAdditionalFiles || containerLandingCtrl.env.isContainer ?
+                        containerLandingCtrl.changeStep():
+                         [containerLandingCtrl.changeStep('STEP4', ['STEP3','STEP2']),containerLandingCtrl.run()]">
+                    Next
+                </button>
+            </div>
+        </div>
+
+
+    </wz-step>
+
+
+    <wz-step id="STEP2" wz-title="STEP2" wz-order="2">
+        <div class="ex3">
+
+            <div  class="modal-header">
+                <h3 class="modal-title">{{'INPUT_OPTION' | translate}}</h3>
+            </div>
+
+
+            <div class="modal-footer">
+                <button class="btn btn-primary" type="button" ng-click="containerLandingCtrl.changeStep('STEP3', ['STEP2']);">Yes</button>
+                <button class="btn btn-default"  type="button" ng-click="containerLandingCtrl.changeStep('STEP4', ['STEP3','STEP2']);containerLandingCtrl.run()">No</button>
+            </div>
+        </div>
+
+    </wz-step>
+
+    <wz-step id="STEP3" wz-title="STEP3" wz-order="3">
+
+        <div ng-if="containerLandingCtrl.env.isContainer" class="ex3">
+            <div class="modal-header">
+                <h3 class="modal-title">{{'CONTAINER_RUN_L' | translate}}</h3>
+            </div>
+
+
+            <div class="modal-body">
+                <container-input-list-modified list="containerLandingCtrl.inputs"
+                                               heading="Define input sources"
+                                               list-empty-note="Add input sources to the container. File-names are relative to the containers input folder."
+                                               add-button-text="Add Input Source"
+                                               input-source-button-text="containerLandingCtrl.inputSourceButtonText"
+                                               new-input-url="containerLandingCtrl.newInputUrl"
+                                               new-input-name="containerLandingCtrl.newInputName"
+                                               import-urls="containerLandingCtrl.importUrls"
+                                               uniprot-batch="containerLandingCtrl.uniprotBatch"
+                                               uniprot-query="containerLandingCtrl.uniprotQuery"
+                                               pride-accession="containerLandingCtrl.prideAccession"
+                                               pride-files="containerLandingCtrl.prideFiles"
+                                               upload-files="containerLandingCtrl.uploadFiles"
+                                               on-input-source-selection="containerLandingCtrl.onInputSourceSelection"
+                                               on-import-files-chosen="containerLandingCtrl.onImportFilesChosen"
+                                               on-file-upload="containerLandingCtrl.onFileUpload"
+                                               on-uniprot="containerLandingCtrl.onUniprot"
+                                               on-import-from-url="containerLandingCtrl.onImportFromUrl"
+                                               on-uniprot-batch-file-chosen="containerLandingCtrl.onUniprotBatchFileChosen"
+                                               on-uniprot-batch="containerLandingCtrl.onUniprotBatch"
+                                               on-uniprot-query="containerLandingCtrl.onUniprotQuery"
+                                               on-pride-list-files="containerLandingCtrl.onPrideListFiles"
+                                               on-pride-add-files="containerLandingCtrl.onPrideAddFiles"
+                                               on-pride-master-checkbox="containerLandingCtrl.onPrideMasterCheckbox"
+                                               show-dialogs="containerLandingCtrl.showDialogs"
+                                               input-data="containerLandingCtrl.input_data">
+                </container-input-list-modified>
+            </div>
+
+            <div class="modal-footer">
+                <!--<button class="btn btn-primary" wz-previous type="button">{{'CONTAINER_BACK' | translate}}</button>-->
+                <button class="btn btn-default" ng-hide="hideme" type="button"  ng-click="hideme=true;containerLandingCtrl.changeStep();containerLandingCtrl.run()">Run</button>
+            </div>
+        </div>
+
+        <div ng-if="!containerLandingCtrl.env.isContainer" class="ex3">
+
+
+            <div ng-hide="containerLandingCtrl.getCurrentStep() != 'STEP3'" class="panel panel-default">
+
+                <div class="modal-header">
+                    <h3 class="modal-title">{{'CONTAINER_RUN_L' | translate}}</h3>
+                    We will create an entity (e.g. HDD, CD) with your files and insert them in current environment. Please, be careful with size, filesystem and partition table.
+                </div>
+                <div  class="panel-body">
+                    <form id="inputForm" name="contentForm" ng-submit="importType == 'fileUrl' ? containerLandingCtrl.addContent(containerLandingCtrl.contentItem) :  importType == 'uploadFile' ? containerLandingCtrl.onFileUpload(): null">
+
+
+                    <div  class="input-group">
+                        Device type
+                        <select required class="form-control" theme="bootstrap"
+                                ng-model="containerLandingCtrl.input_data.type">
+                            <option disabled hidden value=""></option>
+                            <option value="hdd">HDD (hard drive)</option>
+                            <option value="cdrom">CD</option>
+                        </select>
+                    </div>
+
+                    <div ng-hide="containerLandingCtrl.input_data.type == 'cdrom'"  class="input-group">
+                        Partition Table
+                        <select ng-required="containerLandingCtrl.input_data.type == 'hdd'" class="form-control" theme="bootstrap"
+                                ng-model="containerLandingCtrl.input_data.partition_table_type">
+                            <option disabled hidden value=""></option>
+                            <option value="mbr">MBR (Recomended)</option>
+                            <option disabled value="gpt">GPT (not available yet)</option>
+                        </select>
+                    </div>
+
+
+
+                    <div ng-hide="containerLandingCtrl.input_data.type == 'cdrom'" class="input-group">
+                        Filesystem Type
+                        <select ng-required="containerLandingCtrl.input_data.type == 'hdd'" class="form-control" theme="bootstrap"
+                                ng-model="containerLandingCtrl.input_data.filesystem_type">
+                            <option disabled hidden value=""></option>
+                            <option value="fat32">fat32</option>
+                            <option value="vfat">vfat</option>
+                            <option value="ntfs">ntfs</option>
+                            <option value="ext2">ext2</option>
+                            <option value="ext3">ext3</option>
+                            <option value="ext4">ext4</option>
+                        </select>
+                    </div>
+
+                    <div ng-hide="containerLandingCtrl.input_data.type == 'cdrom'" class="input-group">
+                        Size (mb)
+                        <select ng-required="containerLandingCtrl.input_data.type == 'hdd'" class="form-control" theme="bootstrap"
+                                ng-model="containerLandingCtrl.input_data.size_mb">
+                            <option disabled hidden value=""></option>
+                            <option value="128">128</option>
+                            <option value="256">256</option>
+                            <option value="512">512</option>
+                            <option value="1024">1024</option>
+                            <option value="2048">2048</option>
+                        </select>
+                    </div>
+                    <br>
+                        <div><input required type="radio" name="importType" ng-model="importType" value="uploadFile" ng-change="string"> Upload file </div>
+                        <div><input required type="radio" name="importType" ng-model="importType" ng-click="containerLandingCtrl.scrollToDiv('STEP3')" value="fileUrl" ng-change="string"> Link to file</div>
+                        <div required ng-if="importType == 'uploadFile'">
+                        <button type="button" ng-hide="containerLandingCtrl.uploadFiles.length > 0" class="btn btn-default" ngf-select="containerLandingCtrl.onImportFilesChosen($files)" multiple >Select Files</button>
+                        <li class="list-group-item" ng-repeat="elem in containerLandingCtrl.uploadFiles track by $index">
+                            <!-- Display uploaded files together with their upload status, and choose destination in Container -->
+                            <div class="input-group">
+                                <input readonly  type="text" class="form-control" ng-model="containerLandingCtrl.uploadFiles[$index].filename" size="30">
+                                <span class="input-group-addon">Chosen File</span>
+                            </div>
+
+
+
+
+                            <div class="input-group">
+                                <select required class="form-control" theme="bootstrap" ng-model="containerLandingCtrl.uploadFiles[$index].action">
+                                    <option disabled hidden value=""></option>
+                                    <option value="copy">copy</option>
+                                    <option value="extract">extract</option>
+                                </select>
+                                <span class="input-group-addon">Action</span>
+                            </div>
+
+                            <div ng-if="containerLandingCtrl.uploadFiles[$index].action == 'extract'" class="input-group">
+                                <select required class="form-control" theme="bootstrap" ng-model="containerLandingCtrl.uploadFiles[$index].compression_format">
+                                    <option disabled hidden value=""></option>
+                                    <option value="tar">tar</option>
+                                    <option value="zip">zip</option>
+                                </select>
+                                <span class="input-group-addon">Compression format</span>
+                            </div>
+
+
+
+                            <label  ng-if="containerLandingCtrl.uploadFiles[$index].action == 'copy'">I want custom filename of my copied file:
+                                <input type="checkbox" ng-model="containerLandingCtrl.customFileName">
+                                <br>
+                            </label>
+
+                            <div ng-if="containerLandingCtrl.customFileName  == true && containerLandingCtrl.uploadFiles[$index].action == 'copy'" class="input-group">
+                                <input ng-required="containerLandingCtrl.customFileName == true" type="text" class="form-control" ng-model="containerLandingCtrl.uploadFiles[$index].destination" size="30">
+                                <span class="input-group-addon">(File-)Name</span>
+                            </div>
+
+                            <span class="progress" ng-show="progress >= 0">
+                            <div style="width:{{progress}}%" ng-bind="progress + '%'"></div>
+                            </span>
+                        </li>
+                            <button ng-show="containerLandingCtrl.uploadFiles.length > 0" type="submit" class="btn btn-default" >Upload and Add files</button>
+
+                        </div>
+                        <!--Url to file-->
+                        <ul ng-if="importType == 'fileUrl'" class="list-group">
+                            <label>Input source</label>
+                            <div  class="input-group">
+                                <input required type="url" class="form-control" ng-model="containerLandingCtrl.contentItem.url"
+                                       size="30">
+                                <span class="input-group-addon">Url</span>
+                            </div>
+
+
+
+                            <div class="input-group">
+                                <select required class="form-control" theme="bootstrap"
+                                        ng-model="containerLandingCtrl.contentItem.action">
+                                    <option disabled hidden value=""></option>
+                                    <option value="copy">copy</option>
+                                    <option value="extract">extract</option>
+                                </select>
+                                <span class="input-group-addon">Action</span>
+
+                            </div>
+
+                            <label  ng-if="containerLandingCtrl.contentItem.action == 'copy'">I want custom filename of my copied file:
+                                <input type="checkbox" ng-model="containerLandingCtrl.customFileName">
+                                <br>
+                            </label>
+
+
+
+                            <div ng-if="containerLandingCtrl.customFileName  == true && containerLandingCtrl.contentItem.action == 'copy'" class="input-group">
+                                <input  ng-required="containerLandingCtrl.customFileName == true" type="text" class="form-control" ng-model="containerLandingCtrl.contentItem.name"
+                                        size="30">
+                                <span class="input-group-addon">(File-)Name</span>
+                            </div>
+
+                            <div ng-if="containerLandingCtrl.contentItem.action == 'extract'" class="input-group">
+                                <select required class="form-control" theme="bootstrap"
+                                        ng-model="containerLandingCtrl.contentItem.compression_format">
+                                    <option disabled hidden value=""></option>
+                                    <option value="tar">tar</option>
+                                    <option value="zip">zip</option>
+                                </select>
+                                <span class="input-group-addon">Compression format</span>
+                            </div>
+                            <br>
+                            <button class="btn btn-default" type="submit">Add</button>
+
+                        </ul>
+
+                    </form>
+
+                </div>
+
+
+
+            <!--log entered input sources-->
+            </div>
+            <ul class="list-group">
+                <li class="list-group-item"
+                    ng-repeat="item in containerLandingCtrl.content track by $index">
+                    <label>Input sources</label>
+                    <div class="input-group">
+                        <input readonly type="text" class="form-control" ng-model=item.url size="30">
+                        <span class="input-group-addon">Url</span>
+                    </div>
+
+                    <div ng-if="item.action == 'copy' && item.name.length > 0" class="input-group">
+                        <input readonly type="text" class="form-control" ng-model=item.name size="30">
+                        <span class="input-group-addon">(File-)Name</span>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Action:</label> {{item.action}}
+                    </div>
+
+                    <div ng-if="item.action == 'extract'" class="input-group">
+                        <label>Compression format:</label> {{item.compression_format}}
+                    </div>
+
+                    <div class="input-group">
+                    <span class="input-group-btn">
+                        <button ng-hide="containerLandingCtrl.getCurrentStep() != 'STEP3'" type="button" class="btn btn-default"
+                                ng-click="containerLandingCtrl.content.splice($index, 1)">
+                            Delete input
+                        </button>
+                    </span>
+                    </div>
+                </li>
+
+            </ul>
+
+            <div ng-hide="hideme" class="ex4">
+                <button class="btn btn-primary" style="float: right;margin-top: 25px;margin-bottom: 25px;" type="button"
+                        ng-click="hideme=true;containerLandingCtrl.changeStep();containerLandingCtrl.run()">Start!
+                </button>
+            </div>
+        </div>
+
+    </wz-step>
+
+
+    <wz-step id="STEP4" wz-title="STEP4" wz-order="4">
+
+            <div class="parent">
+                <div  style="text-align: center">
+                    <div id="emulator-loading-container" >
+                        <img
+                             src="img/gears.gif"/>
+                    </div>
+                    <p id="container-running">please wait... container is running.</p>
+                    <div class="center-wrapper">
+                    <br>
+                    <div class="modal-body">
+                        <div class="centered-content">
+                            <div id="emulator-container" class="eaas-emulator-container-transcursor"></div>
+                            <br>
+                            <div class="modal-footer">
+
+                                <button ng-hide="containerLandingCtrl.env.isContainer" type="submit" class="btn btn-default" ng-click="containerLandingCtrl.sendCtrlAltDel()">{{'ACTIONS_CTRLALTDEL' | translate}}</button>
+
+                                <button ng-if="containerLandingCtrl.network || containerLandingCtrl.env.localServerMode"
+                                        ng-click="containerLandingCtrl.openNetworkDialog()" class="btn btn-default">Connection info</button>
+
+                                <button id="emulator-downloadable-attachment-link" style="display: none;"
+                                        ng-if="containerLandingCtrl.input_data != null" class="btn btn-primary"
+                                        ng-click="containerLandingCtrl.stop()">Stop & Get result
+                                </button>
+
+                            </div>
+                        </div>
+                  </div>
+
+
+                    </div>
+                    <div id="container-stopped">
+                        <h4>{{'CONTAINER_STOPPED' | translate}}</h4>
+
+                        <p>{{'CONTAINER_STOPPED_T' | translate}}</p>
+
+
+                        <button ng-hide="hideme" id="container-download-btn" ng-click="hideme=true;containerLandingCtrl.downloadLink()">Download
+                            result
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+    </wz-step>
+</wizard>
+
+<div id="footer">
+    <div class="ex3">
+        <p class="muted credit">
+            Build: {{containerLandingCtrl.buildInfo}}</br>
+            UI Build: {{containerLandingCtrl.uiCommitHash}}
+        </p>
+    </div>
+</div>
+
+</body>
+</html>

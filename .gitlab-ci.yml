@@ -10,7 +10,7 @@ build:
     paths:
     - eaas-frontend-admin/dist/
     - eaas-frontend-user/dist/
-    - citar-headless-client/dist/
+    - landing-page/dist/
 
 build_multi_user_admin_ui:
   script:
@@ -26,4 +26,4 @@ build_multi_user_admin_ui:
     paths:
     - eaas-frontend-admin/dist/
     - eaas-frontend-user/dist/
-    - citar-headless-client/dist/
+    - landing-page/dist/

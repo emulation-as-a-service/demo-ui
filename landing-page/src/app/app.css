@@ -1,0 +1,249 @@
+/* ==========================================================================
+        Browser Problem Prompt
+   ========================================================================== */
+/*.modal-backdrop.in {*/
+    /*opacity: 1;*/
+/*}*/
+
+.parent {
+    position: relative;
+}
+
+.parent .center-wrapper {
+    position: absolute;
+    left: 50%;
+}
+
+.parent .center-wrapper .center-content {
+    position: relative;
+    left: -50%;
+}
+.parent .center-wrapper .centered-content {
+    position: relative;
+    left: -50%;
+}
+.browserproblem {
+    background: #C11E1E;
+    color: #000000;
+    padding: 0.8em 0;
+    font-size: 1.25em;
+    text-align: center;
+}
+
+/* ==========================================================================
+        Menu
+   ========================================================================== */
+@media (min-width: 768px) {
+    .sidebar-nav .navbar .navbar-collapse {
+        padding: 0;
+        max-height: none;
+    }
+    
+    .sidebar-nav .navbar ul {
+        float: none;
+    }
+    
+    .sidebar-nav .navbar ul:not {
+        display: block;
+    }
+    
+    .sidebar-nav .navbar li {
+        float: none;
+        display: block;
+    }
+    
+    .sidebar-nav .navbar li a {
+        padding-top: 12px;
+        padding-bottom: 12px;
+    }
+}
+
+/* ==========================================================================
+        Header
+   ========================================================================== */
+
+#header {
+    margin: 7px 0;
+}
+
+/* ==========================================================================
+        Footer
+   ========================================================================== */
+
+#footer {
+        height: 30px;
+        bottom: 0;
+        font-size: x-small;
+}
+
+/* ==========================================================================
+        Action Heading
+   ========================================================================== */
+
+#actionsHeading {
+    text-align: center;
+}
+
+/* ==========================================================================
+        Action Buttons
+   ========================================================================== */
+
+#actionsBtnGroup {
+    width: 100%;
+}
+
+#actionsBtnGroup .btn:first-child {
+    border-radius: 0;
+}
+
+#actionsBtnGroup .btn:last-child {
+    border-radius: 0 0 3px 3px;
+}
+
+/* ==========================================================================
+        Object Overview Page
+   ========================================================================== */
+#object-grid-container {
+  margin: 0 16px;
+}
+
+#object-grid-container .object-container {
+  height: 220px;
+  width: 150px;                  
+  display: inline-block;
+  margin-right: 30px;
+  margin-bottom: 30px;
+  overflow: hidden;
+}
+
+#object-grid-container .object-container:last-child {
+  margin-right: 0;
+}
+
+#object-grid-container .cover-container {
+  display: inline-block;
+  max-height: 100%;
+  max-width: 100%;
+}
+
+#object-grid-container .cover {
+  max-height: 100%;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  display: inline-block;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
+  margin-bottom: 6px;
+}
+
+#object-grid-container .title-container {
+  display: block;
+  text-align: center;
+}
+
+#object-grid-container .title {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: inline-block;
+  max-width: 100%;
+}
+
+#object-grid-container .description {
+  height: 50px;
+}
+
+/* ==========================================================================
+        Custom Environment Select
+   ========================================================================== */
+
+#chooseCustomEnvSelect {
+    margin-bottom: 7px;
+}
+
+/* ==========================================================================
+        Emulator
+   ========================================================================== */
+
+html.wait, body.wait {
+    cursor: progress !important;
+}
+
+#emulator-stopped-container {
+    display: none;
+}
+
+#emulator-loading-spinner {
+    margin: 10px 0 0 90px;
+}
+
+/* ==========================================================================
+        Change Media Dialog
+   ========================================================================== */
+
+#change-media-tabhost .tab-pane {
+    min-height: 200px;
+}
+
+#change-media-tabhost .tab-pane {
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    border-radius: 0px 0px 5px 5px;
+    padding: 10px;
+}
+
+/* ==========================================================================
+        Error Page
+   ========================================================================== */
+
+#error-panel {
+    margin-top: 10px;
+}
+
+/* ==========================================================================
+        Server Error Dialog
+   ========================================================================== */
+
+#error-loading-spinner {
+    display: block;
+    margin: 30px auto;    
+}
+
+/* ==========================================================================
+        Utility classes
+   ========================================================================== */
+
+.m-t-0 {
+  margin-top: 0 !important;
+}
+
+div.ex1, div.ex2 {
+    /*margin: auto;*/
+}
+div.ex1{
+    padding: 10px;
+    border: 0.5px solid #D3D3D3;
+}
+div.ex3{
+    margin:5px 8% 5px 5%;
+}
+
+div.ex4{
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+
+
+.test .step.current, .test .step { display: block !important }
+.test .step.current ~ .step { display: none !important  }
+
+.eaas-emulator-container-transcursor {
+    /* Base64 encoded eaas-client\resources\images\transcursor.png image */
+    cursor: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAWCAYAAADwza0nAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA3XAAAN1wFCKJt4AAAAB3RJTUUH3gcBFCcYPPpNFQAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAKDSURBVDjLlZM/SBtRHMe/93LepZ6eFIXQwU4GiopLHSxCKeUIiAUFRwcHYwZXxSWZsgTEIYiIboEEdPDvYMgZqEPFqUWK4GDULvZqKW3Jcekd713udYlizorND970+33eh/d7vx+ur6+7AATQaFSr1ejW1lYPAKkhkHMeM00zurq62gOgqSFwdHQ0ZppmdHFx8cV/w5zzWFtbW2x8fDxWLpejCwsLYQDiYxwBAEopisUi5ubmyNTU1OtkMvn8MVgEAMYYGGPI5/NobW0NxOPxN7Ztv0+lUlcA3AdB13VBKQVjDDs7O2hpaRFnZ2ff2rZdTKfTBoDqP8G7VsYYNjY2oCiKmEgkNMdx9JWVle9+uA68sVJKsb6+DkVRxGQyGbEsq5DL5X7chcU73a2zMsaQy+UERVGa5ufnI7ZtFzY3N3/ewHWd81sZY8hkMkIwGJTT6XTEsqyCruu/AHgC5zwmCMIt3NzcDFVVkc1meXt7OyeEIBAI8O7u7oBhGObk5GRhf3+/XGeUJAn9/f04OTlBqVRCKBSyl5eXryRJcgkhXJblakdHhwrAujXKsozt7W2vt7cXfX19pLOzE0dHR97Q0NCHw8NDo/afvPZGlwBAMBjE3t6ep6qqValUnLGxMRiGgd3dXSGRSHTVim0ADgAGgBMA0HXdE0XR1DTt+ODg4HM8Hvc8z8PS0pIwODj4bGBg4Kl/ZwkAeJ73OxKJHDuO83V6erokimJlZGQEFxcXOD095cPDw/dml5yfn3/RNO0jpfQbgD8A6NnZ2adUKuXNzMwgHA4Ll5eXLgDBP3ZPAMi+RNPa2trLfD7/bmJi4hWAkN8o1A73XSbUCqVajj60JQ3HXxKQQjZ2meK/AAAAAElFTkSuQmCC') 1 4, auto !important;
+}
+.tekst {
+    display:block;
+    margin-bottom:5px;   /* adapt the margin value to the desire space between span and select box */
+}

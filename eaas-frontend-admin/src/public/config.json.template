@@ -4,7 +4,7 @@
   "dashboardClusterAPIBaseURL" : "http://localhost:8080/eaas/api/v1/clusters/",
   "dashboardAccessToken": "secret",
   "baseEmulatorUrl" : "http://localhost:8080/demo-ui/",
-  "landingPage": "http://localhost:8080/demo-ui/citar-headless-client/",
+  "landingPage": "http://localhost:8080/landing-page/",
   "oaipmhServiceBaseUrl" : "http://localhost:8080/oaipmh/",
 
 

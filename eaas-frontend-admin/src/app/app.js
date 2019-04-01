@@ -63,8 +63,8 @@ const appendScript = function(scriptText) {
 
 // a list of supported emulators (advanced-dialog, emulators overview)
 Object.defineProperty(window, "EMULATORS_LIST", {
-    value: ["qemu-system", "basilisk2", "beebem", "hatari", "kegs-sdl", "pce-atari-st",
-                    "pce-ibmpc", "sheepshaver", "vice-sdl", "fs-uae", "contralto", "visualboyadvance", "linapple", "vmacmini", "previous" ],
+    value: ["qemu-system", "basilisk2", "beebem", "hatari", "kegs-sdl", "pce",
+            "sheepshaver", "vice-sdl", "fs-uae", "contralto", "visualboyadvance", "linapple", "vmacmini", "previous" ],
     writable: false,
     enumerable: true,
     configurable: true
