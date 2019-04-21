@@ -4,13 +4,12 @@ const emilAdminUIHelpersModule = ng.module('emilAdminUI.helpers', []);
 
 emilAdminUIHelpersModule.service('REST_URLS', function () {
     // object data api
-    this.getSoftwareListURL = "EmilObjectData/list?archiveId={0}";
-    this.syncUrl = "EmilObjectData/sync";
+    this.syncUrl = "objects/sync";
     this.getHandleList = "handles/";
-    this.pushUploadUrl = "EmilObjectData/pushUpload";
+    this.pushUploadUrl = "objects/pushUpload";
     this.repositoriesListUrl = "objects/archives";
-    this.syncObjectsUrl = "EmilObjectData/syncObjects";
-    this.getObjectImportTaskState = "EmilObjectData/objectImportTaskState?taskId={0}";
+    this.syncObjectsUrl = "objects/syncObjects";
+    this.getObjectImportTaskState = "objects/objectImportTaskState?taskId={0}";
 
     this.getHandleValue = "handles/";
     this.deleteHandle = "handles/";
