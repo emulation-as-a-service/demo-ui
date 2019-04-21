@@ -252,7 +252,8 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'en
             if (typeof env.envId == "undefined")
                 $state.go('error', {errorMsg: {title: "Error ", message: "given envId: " + id + " is not found!"}});
             $rootScope.nativeConfig = env.nativeConfig;
-            $state.go('admin.emulator', {envId: env.envId, objectId: env.objectId, archiveId: env.archiveId});
+            window.isCollapsed = true;
+            $state.go('admin.emulator', {envId: env.envId, objectId: env.objectId, objectArchive: env.objectArchive}, {reload: true});
         };
 
         vm.edit = function (id) {
@@ -312,13 +313,13 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'en
             columnDefs = [
                 {headerName: '', width: 41, checkboxSelection: true, suppressSorting: true,
                     suppressMenu: true},
-                {headerName: "Name", field: "name"},
-                {headerName: "ID", field: "id"},
+                {headerName: "Name", field: "name", width: 400},
+                {headerName: "ID", field: "id", width: 100},
                 {headerName: "Archive", field: "archive", hide: true}
             ];
 
             if (vm.view == 0 || vm.view == 1) {
-                columnDefs.push({headerName: "Owner", field: "owner"},);
+                columnDefs.push({headerName: "Owner", field: "owner", width: 100},);
                 if (vm.view == 1) {
                     columnDefs.push({headerName: "ObjectID", field: "objectId"});
                 }
@@ -378,7 +379,4 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'en
             new agGrid.Grid(gridDiv, gridOptions);
             gridOptions.api.sizeColumnsToFit();
         });
-
-
-
     }];

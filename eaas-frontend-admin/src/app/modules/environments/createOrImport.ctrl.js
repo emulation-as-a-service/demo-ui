@@ -64,7 +64,8 @@ module.exports = ["$http", "$scope", "$state", "$stateParams", "systemList", "so
              }).then(function(response) {
                  if (response.data.status !== "0")
                      growl.error(response.data.message, {title: 'Error ' + response.data.status});
-                 $state.go('admin.emulator', {envId: response.data.id, type: 'saveCreatedEnvironment', softwareId: vm.selectedSoftware.id});
+                 $state.go('admin.emulator', {envId: response.data.id, type: 'saveCreatedEnvironment', softwareId: vm.selectedSoftware.id,
+                                            objectArchive: vm.selectedSoftware.archiveId});
              });
          } else {
              $http.post(localConfig.data.eaasBackendURL + REST_URLS.importImageUrl,

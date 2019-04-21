@@ -1,38 +1,52 @@
-module.exports = ['$scope', '$state', '$stateParams', '$uibModal', '$http',
-                     'localConfig', 'objEnvironments', 'environmentList', 'growl', '$translate', 'metadata', 'helperFunctions', 'REST_URLS',
-                      function ($scope, $state, $stateParams, $uibModal, $http, localConfig, objEnvironments, environmentList, growl, $translate, metadata, helperFunctions, REST_URLS) {
+module.exports = ['$scope', '$state', '$stateParams', '$uibModal', '$http', 'Objects', 'softwareObj', 'osList',
+                     'localConfig', 'environmentList', 'growl', '$translate', 'helperFunctions', 'REST_URLS',
+                      function ($scope, $state, $stateParams, $uibModal, $http, Objects, softwareObj, osList,
+                      localConfig, environmentList, growl, $translate, helperFunctions, REST_URLS) {
      var vm = this;
+    console.log("$stateParams.userDescription", $stateParams.userDescription);
 
-     vm.objEnvironments = objEnvironments.data.environmentList;
      vm.objectId = $stateParams.objectId;
-     vm.metadata = metadata.data;
-     vm.suggested = objEnvironments.data.suggested;
-     vm.fileFormatMap = objEnvironments.data.fileFormatMap;
+     vm.objectArchive = $stateParams.objectArchive;
+     vm.isSoftware = !($stateParams.swId === "-1");
+     vm.softwareObj = softwareObj.data;
+     vm.osList = osList;
 
-     console.log(vm.fileFormatMap);
+     if(!$stateParams.objectArchive)
+        $stateParams.objectArchive = "default";
 
-     vm.hasEnvironments = false;
-     if(objEnvironments && objEnvironments.length > 0)
-         vm.hasEnvironments = false;
+     Objects.get({archiveId: $stateParams.objectArchive, objectId: $stateParams.objectId}).$promise.then(function(response) {
+        vm.metadata = response.metadata;
+        vm.objEnvironments = response.objectEnvironments.environmentList;
+        vm.suggested = response.objectEnvironments.suggested;
+        vm.fileFormatMap = response.objectEnvironments.fileFormatMap;
+        console.log(response);
+     });
+     vm.description = $stateParams.userDescription;
 
      vm.automaticCharacterization = function(updateClassification, updateProposal) {
          if (window.confirm($translate.instant('JS_START_CHAR'))) {
              $("html, body").addClass("wait");
              $(".fullscreen-overlay-spinner").show();
 
-             $http.get(localConfig.data.eaasBackendURL
-                 + helperFunctions.formatStr(REST_URLS.objectEnvironmentsUrl, $stateParams.objectId, updateClassification, updateProposal))
-                 .then(function(response) {
-                 if (response.data.status !== "0") {
-                     growl.error(response.data.message, {title: 'Error ' + response.data.status});
-                     return;
-                 }
-                 vm.objEnvironments.length = 0;
-                 vm.objEnvironments.push.apply(vm.objEnvironments, response.data.environmentList);
+             Objects.get({
+                archiveId: $stateParams.objectArchive,
+                objectId: $stateParams.objectId,
+                updateClassification: updateClassification,
+                updateProposal, updateProposal
+                }).$promise.then(function(response) {
+                    vm.suggested = response.objectEnvironments.suggested;
+                    vm.metadata = response.metadata;
+                    vm.fileFormatMap = response.objectEnvironments.fileFormatMap;
+                    vm.objEnvironments.length = 0;
+                    vm.objEnvironments.push.apply(vm.objEnvironments, response.objectEnvironments.environmentList);
              })['finally'](function() {
                  $("html, body").removeClass("wait");
                  $(".fullscreen-overlay-spinner").hide();
-                 $state.reload();
+//                 $state.transitionTo($state.current, $stateParams, {
+//                     reload: true,
+//                     inherit: false,
+//                     notify: true
+//                 });
              });
          }
      };
@@ -61,7 +75,6 @@ module.exports = ['$scope', '$state', '$stateParams', '$uibModal', '$http',
                          $scope.$close();
                          $state.reload();
                      });
-
                  };
              }],
              controllerAs: "setDefaultEnvDialogCtrl"
@@ -110,24 +123,54 @@ module.exports = ['$scope', '$state', '$stateParams', '$uibModal', '$http',
          vm.objEnvironments.splice(i, 1);
      };
 
-         vm.resetChanges = function()
-         {
-             if (window.confirm($translate.instant('CHAR_CONFIRM_RESET_T'))) {
-                 $http.post(localConfig.data.eaasBackendURL + REST_URLS.overrideObjectCharacterizationUrl, {
-                     objectId: $stateParams.objectId,
-                     environments: []
-                 }).then(function() {
-                     $state.go('admin.object-overview');
-                 });
-             }
+     vm.resetChanges = function()
+     {
+         if (window.confirm($translate.instant('CHAR_CONFIRM_RESET_T'))) {
+             $http.post(localConfig.data.eaasBackendURL + REST_URLS.overrideObjectCharacterizationUrl, {
+                 objectId: $stateParams.objectId,
+                 environments: []
+             }).then(function() {
+                 $state.go('admin.object-overview');
+             });
          }
+     }
 
      vm.saveCharacterization = function() {
+             console.log("vm.description " , vm.description);
          $http.post(localConfig.data.eaasBackendURL + REST_URLS.overrideObjectCharacterizationUrl, {
              objectId: $stateParams.objectId,
-             environments: vm.objEnvironments
+             objectArchive: $stateParams.objectArchive,
+             environments: vm.objEnvironments,
+             description: vm.description,
          }).then(function() {
              $state.go('admin.object-overview');
          });
      };
+
+     vm.saveSoftware = function() {
+        vm.softwareObj.objectId = $stateParams.objectId;
+        vm.softwareObj.label = vm.softwareObj.objectId;
+        vm.softwareObj.archiveId = $stateParams.objectArchive;
+
+        if(vm.softwareObj.isOperatingSystem && vm.operatingSystemId)
+        {
+           vm.operatingSystemId.puids.forEach(function(puid) {
+              if(!vm.softwareObj.nativeFMTs.includes(puid.puid))
+              {
+                  vm.softwareObj.nativeFMTs.push(puid.puid);
+              }
+           });
+
+        }
+        // console.log(JSON.stringify(vm.softwareObj));
+        $http.post(localConfig.data.eaasBackendURL + REST_URLS.saveSoftwareUrl, vm.softwareObj).then(function(response) {
+           if (response.data.status === "0") {
+               growl.success(response.data.message);
+               $state.go('admin.sw-overview', {}, {reload: true});
+
+           } else {
+               growl.error(response.data.message, {title: 'Error ' + response.data.status});
+           }
+     });
+   };
  }];

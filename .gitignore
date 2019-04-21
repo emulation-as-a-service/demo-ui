@@ -11,6 +11,8 @@ config.json
 *.br
 *.gz
 config.json
+config.js
 sublime.sublime-workspace
 sublime.sublime-project
 auth.env
+package-lock.json

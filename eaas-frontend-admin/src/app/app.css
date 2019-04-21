@@ -14,29 +14,66 @@
         Menu
    ========================================================================== */
 @media (min-width: 768px) {
-    .sidebar-nav .navbar .navbar-collapse {
+    .collapsing {
+        transition: none !important;
+    }
+    .sidebar-nav .navbar  {
         padding: 0;
         max-height: none;
     }
-    
+
     .sidebar-nav .navbar ul {
         float: none;
     }
-    
+
     .sidebar-nav .navbar ul:not {
         display: block;
     }
-    
+
     .sidebar-nav .navbar li {
         float: none;
         display: block;
     }
-    
+
     .sidebar-nav .navbar li a {
         padding-top: 12px;
         padding-bottom: 12px;
     }
+    .navbar-header {
+        float: none;
+    }
+    .navbar-toggle {
+        display: block;
+        z-index: 1000001;
+        background-color: transparent !important;
+    }
+    .navbar-collapse.collapse {
+        display: none !important;
+    }
+    .navbar-nav {
+        float: none!important;
+    }
+    .navbar-nav>li {
+        float: none;
+    }
+    .navbar-collapse.collapse.in{
+        display:block !important;
+    }
+    .navbar-toggle:hover {
+        background-color: #ddd !important;
+    }
 }
+
+.menuTitle{
+    color: #777;
+    float: left;
+    height: 50px;
+    padding: 15px 15px;
+    font-size: 18px;
+    line-height: 20px;
+    margin-left: 30%;
+}
+
 
 /* ==========================================================================
         Header
@@ -434,10 +471,30 @@ pre#json-renderer {
 .ag-ltr .ag-cell-focus{
     border: none !important;
 }
+div.ex1, div.ex2 {
+    /*margin: auto;*/
+}
+div.ex1{
+    padding: 10px;
+    border: 0.5px solid #D3D3D3;
+}
+div.ex3{
+    margin:5px 8% 5px 5%;
+}
+
+div.ex4{
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
 
 .wrapper-signin {
 	margin-top: 80px;
   margin-bottom: 80px;
+}
+abbr[title] {
+    /*border-bottom: none !important;*/
+    /*cursor: inherit !important;*/
+    text-decoration: none !important;
 }
 
 .form-signin {

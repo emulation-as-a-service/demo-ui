@@ -1,8 +1,9 @@
 #!/bin/sh
 
-cd eaas-frontend-admin
+cd landing-page
 npm install
 npm run build
-cd ../landing-page
+
+cd ../eaas-frontend-admin
 npm install
 npm run build

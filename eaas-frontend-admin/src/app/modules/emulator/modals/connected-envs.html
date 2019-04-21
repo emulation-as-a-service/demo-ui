@@ -1,26 +1,52 @@
-
+<div ng-show="isModuleVisible"></div>
 <div class="modal-header">
     <h3 class="modal-title">Connect additional environments</h3>
 </div>
 
-<div class="modal-body">
-        <label>
-            <p>
-                You can connect additional environments via virtual LAN cable.<br> (Note: you will see only the chosen one)
-            </p>
-        </label>
-        <ui-select multiple ng-model="selectedEnvs" theme="bootstrap" on-remove="OnRemoveSelect($item)" ui-outer-click="cancel()" on-select="OnClickSelect($item)"  close-on-select="true"  ng-disabled="disabled" style="width: 550px;" title="Choose environment">
+<uib-tabset active="active">
+    <uib-tab index="0" heading="Connect to another environment">
+
+        <div class="modal-body">
+            <label>
+                <p>
+                    You can connect additional environments via virtual LAN cable.<br> (If you want to see more environments in this list, please enable "Server mode" or "Can be connected with other environments)"
+                </p>
+            </label>
+            <ui-select multiple ng-model="selectedEnvs" theme="bootstrap" on-remove="OnRemoveSelect($item)" ui-outer-click="cancel()" on-select="OnClickSelect($item)"  close-on-select="true"  ng-disabled="disabled" style="width: 550px;" title="Choose environment">
+                <ui-select-match placeholder="Select environment or leave it empty...">
+                    <p align="left"><br>ID: {{$item.envId}}<br>Title: {{$item.title}}}</p>
+                </ui-select-match>
+                <ui-select-choices repeat="item in (envs | filter: $select.search) track by item.envId">
+                    ID:  {{item.envId}} <br>
+                    Title: {{item.title}}
+                </ui-select-choices>
+            </ui-select>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+        </div>
+
+    </uib-tab>
+    <uib-tab index="1" heading="Connect to ComponentID (Beta)">
+        <div class="modal-body">
+
+        <ui-select ng-model="attachComponentId" theme="bootstrap" on-remove="OnClickSelectAttachID($item)" ui-outer-click="cancel()" on-select="OnClickSelectAttachID($item)"  close-on-select="true"  ng-disabled="disabled" style="width: 550px;" title="Choose GroupID">
             <ui-select-match placeholder="Select environment or leave it empty...">
-                <p align="left"><br>ID: {{$item.envId}}<br>Title: {{$item.title}}}</p>
+                ID: {{attachComponentId}} | Title: {{item}}
             </ui-select-match>
-            <ui-select-choices repeat="item in (envs | filter: $select.search) track by item.envId">
-                ID:  {{item.envId}} <br>
-                Title: {{item.title}}
+            <ui-select-choices repeat="item in (availableGroupIds | filter: $select.search) track by item">
+                ID:  {{item}} | Title: {{item}}
             </ui-select-choices>
         </ui-select>
-</div>
 
-<div class="modal-footer">
-    <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
-    <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
-</div>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="button" ng-click="connectToExistentComponent()">OK</button>
+            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+        </div>
+    </uib-tab>
+</uib-tabset>
+

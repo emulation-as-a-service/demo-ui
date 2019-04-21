@@ -20,7 +20,7 @@ module.exports = ['softwareList', '$scope', '$stateParams', function (softwareLi
 
     function editBtnRenderer(params) {
         params.$scope.selected = $scope.selected;
-        return  `<button id="single-button" ui-sref="admin.sw-ingest({swId: data.id})" type="button" class="dropbtn">
+        return  `<button id="single-button" ui-sref="admin.edit-object-characterization({swId: data.id, objectId: data.id, objectArchive: data.archiveId})" type="button" class="dropbtn">
                   {{'SW_OVERVIEW_SW_EDIT'| translate}}
                 </button>`;
     }

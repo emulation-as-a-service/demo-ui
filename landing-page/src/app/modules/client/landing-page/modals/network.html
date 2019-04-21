@@ -30,31 +30,6 @@
 
 </div>
 
-    <div class="ex1">
-        <form id="inputForm" name="contentForm"
-              ng-submit="networkModalCtrl.detach()">
-            <div class="tekst">
-                <div class="input-group">
-
-                    Detach session for:
-                    <select class="form-control" theme="bootstrap" required
-                            ng-model="networkModalCtrl.detachTime">
-                        <option disabled hidden value=""></option>
-                        <option value="2">2 minutes</option>
-                        <option value="15">15 minutes</option>
-                        <option value="30">30 minutes</option>
-                        <option value="60">1 hour</option>
-                        <option value="120">2 hours</option>
-                    </select>
-                </div>
-            </div>
-            <b class="tekst">You would be able to close this windows after detach</b>
-
-            <button class="btn btn-primary" type="submit">Detach</button>
-        </form>
-    </div>
-
-
 
 <div class="modal-footer">
     <button class="btn btn-primary" type="button" ng-click="$close()">OK</button>

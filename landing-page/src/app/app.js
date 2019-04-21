@@ -286,7 +286,7 @@ export default angular.module('emilUI', ['angular-loading-bar', 'ngSanitize', 'n
         })
         .state('container-landing-page', {
             url: "/container-landing-page",
-            template: require('./modules/client/landing-page/container-landing-page.html'),
+            template: require('./modules/client/landing-page/landing-page.html'),
             resolve: {
                 chosenEnv: function($http, localConfig, helperFunctions, REST_URLS) {
                     return $http.get(localConfig.data.eaasBackendURL + helperFunctions.formatStr(REST_URLS.getEnvById, new URLSearchParams(window.location.search).get('id')))

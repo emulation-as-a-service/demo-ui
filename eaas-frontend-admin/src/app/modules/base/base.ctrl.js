@@ -1,6 +1,9 @@
-module.exports = ["$uibModal", "localConfig", "kbLayouts", "buildInfo", "userInfo", "authService",
-function($uibModal, localConfig, kbLayouts, buildInfo, userInfo, authService) {
+module.exports = ["$uibModal","$scope", "$state", "localConfig", "kbLayouts", "buildInfo", "userInfo", "authService",
+function($uibModal, $scope, $state, localConfig, kbLayouts, buildInfo, userInfo, authService) {
     var vm = this;
+
+    $scope.isCollapsed = $state.current.name === "admin.emulator";
+
     vm.authEnabled = auth0config.AUTH_CONFIGURED;
     
     vm.open = function() {
@@ -8,7 +11,7 @@ function($uibModal, localConfig, kbLayouts, buildInfo, userInfo, authService) {
             animation: false,
             template: require('./modals/help.html')
         });
-    }
+    };
 
     vm.config = localConfig.data;
     vm.buildInfo = buildInfo.data.version;

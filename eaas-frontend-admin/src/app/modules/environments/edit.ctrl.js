@@ -132,8 +132,6 @@ module.exports = ["$http", "$rootScope", "$scope", "$state", "$stateParams", "en
                             value: vm.landingPage + "?id=" + vm.env.envId
                         })
                     ).then(function (response) {
-                        console.log("response  ", response);
-                        console.log("response.status   ", response.status);
                         if (response.status === 200) {
                             vm.handle = handlePrefix + vm.env.envId;
                         } else {

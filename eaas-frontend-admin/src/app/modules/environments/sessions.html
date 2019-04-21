@@ -13,7 +13,7 @@
     <tr ng-repeat="row in sessions">
         <td><b>{{row.title}}</b> UserId: {{row.userId}} {{row.objectId}} Creation Date: {{row.creationDate | date:'medium'}}
             <br/><a
-                ui-sref="admin.emulator({envId: row.envId, objectId: row.objectId, type: 'saveUserSession', userId: row.userId})">{{'USER_SESSIONS_RUN' | translate}}</a>
+                ui-sref="admin.emulator({envId: row.envId, objectId: row.objectId, objectArchive: row.objectArchive, type: 'saveUserSession', userId: row.userId})">{{'USER_SESSIONS_RUN' | translate}}</a>
             <a href="#"
                ng-click="sessionListCtrl.deleteSession(row.envId)">{{'USER_SESSION_DEL'| translate}}</a>
         </td>

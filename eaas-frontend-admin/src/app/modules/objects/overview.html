@@ -1,42 +1,39 @@
-<h2 class="m-t-0">{{'OBJECTS_L' | translate}}</h2>
+<h1 class="m-t-0">{{'OBJECTS_L' | translate}}</h1>
 
-<div class="form-group">
+<uib-tabset active="objectOverviewCtrl.viewArchive">
+    <uib-tab ng-repeat="item in objectOverviewCtrl.archives"
+             ng-click="objectOverviewCtrl.updateTable($index, item)"
+             index="$index"
+             heading="{{item}}">
 
-    <div id="object-grid-container">
-        <table st-table="displayObjects" st-safe-src="objectOverviewCtrl.objectList">
-        <thead>
-        <tr>
-            <th colspan="5">
-                <input st-search="" class="form-control" placeholder="{{'OBJECTS_SEARCH' | translate}}" type="text"/><br>
-            </th>
-        </tr>
-        </thead>
+    </uib-tab>
+</uib-tabset>
 
-        <tbody>
-        <tr>
-            <td>
-                <div ng-repeat="object in displayObjects" class="object-container">
-                    <a class="cover-container" ui-sref="admin.edit-object-characterization({objectId: object.id})" >
-                        <img class="cover" ng-src="{{object.thumbnail ? object.thumbnail : 'img/empty-cover.png'}}"></img>
-                    </a>
+<div style="margin-bottom: 15px;" class="ag-theme-balham">
+    <div style="text-align: justify; text-align-last: justify">
+        <span style="display: inline-block; vertical-align: text-bottom;"> Page Size:
+            <select ng-click="onPageSizeChanged()" ng-model="objectOverviewCtrl.pageSize">
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+                <option value="25">25</option>
+                <option value="100">100</option>
+                <option value="500">500</option>
+            </select>
+            </span>
 
-                    <a class="title-container" ui-sref="admin.edit-object-characterization({objectId: object.id})" >
-                        <span class="title">{{object.title}}</span>
-                    </a>
-
-                    <div class="description" ng-bind="object.description" data-ellipsis></div>
-                </div>
-            </td>
-        </tr>
-        </tbody>
-
-        <tfoot>
-        <tr>
-            <td colspan="5" class="text-center">
-                <div st-pagination="" st-items-by-page="12" st-displayed-pages="7"></div>
-            </td>
-        </tr>
-        </tfoot>
-        </table>
+        <span style="vertical-align: text-bottom; display: inline-block">
+                    <button ng-if="objectOverviewCtrl.config.features.objectUpload" type="submit" class="btn btn-default"
+                            ui-sref="admin.new-object"><span style="color: green"
+                                                            class="glyphicon glyphicon-plus"></span>
+                                                            {{'OBJECTS_NEW_OBJECT' | translate}}
+                    </button>
+            </span>
     </div>
 </div>
+<div style="text-align: right; margin-bottom: 15px;">
+    <input type="text" class="form-control" ng-model="objectOverviewCtrl.quickFilterText"
+           placeholder="{{'CHOOSE_ENV_SEARCH' | translate}}"/>
+</div>
+
+<div ag-grid="gridOptions" class="ag-theme-balham"></div>

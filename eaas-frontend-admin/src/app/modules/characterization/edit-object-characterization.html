@@ -1,13 +1,25 @@
 <h2 class="m-t-0">{{'CHAR_L' | translate}}</h2>
 
 <div style="text-align: right;">
-    <button class="btn btn-primary" type="button" ng-click="editObjectCharacterizationCtrl.saveCharacterization()">{{'CHAR_SAVE' | translate}}</button>
-    <button class="btn btn-primary" type="button" ng-click="editObjectCharacterizationCtrl.resetChanges()">{{'CHAR_RESET_CHANGES' | translate}}</button>
-    <button class="btn btn-default" type="button" ui-sref="admin.object-overview">{{'CHAR_CANCEL' | translate}}</button>
+    <button class="btn btn-primary" type="button"
+            ng-if="!editObjectCharacterizationCtrl.isSoftware"
+            ng-click="editObjectCharacterizationCtrl.saveCharacterization()">{{'CHAR_SAVE' | translate}}</button>
+    <button class="btn btn-primary" type="button"
+            ng-if="editObjectCharacterizationCtrl.isSoftware"
+            ng-click="editObjectCharacterizationCtrl.saveSoftware()">{{'CHAR_SAVE' | translate}}</button>
+    <button class="btn btn-primary" type="button"
+            ng-if="!editObjectCharacterizationCtrl.isSoftware"
+            ng-click="editObjectCharacterizationCtrl.resetChanges()">{{'CHAR_RESET_CHANGES' | translate}}</button>
+
+    <button class="btn btn-default" type="button"
+            ng-if="editObjectCharacterizationCtrl.isSoftware"
+            ui-sref="admin.sw-overview">{{'CHAR_CANCEL' | translate}}</button>
+    <button class="btn btn-default" type="button"
+            ng-if="!editObjectCharacterizationCtrl.isSoftware"
+            ui-sref="admin.object-overview">{{'CHAR_CANCEL' | translate}}</button>
 </div>
 <br>
 <div class="panel panel-default">
-
     <div class="panel-heading">
         {{'CHAR_OBJ_INFORMATION' | translate}}
     </div>
@@ -15,101 +27,175 @@
         <p>
             <b>Object ID:</b> {{editObjectCharacterizationCtrl.metadata.title}}
         </p>
-        <br/>
+
         <p ng-bind-html="editObjectCharacterizationCtrl.metadata.summary"></p>
-        </p>
+            <p>
+                <b>Additional Description</b>
+            </p>
+            <div class="form-group">
+                <textarea ng-model="editObjectCharacterizationCtrl.description" class="form-control" style="resize: none;"
+                      rows="5"
+                      id="comment"></textarea>
+            </div>
+
+        <div class="form-group">
+            <input type="checkbox"  ng-model="editObjectCharacterizationCtrl.isSoftware">
+            <label>Object is software</label>
+        </div>
     </div>
 
     <br/>
-    <div class="panel-heading">
-        {{'CHAR_ENV_LIST' | translate}}
-    </div>
-    <div class="panel-body">
-        <div class="row">
+    <uib-accordion close-others="false">
+        <div uib-accordion-group class="panel-default" is-open="status.openEnv">
+            <uib-accordion-heading>
+                {{'CHAR_ENV_LIST' | translate}}
+                <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.openEnv, 'glyphicon-chevron-right': !status.openEnv}"></i>
+            </uib-accordion-heading>
+            <div class="row">
+
+                    <div style="text-align: right; margin-bottom: 15px;">
+                        <div style="display: inline-block;">
+                            <button type="submit" class="btn btn-default" ng-click="editObjectCharacterizationCtrl.automaticCharacterization(false, true)">
+                                <span class="glyphicon glyphicon-cloud-download"></span> {{'CHAR_UPDATE_PROPOSAL' | translate}}</button>
+                        </div>
+
+                        <div style="display: inline-block;">
+                            <button type="submit" class="btn btn-default" ng-click="editObjectCharacterizationCtrl.openAddEnvDialog()">
+                                <span style="color: green" class="glyphicon glyphicon-plus"></span> {{'CHAR_ADD' | translate}}</button>
+                        </div>
+                    </div>
+
+                    <ul class="list-group-item" ng-sortable="{animation: 150, handle: '.handle'}">
+                            <li class="list-group-item" ng-repeat="env in editObjectCharacterizationCtrl.objEnvironments">
+                            <div class="handle btn btn-primary"><i class="glyphicon glyphicon-move"></i></div>
+                            <div style="display: inline-block;">{{env.label}} <span ng-if="env.objectEnvironment">(OE)</span></div>
+                            <div class="btn btn-default" style="float: right; color: #CC322E;" ng-click="editObjectCharacterizationCtrl.removeEnvironment(env)">
+                                <i class="glyphicon glyphicon-remove"></i>
+                            </div>
+                            <div style="float: right;"><button type="submit" class="btn btn-primary"
+                                                               ui-sref="admin.emulator({envId: env.id,
+                                                        type: 'objectEnvironment',
+                                                        objectId: editObjectCharacterizationCtrl.objectId,
+                                                        objectArchive: editObjectCharacterizationCtrl.objectArchive,
+                                                        returnToObjects: true})" >Run</button>
+                            </div>
+                        </li>
+                    </ul>
+
+                </div>
+        </div>
+        <div uib-accordion-group class="panel-default" is-open="status.open">
+            <uib-accordion-heading>
+                {{'CHAR_CLASS_INFORMATION' | translate}}
+                <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+            </uib-accordion-heading>
 
             <div style="text-align: right; margin-bottom: 15px;">
                 <div style="display: inline-block;">
-                    <button type="submit" class="btn btn-default" ng-click="editObjectCharacterizationCtrl.automaticCharacterization(false, true)">
-                        <span class="glyphicon glyphicon-cloud-download"></span> {{'CHAR_UPDATE_PROPOSAL' | translate}}</button>
-                </div>
-
-                <div style="display: inline-block;">
-                    <button type="submit" class="btn btn-default" ng-click="editObjectCharacterizationCtrl.openAddEnvDialog()">
-                        <span style="color: green" class="glyphicon glyphicon-plus"></span> {{'CHAR_ADD' | translate}}</button>
+                    <button type="submit" class="btn btn-default" ng-click="editObjectCharacterizationCtrl.automaticCharacterization(true, false)">
+                        <span class="glyphicon glyphicon-cloud-download"></span> {{'CHAR_UPDATE_CLASS' | translate}}</button>
                 </div>
             </div>
 
-            <ul class="list-group-item" ng-sortable="{animation: 150, handle: '.handle'}">
-                <li class="list-group-item" ng-repeat="env in editObjectCharacterizationCtrl.objEnvironments">
-                    <div class="handle btn btn-primary"><i class="glyphicon glyphicon-move"></i></div>
-                    <div style="display: inline-block;">{{env.label}} <span ng-if="env.objectEnvironment">(OE)</span></div>
-                    <div class="btn btn-default" style="float: right; color: #CC322E;" ng-click="editObjectCharacterizationCtrl.removeEnvironment(env)">
-                        <i class="glyphicon glyphicon-remove"></i>
-                    </div>
-                    <div style="float: right;"><button type="submit" class="btn btn-primary"
-                                                       ui-sref="admin.emulator({envId: env.id,
-												type: 'objectEnvironment',
-												objectId: editObjectCharacterizationCtrl.objectId,
-												returnToObjects: true})" >Run</button>
-                    </div>
-                </li>
-            </ul>
+            <div ng-show="editObjectCharacterizationCtrl.suggested.length > 0">
+                <p >
+                    <b>{{'CHAR_MISSING' | translate}}:</b>
+                </p>
+                <ul>
+                    <li ng-repeat="env in editObjectCharacterizationCtrl.suggested">{{env.label}}
+                        <ul>
+                            <li><b>Default Environment:</b> {{env.defaultEnvironment.label}}
+                                <a ng-click="editObjectCharacterizationCtrl.openDefaultEnvDialog(env.id, env.label)">Edit/Assign</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
 
-        </div>
-    </div>
-
-    <br/>
-    <div class="panel-heading">
-        {{'CHAR_CLASS_INFORMATION' | translate}}
-    </div>
-    <div class="panel-body">
-        <div style="text-align: right; margin-bottom: 15px;">
-            <div style="display: inline-block;">
-                <button type="submit" class="btn btn-default" ng-click="editObjectCharacterizationCtrl.automaticCharacterization(true, false)">
-                    <span class="glyphicon glyphicon-cloud-download"></span> {{'CHAR_UPDATE_CLASS' | translate}}</button>
+            <div ng-show="editObjectCharacterizationCtrl.fileFormatMap">
+                <p >
+                    <b>{{'CHAR_FORMATS' | translate}}:</b>
+                </p>
+                <ul>
+                    <li ng-repeat="(key, mediaItem) in editObjectCharacterizationCtrl.fileFormatMap"> <b>{{key}}</b>
+                        <ul>
+                            <li ng-repeat="fmt in mediaItem.fileFormats">
+                                <b>{{fmt.name}}</b> ({{fmt.puid}})
+                                <ul>
+                                    <li><b>File count:</b> {{fmt.count}}</li>
+                                    <li><b>File dates:</b> {{fmt.fromDate | date:'medium'}} - {{fmt.toDate | date:'medium'}}</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
         </div>
+        <div uib-accordion-group class="panel-default" is-open="status.openSw" ng-if="editObjectCharacterizationCtrl.isSoftware">
+            <uib-accordion-heading>
+                {{'CHAR_SW_INFORMATION' | translate}}
+                <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.openSw, 'glyphicon-chevron-right': !status.openSw}"></i>
+            </uib-accordion-heading>
 
-        <div ng-show="editObjectCharacterizationCtrl.suggested.length > 0">
-            <p >
-                <b>{{'CHAR_MISSING' | translate}}:</b>
-            </p>
-            <ul>
-                <li ng-repeat="env in editObjectCharacterizationCtrl.suggested">{{env.label}}
-                    <ul>
-                        <li><b>Default Environment:</b> {{env.defaultEnvironment.label}}
-                            <a ng-click="editObjectCharacterizationCtrl.openDefaultEnvDialog(env.id, env.label)">Edit/Assign</a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
+            <div class="form-group">
+                <label>{{'SW_INGEST_LICENSE_LBL' | translate}}</label>
+                <textarea class="form-control" rows="3"
+                          ng-model="editObjectCharacterizationCtrl.softwareObj.licenseInformation"
+                          placeholder="{{'SW_INGEST_LICENSE_PH' | translate}}" required></textarea>
+            </div>
+
+            <label>{{'SW_INGEST_NO_INSTANCES_LBL' | translate}}</label>
+            <input type="number" class="form-control"
+                   ng-model="editObjectCharacterizationCtrl.softwareObj.allowedInstances">
+            <br/>
+
+            <label>{{'SW_INGEST_QID' | translate}}</label>
+            <input type="text" class="form-control"
+                   ng-model="editObjectCharacterizationCtrl.softwareObj.qid">
+            <br/>
+
+            <div class="form-group">
+                <label>{{'SW_INGEST_OS_ID' | translate}} <input type="checkbox" ng-model="editObjectCharacterizationCtrl.softwareObj.isOperatingSystem"> </label>
+                <div style="max-width: 450px;">
+                    <ui-select id="chosenOs" ng-model="editObjectCharacterizationCtrl.operatingSystemId"
+                               ng-disabled="!editObjectCharacterizationCtrl.softwareObj.isOperatingSystem" theme="bootstrap"
+                               title="{{'SW_INGEST_CHOOSE_OS_PH' | translate}}" >
+                        <ui-select-match
+                            placeholder="{{'SW_INGEST_CHOOSE_OS_PH' | translate}}">{{$select.selected.id}}</ui-select-match>
+                        <ui-select-choices
+                            repeat="os in editObjectCharacterizationCtrl.osList.data.operatingSystems | filter: $select.search">
+                            <b><span ng-bind-html="os.id | highlight: $select.search"></span></b>
+                            <br>
+                            <span ng-bind-html="os.id | highlight: $select.search"></span>
+                        </ui-select-choices> </ui-select>
+                </div>
+            </div>
+
+
+            <br/><br/>
+
+            <input-list list="editObjectCharacterizationCtrl.softwareObj.nativeFMTs"
+                        heading="{{'SW_INGEST_FMT_NATIVE_HEADER' | translate}}"
+                        list-empty-note="{{'SW_INGEST_FMT_NATIVE_EMPTY' | translate}}"
+                        input-placeholder="{{'SW_INGEST_FMT_NATIVE_PH' | translate}}"
+                        add-button-text="{{'SW_INGEST_FMT_NATIVE_BUTTON' | translate}}"></input-list>
+            <!--
+            <input-list list="editObjectCharacterizationCtrl.softwareObj.importFMTs"
+                heading="{{'SW_INGEST_FMT_IMPORT_HEADER' | translate}}"
+                list-empty-note="{{'SW_INGEST_FMT_IMPORT_EMPTY' | translate}}"
+                input-placeholder="{{'SW_INGEST_FMT_IMPORT_PH' | translate}}"
+                add-button-text="{{'SW_INGEST_FMT_IMPORT_BUTTON' | translate}}"></input-list>
+
+            <input-list list="editObjectCharacterizationCtrl.softwareObj.exportFMTs"
+                heading="{{'SW_INGEST_FMT_EXPORT_HEADER' | translate}}"
+                list-empty-note="{{'SW_INGEST_FMT_EXPORT_EMPTY' | translate}}"
+                input-placeholder="{{'SW_INGEST_FMT_EXPORT_PH' | translate}}"
+                add-button-text="{{'SW_INGEST_FMT_EXPORT_BUTTON' | translate}}"></input-list>
+            -->
         </div>
 
-        <div ng-show="editObjectCharacterizationCtrl.fileFormatMap">
-            <p >
-                <b>{{'CHAR_FORMATS' | translate}}:</b>
-            </p>
-            <ul>
-                <li ng-repeat="(key, mediaItem) in editObjectCharacterizationCtrl.fileFormatMap"> <b>{{key}}</b>
-                    <ul>
-                        <li ng-repeat="fmt in mediaItem.fileFormats">
-                            <b>{{fmt.name}}</b> ({{fmt.puid}})
-                            <ul>
-                                <li><b>File count:</b> {{fmt.count}}</li>
-                                <li><b>File dates:</b> {{fmt.fromDate | date:'medium'}} - {{fmt.toDate | date:'medium'}}</li>
-                            </ul>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-
-    </div>
+    </uib-accordion>
 </div>
-
-<br>
-
-
 <div class="fullscreen-overlay-spinner">
     <img style="margin: -72px 0 0 -72px;" height="144" width="144" src="img/gears.gif" />
 </div>

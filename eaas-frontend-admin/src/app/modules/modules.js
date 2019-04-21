@@ -16,7 +16,6 @@ emilUIModule.controller('DashboardController', require('./dashboard/dashboard.ct
 
 // software
 emilUIModule.controller('SoftwareOverviewController', require('./software/overview.ctrl.js'));
-emilUIModule.controller('SoftwareIngestController', require('./software/ingest.ctrl.js'));
 
 // sync
 emilUIModule.controller('SyncImageArchivesController', require('./sync/syncImageArchives.ctrl.js'));
@@ -52,3 +51,5 @@ emilUIModule.controller('EmulatorsController', require('./emulators/overview.ctr
 emilUIModule.controller('EmulatorsDetailsController', require('./emulators/details.ctrl.js'));
 emilUIModule.controller('EmulatorsDetailsController', require('./emulators/details.ctrl.js'));
 emilUIModule.controller('EmulatorsJsonModalController', require('./emulators/modals/emulators-json.modal'));
+emilUIModule.controller('NetworkModalController', require('../../../../landing-page/src/app/modules/client/landing-page/modals/network-modal.ctrl.js'));
+emilUIModule.controller('DetachModalController', require('../../../../landing-page/src/app/modules/client/landing-page/modals/detach-modal.ctrl.js'));

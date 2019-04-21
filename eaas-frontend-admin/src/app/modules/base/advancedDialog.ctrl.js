@@ -13,8 +13,6 @@ module.exports = ['$state', '$http', '$scope', '$uibModal', '$timeout', 'localCo
         vm.showEmilEnvs = function () {
             $http.get(localConfig.data.eaasBackendURL + helperFunctions.formatStr(REST_URLS.getDatabaseContent, "emilEnvironment", "de.bwl.bwfla.emil.datatypes.EmilEnvironment")).then(function (response) {
                 if (response.status === 200) {
-                    console.log("response", response.data);
-                    console.log(JSON.stringify("response.data"));
                     vm.response = response.data;
                     $('#json-renderer').jsonViewer(response.data, {withQuotes: false});
                     growl.success("Done");
@@ -26,8 +24,6 @@ module.exports = ['$state', '$http', '$scope', '$uibModal', '$timeout', 'localCo
         vm.showObjectEmilEnvs = function () {
             $http.get(localConfig.data.eaasBackendURL + helperFunctions.formatStr(REST_URLS.getDatabaseContent, "emilObjectEnvironment", "de.bwl.bwfla.emil.datatypes.EmilObjectEnvironment")).then(function (response) {
                 if (response.status === 200) {
-                    console.log("response", response.data);
-                    console.log(JSON.stringify("response.data"));
                     vm.response = response.data;
                     $('#json-renderer').jsonViewer(response.data, {withQuotes: false});
                     growl.success("Done");
@@ -39,8 +35,6 @@ module.exports = ['$state', '$http', '$scope', '$uibModal', '$timeout', 'localCo
         vm.showContainerEmilEnvs = function () {
             $http.get(localConfig.data.eaasBackendURL + helperFunctions.formatStr(REST_URLS.getDatabaseContent, "emilContainerEnvironment", "de.bwl.bwfla.emil.datatypes.EmilContainerEnvironment")).then(function (response) {
                 if (response.status === 200) {
-                    console.log("response", response.data);
-                    console.log(JSON.stringify("response.data"));
                     vm.response = response.data;
                     $('#json-renderer').jsonViewer(response.data, {withQuotes: false});
                     growl.success("Done");
@@ -52,10 +46,21 @@ module.exports = ['$state', '$http', '$scope', '$uibModal', '$timeout', 'localCo
         vm.getNameIndexes = function () {
             $http.get(localConfig.data.eaasBackendURL + REST_URLS.getNameIndexes).then(function (response) {
                 if (response.status === 200) {
-                    console.log("response!!!! ", response);
-                    console.log("response.data", response.data);
-
                     growl.success("Done");
+                } else {
+                    growl.error(response.data.message, {title: 'Error ' + response.data.status});
+                }
+            });
+        };
+        vm.groupIds = function () {
+            $http.get(localConfig.data.eaasBackendURL + REST_URLS.getGroupIds).then(function (response) {
+                if (response.status === 200) {
+                    console.log("!!! response.data", response.data);
+                    let toShow = "";
+                    for (let i = 0; i < response.data.length; i++) {
+                        toShow += response.data[i] + "\n"
+                    }
+                    alert(toShow);
                 } else {
                     growl.error(response.data.message, {title: 'Error ' + response.data.status});
                 }

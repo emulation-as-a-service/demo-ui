@@ -23,6 +23,22 @@
         <button type="submit" class="btn btn-default" ng-click="actionsCtrl.sendCtrlAltDel()">{{'ACTIONS_CTRLALTDEL' | translate}}</button>
         <button type="submit" class="btn btn-default" ng-click="actionsCtrl.sendEsc()">{{'ACTIONS_ESC' | translate}}</button>
         <button type="submit" class="btn btn-default" ng-click="actionsCtrl.restartEmulator()">{{'ACTIONS_RESTART' | translate}}</button>
+
+        <button ng-if="(chosenEnv.data.serverMode || chosenEnv.data.localServerMode)"
+                ng-click="actionsCtrl.openNetworkDialog()" class="btn btn-default">Connection Info</button>
+
+        <button ng-if="(chosenEnv.data.serverMode || chosenEnv.data.localServerMode)"
+                ng-click="actionsCtrl.openDetachDialog()" class="btn btn-default">Detach Network</button>
+
         <button type="submit" class="btn btn-default" ng-click="actionsCtrl.stopEmulator()" data-id="b-stop">{{'ACTIONS_STOP' | translate}}</button>
+
+        <button  class="btn btn-default" ng-click="initTitles()" uib-dropdown-toggle ng-if="idsData.length > 1" uib-dropdown on-toggle="toggled(open)">
+            <div>Switch View</div>
+            <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
+                <li ng-repeat="choice in idsData">
+                    <a ng-click="actionsCtrl.switchEmulators(choice)" href>{{choice.title}}</a>
+                </li>
+            </ul>
+        </button>
     </div>
 </div>
