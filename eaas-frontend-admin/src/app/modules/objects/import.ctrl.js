@@ -94,7 +94,7 @@ module.exports = ["$http", "$scope", "$state", "$stateParams", "growl", "localCo
                for (var i = 0; i < vm.allFiles.length; i++) {
                  uploadCnt++;
                  Upload.upload({
-                   url: localConfig.data.eaasBackendURL + "EmilObjectData/upload",
+                   url: localConfig.data.eaasBackendURL + "objects/upload",
                          data: {file: vm.allFiles[i], 'mediaType' : vm.mediumType, 'objectId' : vm.objectId}
                      }).then(function (resp) {
                          console.log('Success ' + resp.config.data.file.name + 'uploaded. Response: ' + resp.data);

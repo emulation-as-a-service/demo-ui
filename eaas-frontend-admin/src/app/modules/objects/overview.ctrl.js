@@ -4,10 +4,6 @@ module.exports = ['$state', '$scope', '$stateParams', 'Objects', 'localConfig', 
 
     var vm = this;
     vm.config = localConfig.data;
-    Objects.query().$promise.then(function(response) {
-        vm.objectList = response;
-        vm.updateData();
-    });
     vm.activeView = 0;
     vm.archives = archives.data.archives;
 
@@ -20,6 +16,7 @@ module.exports = ['$state', '$scope', '$stateParams', 'Objects', 'localConfig', 
         });
         vm.activeView = index;
     };
+    vm.updateTable(0, vm.archives[0]);
 
     /*
     if (objectList.data.status !== "0") {

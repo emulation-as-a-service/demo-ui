@@ -74,10 +74,19 @@ import '../../../eaas-client/eaas-client.css';
 import './app.css';
 
 
+var env = {};
+
+// Import variables if present (from env.js)
+if(window){
+  Object.assign(env, window.__env);
+}
+
 export default angular.module('emilUI', ['angular-loading-bar', 'ngSanitize', 'ngAnimate', 'ngCookies', 'ui.router', 'ui.bootstrap', 'ui.select', 'angular-growl',
     'dibari.angular-ellipsis', 'ui.bootstrap.contextMenu', 'pascalprecht.translate', 'smart-table', 'emilUI.modules', 'emilUI.helpers', 'mgo-angular-wizard',
     'textAngular', 'ngFileUpload', 'angular-jwt'])
 
+    .constant('localConfig', env)
+    
     .component('containerInputList', {
         templateUrl: 'partials/containerInputList.html',
         bindings: {
@@ -211,7 +220,7 @@ export default angular.module('emilUI', ['angular-loading-bar', 'ngSanitize', 'n
             // Angular before v1.2 uses $compileProvider.urlSanitizationWhitelist(...)
         }
     ])
-.config(function($stateProvider, $urlRouterProvider, growlProvider, $httpProvider, $translateProvider, $provide) {
+.config(function($stateProvider, $urlRouterProvider, growlProvider, $httpProvider, $translateProvider, $provide, localConfig) {
 
     /*
      * Use ng-sanitize for textangular, see https://git.io/vFd7y
@@ -291,7 +300,6 @@ export default angular.module('emilUI', ['angular-loading-bar', 'ngSanitize', 'n
                 chosenEnv: function($http, localConfig, helperFunctions, REST_URLS) {
                     return $http.get(localConfig.data.eaasBackendURL + helperFunctions.formatStr(REST_URLS.getEnvById, new URLSearchParams(window.location.search).get('id')))
                 },
-                localConfig: ($http) => $http.get("config.json"),
                 buildInfo: ($http, localConfig, REST_URLS) => $http.get(localConfig.data.eaasBackendURL + REST_URLS.buildVersionUrl),
             },
             controller: "ContainerLandingCtrl as containerLandingCtrl"
