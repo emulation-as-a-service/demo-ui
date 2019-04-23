@@ -40,6 +40,7 @@ module.exports = ['$state', '$scope', '$stateParams', 'Objects', 'localConfig', 
     };
 
     $scope.onPageSizeChanged = function () {
+        console.log("page size changed: " + vm.pageSize);
         $scope.gridOptions.api.paginationSetPageSize(Number(vm.pageSize));
     };
 

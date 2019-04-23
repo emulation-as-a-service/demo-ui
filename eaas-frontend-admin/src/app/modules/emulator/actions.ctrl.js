@@ -16,7 +16,7 @@ module.exports = ['$rootScope', '$scope', '$window', '$state', '$http', '$uibMod
     console.log(objectId);
     console.log(objectArchive);
     if(objectId) {
-        Objects.get({archiveId: $stateParams.objectArchive, objectId: objectId}).$promise.then(function(response) {
+        Objects.get({archiveId: objectArchive, objectId: objectId}).$promise.then(function(response) {
             vm.mediaCollection = response.mediaItems;
                 if(vm.mediaCollection)
                     vm.currentMediumLabel = vm.mediaCollection.file.length > 0 ? vm.mediaCollection.file[0].localAlias : null;
