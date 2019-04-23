@@ -6,20 +6,16 @@ module.exports = ['$scope', '$state', '$stateParams', '$uibModal', '$http', 'Obj
     console.log("$stateParams.userDescription", $stateParams.userDescription);
 
      vm.objectId = $stateParams.objectId;
-     vm.objectArchive = $stateParams.objectArchive;
+     vm.objectArchive = $stateParams.objectArchive ? $stateParams.objectArchive : null;
      vm.isSoftware = !($stateParams.swId === "-1");
      vm.softwareObj = softwareObj.data;
      vm.osList = osList;
 
-     if(!$stateParams.objectArchive)
-        $stateParams.objectArchive = "default";
-
-     Objects.get({archiveId: $stateParams.objectArchive, objectId: $stateParams.objectId}).$promise.then(function(response) {
+     Objects.get({archiveId: vm.objectArchive, objectId: vm.objectId}).$promise.then(function(response) {
         vm.metadata = response.metadata;
         vm.objEnvironments = response.objectEnvironments.environmentList;
         vm.suggested = response.objectEnvironments.suggested;
         vm.fileFormatMap = response.objectEnvironments.fileFormatMap;
-        console.log(response);
      });
      vm.description = $stateParams.userDescription;
 
