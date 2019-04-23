@@ -8,10 +8,13 @@ module.exports = ['$rootScope', '$scope', '$window', '$state', '$http', '$uibMod
     vm.emulator = $rootScope.emulator;
     $scope.chosenEnv = chosenEnv;
 
-    console.log($stateParams.objectArchive);
+
     vm.currentMediumLabel = null;
+
+    var objectArchive = $stateParams.objectArchive ? $stateParams.objectArchive : "default";
     var objectId = $stateParams.softwareId ? $stateParams.softwareId : $stateParams.objectId;
     console.log(objectId);
+    console.log(objectArchive);
     if(objectId) {
         Objects.get({archiveId: $stateParams.objectArchive, objectId: objectId}).$promise.then(function(response) {
             vm.mediaCollection = response.mediaItems;
