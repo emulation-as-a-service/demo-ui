@@ -44,7 +44,7 @@
     }
     .navbar-toggle {
         display: block;
-        z-index: 1000001;
+        z-index: 100;
         background-color: transparent !important;
     }
     .navbar-collapse.collapse {

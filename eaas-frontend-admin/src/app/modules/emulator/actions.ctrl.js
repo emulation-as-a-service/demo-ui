@@ -6,7 +6,7 @@ module.exports = ['$rootScope', '$scope', '$window', '$state', '$http', '$uibMod
     vm.config = localConfig.data;
     vm.type = $stateParams.type;
     vm.emulator = $rootScope.emulator;
-    $scope.chosenEnv = chosenEnv;
+    $rootScope.chosenEnv = chosenEnv;
 
 
     vm.currentMediumLabel = null;
@@ -86,6 +86,11 @@ module.exports = ['$rootScope', '$scope', '$window', '$state', '$http', '$uibMod
 
     vm.sendCtrlAltDel = function() {
         window.eaasClient.sendCtrlAltDel();
+    };
+
+    vm.close = function () {
+        window.onbeforeunload = null;
+        $state.go('admin.standard-envs-overview', {}, {reload: true});
     };
 
     vm.stopEmulator = function () {
@@ -253,7 +258,6 @@ module.exports = ['$rootScope', '$scope', '$window', '$state', '$http', '$uibMod
             eaasClient.componentId = component.id;
 
             eaasClient.connect().then(function () {
-
                 jQuery.when(
                     loadingElement.animate({width: "100%"}, 700),
                     jQuery.Deferred(function (deferred) {
@@ -266,20 +270,20 @@ module.exports = ['$rootScope', '$scope', '$window', '$state', '$http', '$uibMod
                 $("#emulator-container").show();
                 $rootScope.emulator.mode = eaasClient.mode;
                 $scope.$apply();
-                if (eaasClient.networkTcpInfo || eaasClient.tcpGatewayConfig) (async () => {
-                    var url = new URL(eaasClient.networkTcpInfo.replace(/^info/, 'http'));
-                    var pathArray = url.pathname.split('/');
-                    document.querySelector("#emulator-info-container").append(
-                        Object.assign(document.createElement("a"),
-                            {textContent: `connect to: ${url.hostname} protocol ${pathArray[1]} port ${pathArray[2]}`,
-                                href: `http://${url.hostname}:${pathArray[2]}`,
-                                target: "_blank", rel: "noopener"}),
-                        ' // ',
-                        Object.assign(document.createElement("a"),
-                            {textContent: "start eaas-proxy", href: await eaasClient.getProxyURL(),
-                                target: "_blank",}),
-                    );
-                })();
+//                if (eaasClient.networkTcpInfo || eaasClient.tcpGatewayConfig) (async () => {
+//                    var url = new URL(eaasClient.networkTcpInfo.replace(/^info/, 'http'));
+//                    var pathArray = url.pathname.split('/');
+//                    document.querySelector("#emulator-info-container").append(
+//                        Object.assign(document.createElement("a"),
+//                            {textContent: `connect to: ${url.hostname} protocol ${pathArray[1]} port ${pathArray[2]}`,
+//                                href: `http://${url.hostname}:${pathArray[2]}`,
+//                                target: "_blank", rel: "noopener"}),
+//                        ' // ',
+//                        Object.assign(document.createElement("a"),
+//                            {textContent: "start eaas-proxy", href: await eaasClient.getProxyURL(),
+//                                target: "_blank",}),
+//                    );
+//                })();
 
                 if (eaasClient.params.pointerLock === "true") {
                     growl.info($translate.instant('EMU_POINTER_LOCK_AVAILABLE'));
@@ -290,7 +294,6 @@ module.exports = ['$rootScope', '$scope', '$window', '$state', '$http', '$uibMod
                 $scope.$on('$locationChangeStart', function (event) {
                     window.$rootScope.idsData = [];
                     eaasClient.release();
-
                 });
 
             });

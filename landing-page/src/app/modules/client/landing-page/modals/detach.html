@@ -1,16 +1,14 @@
 <div class="modal-header">
     <h3 class="modal-title">Detach Network</h3>
 </div>
-
+<form id="inputForm" name="contentForm"
 <div class="modal-body">
-        <form id="inputForm" name="contentForm"
-              ng-submit="detachModalCtrl.detach()">
 
             <div class="form-group">
-                <label>Session Name</label> <input type="text"
+                <label>Network Environment Name</label> <input type="text"
                      class="form-control"
                      ng-model="detachModalCtrl.sessionName"
-                     placeholder="Session Name" required>
+                     placeholder="Network Environment Name" required>
             </div>
 
             <div class="tekst">
@@ -29,16 +27,18 @@
                 </div>
             </div>
             <b class="tekst">You would be able to close this windows after detach</b>
-
-            <button ng-if="!detachModalCtrl.detachedComponentId" class="btn btn-primary" type="submit">Detach</button>
-
+            <!--
             <div ng-if="detachModalCtrl.detachedComponentId">
                 You can connect other environments with <br>
                 NetworkID: <b>{{detachModalCtrl.detachedComponentId}}</b>
             </div>
-        </form>
+            -->
+
 </div>
 
 <div class="modal-footer">
+    <button ng-if="!detachModalCtrl.detachedComponentId" class="btn btn-primary" type="button" ng-click="$close();detachModalCtrl.detach()">Detach</button>
     <button class="btn btn-primary" type="button" ng-click="$close();detachModalCtrl.showEmu()">Cancel</button>
 </div>
+
+</form>

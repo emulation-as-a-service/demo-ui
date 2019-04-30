@@ -244,6 +244,7 @@
   "EMU_STOPPED" : "Emulator stopped",
   "EMU_POINTER_LOCK_AVAILABLE" : "Click on the emulator for mouse control.",
   "EMU_LINK": "Link to this environment",
+  "NETWORKING_STOPPING_COMPONENT": "Stopping emulator",
 
   "ADDSW_TITLE" : "Add software",
   "ADDSW_DIALOG_LIST" : "Available software packages",

@@ -20,7 +20,8 @@
       "advanced": true,
       "objectUpload" : true,
       "oaipmh" : true,
-      "emulators": true
+      "emulators": true,
+      "networking": true
     },
 
     "auth0Config" : {

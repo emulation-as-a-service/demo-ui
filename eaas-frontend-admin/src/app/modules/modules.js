@@ -53,3 +53,5 @@ emilUIModule.controller('EmulatorsDetailsController', require('./emulators/detai
 emilUIModule.controller('EmulatorsJsonModalController', require('./emulators/modals/emulators-json.modal'));
 emilUIModule.controller('NetworkModalController', require('../../../../landing-page/src/app/modules/client/landing-page/modals/network-modal.ctrl.js'));
 emilUIModule.controller('DetachModalController', require('../../../../landing-page/src/app/modules/client/landing-page/modals/detach-modal.ctrl.js'));
+emilUIModule.controller('NetworkingCtrl', require('./networking/networking.ctrl.js'));
+emilUIModule.controller('NetworkGroupManagerCtrl', require('./networking/modals/networkGroupModal.ctrl.js'));

@@ -1,0 +1,24 @@
+<h1 class="m-t-0">Networks</h1>
+
+<div style="margin-bottom: 15px;" class="ag-theme-balham">
+    <div style="text-align: justify; text-align-last: justify">
+        <span style="display: inline-block; vertical-align: text-bottom;"> Page Size:
+            <select ng-click="onPageSizeChanged()" ng-model="netCtrl.pageSize">
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+                <option value="25">25</option>
+                <option value="100">100</option>
+                <option value="500">500</option>
+            </select>
+            </span>
+    </div>
+</div>
+
+
+<div style="text-align: right; margin-bottom: 15px;">
+    <input type="text" class="form-control" ng-model="netCtrl.quickFilterText"
+           placeholder="{{'CHOOSE_ENV_SEARCH' | translate}}"/>
+</div>
+
+<div ag-grid="gridOptions" class="ag-theme-balham"></div>

@@ -100,21 +100,19 @@ import '../../../eaas-client/eaas-client.css';
 import './app.css';
 
 
-var env = {};
-
-// Import variables if present (from env.js)
-if(window){
-  Object.assign(env, window.__env);
-}
-
 export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize', 'ngAnimate', 'ngCookies', 'ngResource', 'ui.router', 'ui.bootstrap',
                                    'ui.mask', 'ui.select', 'angular-growl', 'smart-table', 'ng-sortable', 'pascalprecht.translate',
                                    'textAngular', 'mgo-angular-wizard', 'ui.bootstrap.datetimepicker', 'chart.js', 'emilAdminUI.helpers',
                                    'emilAdminUI.modules', 'angular-jwt', 'ngFileUpload', 'agGrid', 'auth0.auth0'])
 
-// .constant('kbLayouts', require('./../public/kbLayouts.json'))
-
-    .constant('localConfig', env)
+    .constant('localConfig', (() => {
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", localStorage.eaasConfigURL || "config.json", false);
+        xhr.send();
+        var ret = {};
+        ret.data = JSON.parse(xhr.responseText);
+        return ret;
+    })())
 
     .component('inputList', {
         templateUrl: 'partials/components/inputList.html',
@@ -185,10 +183,9 @@ export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize'
 .run(async function($rootScope, $state, $http, authService, localConfig) {
     $rootScope.emulator = {
         state : '',
-        mode : null
+        mode : null,
+        detached : false
     };
-
-    console.log(localConfig);
 
     $rootScope.chk = {};
     $rootScope.chk.transitionEnable = true;
@@ -672,7 +669,10 @@ function($stateProvider,
                 objectId: null,
                 objectArchive: null,
                 userId: null,
-                returnToObjects: false
+                returnToObjects: false,
+                isStarted: false,
+                isDetached: false,
+                networkInfo: null
             },
             views: {
                 'wizard': {
@@ -745,6 +745,19 @@ function($stateProvider,
                 'wizard': {
                     template: require('./modules/handle/overview.html'),
                     controller: "HandleOverviewController as handleOverview",
+                }
+            }
+        })
+            .state('admin.networking', {
+            url: "/networking",
+            resolve: {
+                localConfig: ($http) => $http.get(localStorage.eaasConfigURL || "config.json"),
+                groupdIds: ($http, localConfig, REST_URLS) => $http.get(localConfig.data.eaasBackendURL + REST_URLS.getGroupIds)
+            },
+            views: {
+                'wizard': {
+                    template: require('./modules/networking/overview.html'),
+                    controller: "NetworkingCtrl as netCtrl",
                 }
             }
         })

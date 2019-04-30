@@ -32,12 +32,14 @@
     <uib-tab index="1" heading="Connect to ComponentID (Beta)">
         <div class="modal-body">
 
-        <ui-select ng-model="attachComponentId" theme="bootstrap" on-remove="OnClickSelectAttachID($item)" ui-outer-click="cancel()" on-select="OnClickSelectAttachID($item)"  close-on-select="true"  ng-disabled="disabled" style="width: 550px;" title="Choose GroupID">
+        <ui-select ng-model="attachComponentId" theme="bootstrap" on-remove="OnClickSelectAttachID($item)"
+                   ui-outer-click="cancel()" on-select="OnClickSelectAttachID($item)"  close-on-select="true"
+                   ng-disabled="disabled" style="width: 550px;" title="Choose GroupID">
             <ui-select-match placeholder="Select environment or leave it empty...">
-                ID: {{attachComponentId}} | Title: {{item}}
+                ID: {{attachComponentId}} | Title: {{item.name}}
             </ui-select-match>
-            <ui-select-choices repeat="item in (availableGroupIds | filter: $select.search) track by item">
-                ID:  {{item}} | Title: {{item}}
+            <ui-select-choices repeat="item in (availableGroupIds | filter: $select.search) track by item.id">
+                ID:  {{item.id}} | Title: {{item.name}}
             </ui-select-choices>
         </ui-select>
 

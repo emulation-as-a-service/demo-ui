@@ -2,37 +2,109 @@
     <div id="actionsHeading" class="panel-heading">{{'ACTIONS_L' | translate}}</div>
 
     <div id="actionsBtnGroup" class="btn-group-vertical" role="group">
-        <button ng-if="baseCtrl.config.features.screenshots && actionsCtrl.mode === 'guac'"
-                type="submit" class="btn btn-default" ng-click="actionsCtrl.screenshot()">{{'ACTIONS_SCREENSHOT' | translate}}</button>
+        <button ng-if="baseCtrl.config.features.screenshots && actionsCtrl.emulator.mode === 'guac'"
+                type="submit" class="btn btn-default"
+                ng-click="actionsCtrl.screenshot()"
+                ng-disabled="actionsCtrl.emulator.state !== 'STARTED'">
+            {{'ACTIONS_SCREENSHOT' | translate}}
+        </button>
         <button type="submit" class="btn btn-default" ng-click="actionsCtrl.openPrintDialog()"
-                ng-show="actionsCtrl.enablePrinting">{{'ACTIONS_PRINT' | translate}}</button>
-        <button type="submit" class="btn btn-default" ng-click="actionsCtrl.openChangeMediaDialog()"
-                ng-show="actionsCtrl.driveId >= 0">{{'ACTIONS_CHANGE_MEDIA' | translate}}</button>
+                ng-disabled="actionsCtrl.emulator.state !== 'STARTED'"
+                ng-show="actionsCtrl.enablePrinting">
+            {{'ACTIONS_PRINT' | translate}}
+        </button>
+        <button type="submit" class="btn btn-default"
+                ng-click="actionsCtrl.openChangeMediaDialog()"
+                ng-disabled="actionsCtrl.emulator.state !== 'STARTED'"
+                ng-show="actionsCtrl.driveId >= 0">
+            {{'ACTIONS_CHANGE_MEDIA' | translate}}
+        </button>
 
         <button ng-if="actionsCtrl.shutdownByOs"
-                type="submit" class="btn btn-default" uib-tooltip="{{'ACTIONS_SAVESESSION_HELP' | translate}}" ng-click="actionsCtrl.openSaveEnvironmentDialog()"
-                ng-disabled="actionsCtrl.emulator.state != 'STOPPED'" ng-show="actionsCtrl.type"> {{'ACTIONS_SAVE_ENV' | translate}}</button>
+                type="submit" class="btn btn-default"
+                uib-tooltip="{{'ACTIONS_SAVESESSION_HELP' | translate}}"
+                ng-click="actionsCtrl.openSaveEnvironmentDialog()"
+                ng-disabled="actionsCtrl.emulator.state !== 'STOPPED'"
+                ng-show="actionsCtrl.type">
+            {{'ACTIONS_SAVE_ENV' | translate}}
+        </button>
 
         <button ng-if="!actionsCtrl.shutdownByOs"
+<<<<<<< HEAD
                 type="submit" class="btn btn-default" ng-click="actionsCtrl.openSaveEnvironmentDialog()"
                 ng-show="actionsCtrl.type"> {{'ACTIONS_SAVE_ENV' | translate}}</button>
 
         <button type="submit" ng-hide="actionsCtrl.isKVM" ng-if="baseCtrl.config.features.snapshots"
                 class="btn btn-default" ng-click="actionsCtrl.checkpoint()">{{'ACTIONS_SNAPSHOT' | translate}}</button>
+=======
+                type="submit"
+                class="btn btn-default"
+                ng-click="actionsCtrl.openSaveEnvironmentDialog()"
+                ng-disabled="actionsCtrl.emulator.state !== 'STARTED'"
+                ng-show="actionsCtrl.type">
+            {{'ACTIONS_SAVE_ENV' | translate}}
+        </button>
+        
+        <button type="submit"
+                ng-hide="actionsCtrl.isKVM"
+                ng-if="baseCtrl.config.features.snapshots"
+                ng-disabled="actionsCtrl.emulator.state !== 'STARTED'"
+                class="btn btn-default"
+                ng-click="actionsCtrl.checkpoint()">
+            {{'ACTIONS_SNAPSHOT' | translate}}
+        </button>
+>>>>>>> master
 
-        <button type="submit" class="btn btn-default" ng-click="actionsCtrl.sendCtrlAltDel()">{{'ACTIONS_CTRLALTDEL' | translate}}</button>
-        <button type="submit" class="btn btn-default" ng-click="actionsCtrl.sendEsc()">{{'ACTIONS_ESC' | translate}}</button>
-        <button type="submit" class="btn btn-default" ng-click="actionsCtrl.restartEmulator()">{{'ACTIONS_RESTART' | translate}}</button>
+        <button type="submit" class="btn btn-default"
+                ng-click="actionsCtrl.sendCtrlAltDel()"
+                ng-if="actionsCtrl.emulator.mode === 'guac'"
+                ng-disabled="actionsCtrl.emulator.state !== 'STARTED'">
+            {{'ACTIONS_CTRLALTDEL' | translate}}
+        </button>
 
-        <button ng-if="(chosenEnv.data.serverMode || chosenEnv.data.localServerMode)"
-                ng-click="actionsCtrl.openNetworkDialog()" class="btn btn-default">Connection Info</button>
+        <button type="submit" class="btn btn-default"
+                ng-if="actionsCtrl.emulator.mode === 'guac'"
+                ng-disabled="actionsCtrl.emulator.state !== 'STARTED'"
+                ng-click="actionsCtrl.sendEsc()">
+            {{'ACTIONS_ESC' | translate}}
+        </button>
+        <button type="submit" class="btn btn-default"
+                ng-if="actionsCtrl.emulator.mode === 'guac'"
+                ng-disabled="actionsCtrl.emulator.state !== 'STARTED'"
+                ng-click="actionsCtrl.restartEmulator()">
+            {{'ACTIONS_RESTART' | translate}}
+        </button>
 
-        <button ng-if="(chosenEnv.data.serverMode || chosenEnv.data.localServerMode)"
-                ng-click="actionsCtrl.openDetachDialog()" class="btn btn-default">Detach Network</button>
+        <button class="btn btn-default"
+                ng-if="(chosenEnv.data.serverMode || chosenEnv.data.localServerMode)"
+                ng-disabled="actionsCtrl.emulator.state !== 'STARTED'"
+                ng-click="actionsCtrl.openNetworkDialog()">
+            Connection Info
+        </button>
 
-        <button type="submit" class="btn btn-default" ng-click="actionsCtrl.stopEmulator()" data-id="b-stop">{{'ACTIONS_STOP' | translate}}</button>
+        <button class="btn btn-default"
+                ng-if="!actionsCtrl.emulator.detached"
+                ng-disabled="actionsCtrl.emulator.state !== 'STARTED'"
+                ng-click="actionsCtrl.openDetachDialog()" >
+            Detach Network
+        </button>
 
-        <button  class="btn btn-default" ng-click="initTitles()" uib-dropdown-toggle ng-if="idsData.length > 1" uib-dropdown on-toggle="toggled(open)">
+        <button type="submit" class="btn btn-default"
+                ng-if="!actionsCtrl.emulator.detached"
+                ng-click="actionsCtrl.stopEmulator()">
+            {{'ACTIONS_STOP' | translate}}
+        </button>
+
+        <button type="submit" class="btn btn-default"
+                ng-if="actionsCtrl.emulator.detached"
+                ng-click="actionsCtrl.close()">
+            Close
+        </button>
+
+        <button  class="btn btn-default"
+                 ng-click="initTitles()"
+                 uib-dropdown-toggle ng-if="idsData.length > 1"
+                 uib-dropdown on-toggle="toggled(open)">
             <div>Switch View</div>
             <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
                 <li ng-repeat="choice in idsData">
@@ -42,3 +114,4 @@
         </button>
     </div>
 </div>
+

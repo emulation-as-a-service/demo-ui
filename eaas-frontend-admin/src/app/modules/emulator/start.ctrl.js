@@ -5,6 +5,8 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$http', '$sce', 'environ
 
         window.isCollapsed = true;
         window.$rootScope = $rootScope;
+        $rootScope.emulator.state = '';
+        $rootScope.emulator.detached = false;
         console.log(window.isCollapsed, window.isCollapsed);
         vm.runEmulator = function(selectedEnvs, attachId) {
 
@@ -37,6 +39,7 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$http', '$sce', 'environ
                     return;
 
                 $rootScope.emulator.state = 'STOPPED';
+                $rootScope.emulator.detached = false;
                 $("#emulator-container").hide();
                 $("#emulator-loading-container").show();
                 $("#emulator-loading-container").text($translate.instant('JS_EMU_STOPPED'));
@@ -107,8 +110,6 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$http', '$sce', 'environ
             };
             $rootScope.environments = environmentList.data.environments;
             envs.push({data, visualize: true});
-
-             // Fix to close emulator on page leave
             $scope.$on('$locationChangeStart', function (event, newUrl, oldUrl) {
                 if(!newUrl.endsWith("emulator")) {
                     eaasClient.release();
@@ -116,11 +117,40 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$http', '$sce', 'environ
                 }
             });
 
-            eaasClient.start(envs, params, attachId).then(function () {
+            if($stateParams.isStarted){
+                eaasClient.isStarted = true;
+                if($stateParams.isDetached)
+                    eaasClient.detached = true;
+                eaasClient.componentId = $stateParams.envId;
+
+                if ($stateParams.networkInfo) {
+                    $rootScope.chosenEnv.data.serverMode = true;
+                    eaasClient.networkTcpInfo = $stateParams.networkInfo.tcp;
+                }
+                eaasClient.connect().then(function () {
+                    $("#emulator-loading-container").hide();
+                    $("#emulator-container").show();
+                     $rootScope.emulator.mode = eaasClient.mode;
+                     $rootScope.emulator.state = 'STARTED';
+                     $rootScope.emulator.detached = true;
+                     $scope.$apply();
+                    if (eaasClient.networkTcpInfo || eaasClient.tcpGatewayConfig) {
+                        $rootScope.networkTcpInfo = eaasClient.networkTcpInfo;
+                        $rootScope.tcpGatewayConfig = eaasClient.tcpGatewayConfig;
+                    }
+                    if (eaasClient.params.pointerLock === "true") {
+                        growl.info($translate.instant('EMU_POINTER_LOCK_AVAILABLE'));
+                        BWFLA.requestPointerLock(eaasClient.guac.getDisplay().getElement(), 'click');
+                    }
+                });
+            } else {
+                eaasClient.start(envs, params, attachId).then(function () {
                 eaasClient.connect().then(function () {
                     $("#emulator-loading-container").hide();
                     $("#emulator-container").show();
                     $rootScope.emulator.mode = eaasClient.mode;
+                    $rootScope.emulator.state = 'STARTED';
+                    $scope.$apply();
                     if (eaasClient.networkTcpInfo || eaasClient.tcpGatewayConfig) {
                         $rootScope.networkTcpInfo = eaasClient.networkTcpInfo;
                         $rootScope.tcpGatewayConfig = eaasClient.tcpGatewayConfig;
@@ -131,6 +161,7 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$http', '$sce', 'environ
                     }
                 });
             });
+            }
         };
 
         //todo optimize this if else
@@ -148,8 +179,8 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$http', '$sce', 'environ
                 controller: ["$scope", "$uibModalInstance", "$uibModalStack", function ($scope, $uibModalInstance, $uibModalStack) {
                     $http.get(localConfig.data.eaasBackendURL + REST_URLS.getGroupIds).then(function (response) {
                         if (response.status === 200) {
-                            console.log("!!! response.data", response.data);
                             $scope.availableGroupIds = response.data;
+                            console.log($scope.availableGroupIds);
                         } else {
                             growl.error(response.data.message, {title: 'Error ' + response.data.status});
                         }
@@ -188,9 +219,8 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$http', '$sce', 'environ
                             jQuery.Deferred(function (deferred) {
                                 jQuery(deferred.resolve);
                             })).done(function () {
-                            vm.runEmulator($scope.selected, $scope.attachComponentId);
+                            vm.runEmulator($scope.selected, $scope.attachComponentId.id);
                         });
-
                     };
 
                     $scope.cancel = function () {
