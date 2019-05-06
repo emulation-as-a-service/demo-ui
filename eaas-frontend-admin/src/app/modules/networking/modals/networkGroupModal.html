@@ -10,6 +10,7 @@
     </div>
 <uib-accordion id="session-accordion" close-others="oneAtATime"> <!-- pay attention to this line -->
 
+
     <div uib-accordion-group class="panel-default" heading="{{getTitle(component.customComponentName)}}" ng-repeat="component in groupComponents">
         {{getTitle(component.customComponentName)}}
         <button ng-click="attach(component.componentId)" class="btn btn-default">Attach Viewer</button>
