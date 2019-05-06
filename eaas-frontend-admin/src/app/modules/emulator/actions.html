@@ -30,13 +30,6 @@
         </button>
 
         <button ng-if="!actionsCtrl.shutdownByOs"
-<<<<<<< HEAD
-                type="submit" class="btn btn-default" ng-click="actionsCtrl.openSaveEnvironmentDialog()"
-                ng-show="actionsCtrl.type"> {{'ACTIONS_SAVE_ENV' | translate}}</button>
-
-        <button type="submit" ng-hide="actionsCtrl.isKVM" ng-if="baseCtrl.config.features.snapshots"
-                class="btn btn-default" ng-click="actionsCtrl.checkpoint()">{{'ACTIONS_SNAPSHOT' | translate}}</button>
-=======
                 type="submit"
                 class="btn btn-default"
                 ng-click="actionsCtrl.openSaveEnvironmentDialog()"
@@ -53,7 +46,6 @@
                 ng-click="actionsCtrl.checkpoint()">
             {{'ACTIONS_SNAPSHOT' | translate}}
         </button>
->>>>>>> master
 
         <button type="submit" class="btn btn-default"
                 ng-click="actionsCtrl.sendCtrlAltDel()"
