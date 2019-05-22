@@ -78,7 +78,7 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'lo
                                          _vm.id = response.data.userData.environmentId;
                                          _vm.modal.close();
                                          growl.success("Import successful.");
-                                         $state.go('admin.standard-envs-overview', {}, {reload: true});
+                                         $state.go('admin.emulators', {}, {reload: true});
                                      }
                                      else
                                          $timeout(function () {

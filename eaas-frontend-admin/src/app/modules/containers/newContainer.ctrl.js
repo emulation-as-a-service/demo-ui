@@ -21,6 +21,8 @@ module.exports = ['$http', '$scope', '$state', '$stateParams', 'runtimeList', 'g
         container.tag = "";
         container.imageInput = "/input";
         container.imageOutput = "/output";
+        container.customSubdir = null;
+        container.isCustomSubdir = false;
 
         //TODO: ?
         container.onSelectRuntime = function (item, model) {
@@ -210,7 +212,8 @@ module.exports = ['$http', '$scope', '$state', '$stateParams', 'runtimeList', 'g
                     title: container.title,
                     description: container.containerDescription,
                     author: container.author,
-                    guiRequired: container.gui
+                    guiRequired: container.gui,
+                    customSubdir: container.customSubdir
                 }).then(function (response) {
 
                 if (response.data.status === "0") {

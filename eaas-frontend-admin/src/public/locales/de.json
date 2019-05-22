@@ -35,6 +35,7 @@
   "ACTIONS_ESC" : "Esc",
   "ACTIONS_SAVESESSION_HELP" : "Die Sitzung kann erst gespeichert werden, wenn das Betriebssystem der Bereitstellungs-Sitzung heruntergefahren wurde. Eine Anleitung zum Herunterfahren finden Sie in der 'Hilfe zur Bereitstellungsumgebung'",
   "ACTIONS_SNAPSHOT": "Snapshot",
+  "ACTIONS_PRINT_READY" : "Ein neuer Druckauftrag liegt vor",
 
   "CONTAINER_ACTIONS_ABORT" : "Abbrechen",
   "CONTAINER_STOPPED" : "Beendet",
@@ -177,6 +178,9 @@
   "SW_NEW_CONTAINER_ARGUMENTS_H" : "Prozess und Argumente/Parameter",
   "SW_NEW_CONTAINER_ARGUMENTS_NOTE" : "Prozess und Argumente für den auszuführenden Container-Einstiegspunkt",
   "SW_NEW_CONTAINER_ARGUMENTS_PH" : "cmdl / args",
+  "SW_NEW_CONTAINER_OPTIONAL_SUBDIRECTORY" : "Optionale Unterverzeichnis",
+  "SW_NEW_CONTAINER_OPTIONAL_SUBDIRECTORY_NAME" : "Unterverzeichnis Name",
+
 
   "EDITENV_L" : "Umgebung bearbeiten",
   "EDITENV_ID" : "ID",

@@ -1,129 +1,122 @@
-module.exports = ["$http", "$rootScope", "$scope", "$state", "$stateParams", "environmentList", "localConfig",
+module.exports = ["$http", "$rootScope", "$scope", "$state", "$stateParams", "Environments", "localConfig",
             "growl", "$translate", "objectDependencies", "helperFunctions", "operatingSystemsMetadata", "softwareList", "$uibModal",
              "$timeout", "nameIndexes", "REST_URLS",
-            function ($http, $rootScope, $scope, $state, $stateParams, environmentList, localConfig,
+    function ($http, $rootScope, $scope, $state, $stateParams, Environments, localConfig,
             growl, $translate, objectDependencies, helperFunctions, operatingSystemsMetadata, softwareList, $uibModal,
             $timeout, nameIndexes, REST_URLS) {
 
-           let handlePrefix = "11270/";
-           var vm = this;
+       let handlePrefix = "11270/";
+       var vm = this;
 
-           vm.editMode = false;
-           let emulatorContainerVersionSpillter = "|";
+       vm.editMode = false;
+       let emulatorContainerVersionSpillter = "|";
 
-           vm.showAdvanced = false;
-           vm.landingPage = localConfig.data.landingPage;
+       vm.showAdvanced = false;
+       vm.landingPage = localConfig.data.landingPage;
 
-           var envList = null;
-           vm.isObjectEnv = $stateParams.objEnv;
+       vm.isObjectEnv = $stateParams.objEnv;
 
-           vm.operatingSystemsMetadata = {};
-           if(operatingSystemsMetadata)
-             vm.operatingSystemsMetadata = operatingSystemsMetadata.data.operatingSystemInformations;
+       vm.operatingSystemsMetadata = {};
+       if(operatingSystemsMetadata)
+         vm.operatingSystemsMetadata = operatingSystemsMetadata.data.operatingSystemInformations;
 
-           this.dependencies = objectDependencies.data;
-           vm.isObjectEnv = $stateParams.objEnv;
+       this.dependencies = objectDependencies.data;
+       vm.isObjectEnv = $stateParams.objEnv;
+       vm.emulator = null;
 
-           envList = environmentList.data.environments;
-           this.env = null;
-
-           for(var i = 0; i < envList.length; i++) {
-               if (envList[i].envId === $stateParams.envId) {
-                   this.env = envList[i];
-                   break;
-               }
-           }
-
-           if(!this.env)
-           {
-               growl.error("Environment not found");
-               $state.go('admin.standard-envs-overview', {}, {reload: true});
-           }
-
-        vm.emulator = this.env.emulator;
-
-        if (typeof this.env.xpraEncoding != "undefined" && this.env.xpraEncoding != null)
-           vm.xpraEncoding = this.env.xpraEncoding;
-        else
-           vm.xpraEncoding = "jpeg";
+        this.env = {};
+        if(!$stateParams.envId)
+        {
+            $state.go('admin.standard-envs-overview', {}, {reload: false});
+            return;
+        }
 
         vm.showDateContextPicker = false;
 
-        let emulatorContainerName = null;
-        if(nameIndexes.data.entries.entry) {
-            nameIndexes.data.entries.entry.forEach(function (element, i) {
-                if (!element.key.toLowerCase().includes(vm.emulator.toLowerCase()))
-                    delete nameIndexes.data.entries.entry[i];
-                else
-                    emulatorContainerName = element.value.name;
-            });
-            vm.nameIndexes = nameIndexes.data.entries.entry;
-        }
-        else
-        {
-             vm.nameIndexes = [];
-        }
+        Environments.get({envId: $stateParams.envId}).$promise.then(function(response) {
+            vm.env = response;
+            vm.emulator = vm.env.emulator;
 
-        vm.getNameIndexObj = function(key, name, version){
-            return             {
-                key: key,
-                value: {
-                    name: name,
-                    version: version
+            if (typeof vm.env.xpraEncoding != "undefined" && vm.env.xpraEncoding != null)
+                vm.xpraEncoding = vm.env.xpraEncoding;
+            else
+                vm.xpraEncoding = "jpeg";
+
+            if (typeof vm.env.containerName !== "undefined" && typeof vm.env.containerVersion !== "undefined")
+            {
+              let name = vm.env.containerName;
+              let version = vm.env.containerVersion;
+
+              vm.nameIndexes.forEach(function(element, i)
+              {
+                  if(element.value.version === version)
+                      vm.emulatorContainer = element;
+              });
+            }
+
+            vm.envTitle = vm.env.title;
+            vm.author = vm.env.author;
+            vm.envDescription = vm.env.description;
+            vm.envHelpText = vm.env.helpText;
+            vm.enableRelativeMouse = vm.env.enableRelativeMouse;
+            vm.enablePrinting = vm.env.enablePrinting;
+            vm.nativeConfig = vm.env.nativeConfig;
+            vm.enableInternet = vm.env.enableInternet;
+            vm.serverMode = vm.env.serverMode;
+            vm.localServerMode = vm.env.localServerMode;
+            vm.enableSocks = vm.env.enableSocks;
+            vm.serverIp = vm.env.serverIp;
+            vm.serverPort = vm.env.serverPort;
+            vm.gwPrivateIp = vm.env.gwPrivateIp;
+            vm.gwPrivateMask = vm.env.gwPrivateMask;
+            vm.useXpra = vm.env.useXpra;
+            vm.connectEnvs = vm.env.connectEnvs;
+            vm.canProcessAdditionalFiles = vm.env.canProcessAdditionalFiles;
+            vm.shutdownByOs = vm.env.shutdownByOs;
+            vm.userTag = vm.env.userTag;
+            vm.drives = vm.env.drives;
+
+            for (var i = 0; i < vm.operatingSystemsMetadata.length; i++) {
+                if (vm.operatingSystemsMetadata[i].id === vm.env.os)
+                {
+                    vm.os = vm.operatingSystemsMetadata[i];
                 }
             }
-        };
-        vm.nameIndexes.unshift(vm.getNameIndexObj("latest", emulatorContainerName, null));
-        vm.emulatorContainer = vm.nameIndexes[0];
 
-        if (typeof this.env.containerName !== "undefined" && typeof this.env.containerVersion !== "undefined")
-        {
-            let name = this.env.containerName;
-            let version = this.env.containerVersion;
+            if(localConfig.data.features.handle) {
+                $http.get(localConfig.data.eaasBackendURL + REST_URLS.getHandleList).then(function (response) {
+                     if (response.data.handles.includes(handlePrefix + vm.env.envId.toUpperCase())) {
+                         vm.handle = handlePrefix + vm.env.envId;
+                     }
+                });
+            }
 
-            vm.nameIndexes.forEach(function(element, i)
-            {
-                if(element.value.version === version)
-                    vm.emulatorContainer = element;
-            });
-        }
+            let emulatorContainerName = null;
+            if(nameIndexes.data.entries.entry) {
+              nameIndexes.data.entries.entry.forEach(function (element, i) {
+                  if (!element.key.toLowerCase().includes(vm.emulator.toLowerCase()))
+                      delete nameIndexes.data.entries.entry[i];
+                  else
+                      emulatorContainerName = element.value.name;
+              });
+              vm.nameIndexes = nameIndexes.data.entries.entry;
+            } else {
+               vm.nameIndexes = [];
+            }
 
-           this.envTitle = this.env.title;
-           this.author = this.env.author;
-           this.envDescription = this.env.description;
-           this.envHelpText = this.env.helpText;
-           this.enableRelativeMouse = this.env.enableRelativeMouse;
-           this.enablePrinting = this.env.enablePrinting;
-           this.nativeConfig = this.env.nativeConfig;
-           this.enableInternet = this.env.enableInternet;
-           this.serverMode = this.env.serverMode;
-           this.localServerMode = this.env.localServerMode;
-           this.enableSocks = this.env.enableSocks;
-           this.serverIp = this.env.serverIp;
-           this.serverPort = this.env.serverPort;
-           this.gwPrivateIp = this.env.gwPrivateIp;
-           this.gwPrivateMask = this.env.gwPrivateMask;
-           this.useXpra = this.env.useXpra;
-           this.connectEnvs = this.env.connectEnvs;
-           this.canProcessAdditionalFiles = this.env.canProcessAdditionalFiles;
-           this.shutdownByOs = this.env.shutdownByOs;
+            vm.getNameIndexObj = function(key, name, version){
+                  return {
+                      key: key,
+                      value: {
+                          name: name,
+                          version: version
+                      }
+                  }
+            };
 
-           for (var i = 0; i < vm.operatingSystemsMetadata.length; i++) {
-                if (vm.operatingSystemsMetadata[i].id === this.env.os)
-                {
-                    this.os = vm.operatingSystemsMetadata[i];
-                }
-           }
-
-           this.userTag = this.env.userTag;
-
-           if(localConfig.data.features.handle) {
-               $http.get(localConfig.data.eaasBackendURL + REST_URLS.getHandleList).then(function (response) {
-                   if (response.data.handles.includes(handlePrefix + vm.env.envId.toUpperCase())) {
-                       vm.handle = handlePrefix + vm.env.envId;
-                   }
-               });
-           }
+            vm.nameIndexes.unshift(vm.getNameIndexObj("latest", emulatorContainerName, null));
+            vm.emulatorContainer = vm.nameIndexes[0];
+        });
 
            vm.createHandle = function () {
                     jQuery.when(
@@ -190,7 +183,8 @@ module.exports = ["$http", "$rootScope", "$scope", "$state", "$stateParams", "en
                    processAdditionalFiles : vm.canProcessAdditionalFiles,
                    containerEmulatorName : vm.emulatorContainer.value.name,
                    containerEmulatorVersion : vm.emulatorContainer.value.version,
-                   xpraEncoding: vm.xpraEncoding
+                   xpraEncoding: vm.xpraEncoding,
+                   drives : vm.drives
                }).then(function(response) {
                    if (response.data.status === "0") {
                        growl.success($translate.instant('JS_ENV_UPDATE'));
@@ -421,6 +415,32 @@ Do you want to publish this environment to the network?`))
                       $state.go('admin.standard-envs-overview', {}, {reload: true});
                   });
               }
+          };
+
+          vm.deleteDrive = function(index)
+          {
+              vm.drives.splice(index, 1);
+          };
+
+          vm.showDriveDetails = function(driveIdx) {
+              $uibModal.open({
+                  animation: true,
+                  template: require('./modals/drive-details.html'),
+                  controller: ["$scope", function($scope) {
+                    this.drive = {};
+                    if(driveIdx >= 0)
+                       this.drive = vm.drives[driveIdx];
+
+                    this.saveEdit = function()
+                    {
+                        if(driveIdx < 0)
+                            vm.drives.push(this.drive);
+
+                        console.log(vm.drives);
+                    }
+                  }],
+                  controllerAs: "editDriveCtrl"
+              });
           };
 }];
 

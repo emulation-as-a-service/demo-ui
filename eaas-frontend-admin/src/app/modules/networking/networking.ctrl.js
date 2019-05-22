@@ -1,5 +1,5 @@
-module.exports = ['$state', '$scope', '$stateParams', '$uibModal', 'groupdIds', 'localConfig', 'REST_URLS', '$http',
-    function ($state, $scope, $stateParams, $uibModal, groupdIds, localConfig, REST_URLS, $http) {
+module.exports = ['$state', '$scope', '$stateParams', '$uibModal', 'groupdIds', 'localConfig', 'REST_URLS', '$http', 'Environments',
+    function ($state, $scope, $stateParams, $uibModal, groupdIds, localConfig, REST_URLS, $http, Environments) {
     console.log("groupdIds", groupdIds.data);
 
     console.log("local ", localConfig);
@@ -12,7 +12,6 @@ module.exports = ['$state', '$scope', '$stateParams', '$uibModal', 'groupdIds', 
     function updateGroupId() {
         var updatedGroupID = $http.get(localConfig.data.eaasBackendURL + REST_URLS.getGroupIds).then(function (response) {
             $scope.groupdIds = response.data;
-            console.log($scope.groupdIds);
 
             if ($scope.gridOptions.api != null) {
                 $scope.gridOptions.api.setRowData($scope.groupdIds);
@@ -76,7 +75,9 @@ module.exports = ['$state', '$scope', '$stateParams', '$uibModal', 'groupdIds', 
                     },
                     groupComponents: function () {
                         return response.data;
-                    }
+                    },
+
+                    environments : (Environments) => Environments.query().$promise
                 },
                 controller: "NetworkGroupManagerCtrl as networkModalCtrl"
             });

@@ -36,8 +36,8 @@
                 <label>
                     <input type="radio" ng-model="newContainerCtrl.importMethod" value="url">
                     <span>{{'SW_NEW_CONTAINER_DOCKER_IMAGE_IMPORT_URL' | translate}}</span>
-
                 </label>
+
                 <br>
 
                 <label>
@@ -52,17 +52,32 @@
                 <div class="tekst">
                 <button type="button" class="btn btn-default" ng-show="newContainerCtrl.importMethod == 'file'" ngf-select="newContainerCtrl.onImportFilesChosen($file)" >Select Files</button>
                 </div>
-
-                <label>{{'SW_NEW_CONTAINER_ARCHIVE_T' | translate}}</label>
-                <select style="max-width: 300px;" class="form-control" theme="bootstrap" ng-model="newContainerCtrl.archiveType" required ng-disabled="newContainerCtrl.importMethod == ''">
-                    <option value="rootfs">RootFS TAR(GZ/BZ2)</option>
-                    <option disabled value="simg">Singularity Image (simg)</option>
-                </select>
+                <div class="tekst">
+                    <label>{{'SW_NEW_CONTAINER_ARCHIVE_T' | translate}}</label>
+                    <select style="max-width: 300px;" class="form-control" theme="bootstrap"
+                            ng-model="newContainerCtrl.archiveType" required
+                            ng-disabled="newContainerCtrl.importMethod == ''">
+                        <option value="rootfs">RootFS TAR(GZ/BZ2)</option>
+                        <option disabled value="simg">Singularity Image (simg)</option>
+                    </select>
+                </div>
 
                 <!--<br>-->
                 <!--<input type="checkbox" name="isGui" value="gui" ng-model="newContainerCtrl.gui">{{'SW_NEW_CONTAINER_RUNC_GUI' | translate}} <br>-->
 
-                <br>
+
+                <div class="tekst">
+                    <label>{{'SW_NEW_CONTAINER_OPTIONAL_SUBDIRECTORY' | translate}}
+                        <input type="checkbox" ng-disabled="newContainerCtrl.importMethod == ''"
+                               ng-model="newContainerCtrl.isCustomSubdir">
+                    </label>
+
+
+                    <input type="text" ng-hide="!newContainerCtrl.isCustomSubdir"
+                           placeholder="{{'SW_NEW_CONTAINER_OPTIONAL_SUBDIRECTORY_NAME' | translate }}" class="form-control"
+                           ng-model="newContainerCtrl.customSubdir"/>
+                </div>
+
                 <input-list list="newContainerCtrl.env"
                             heading="{{'SW_NEW_CONTAINER_ENVIRONMENT_H' | translate}}"
                             list-empty-note="{{'SW_NEW_CONTAINER_ENVIRONMENT_NOTE' | translate}}"

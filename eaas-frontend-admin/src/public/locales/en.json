@@ -36,6 +36,7 @@
   "ACTIONS_ESC" : "Send Esc",
   "ACTIONS_SAVESESSION_HELP" : "Shutdown the guest OS to enable this feature",
   "ACTIONS_SNAPSHOT": "Snapshot",
+  "ACTIONS_PRINT_READY" : "A new print job is ready.",
 
   "CONTAINER_ACTIONS_ABORT" : "Abort",
 
@@ -182,6 +183,8 @@
   "SW_NEW_CONTAINER_ARGUMENTS_H" : "Process",
   "SW_NEW_CONTAINER_ARGUMENTS_NOTE" : "Enter container start script and arguments",
   "SW_NEW_CONTAINER_ARGUMENTS_PH" : "cmdl / args",
+  "SW_NEW_CONTAINER_OPTIONAL_SUBDIRECTORY" : "Optinal subdirectory",
+  "SW_NEW_CONTAINER_OPTIONAL_SUBDIRECTORY_NAME" : "Subdirectory name",
 
   "EDITENV_L" : "Edit Environment",
   "EDITENV_ID": "ID",

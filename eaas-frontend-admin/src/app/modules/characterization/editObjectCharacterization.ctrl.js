@@ -1,7 +1,7 @@
 module.exports = ['$scope', '$state', '$stateParams', '$uibModal', '$http', 'Objects', 'softwareObj', 'osList',
-                     'localConfig', 'environmentList', 'growl', '$translate', 'helperFunctions', 'REST_URLS',
+                     'localConfig', 'Environments', 'growl', '$translate', 'helperFunctions', 'REST_URLS',
                       function ($scope, $state, $stateParams, $uibModal, $http, Objects, softwareObj, osList,
-                      localConfig, environmentList, growl, $translate, helperFunctions, REST_URLS) {
+                      localConfig, Environments, growl, $translate, helperFunctions, REST_URLS) {
      var vm = this;
     console.log("$stateParams.userDescription", $stateParams.userDescription);
 
@@ -17,6 +17,11 @@ module.exports = ['$scope', '$state', '$stateParams', '$uibModal', '$http', 'Obj
         vm.suggested = response.objectEnvironments.suggested;
         vm.fileFormatMap = response.objectEnvironments.fileFormatMap;
      });
+
+    Environments.query().$promise.then(function(response) {
+        vm.environmentList = response;
+    });
+
      vm.description = $stateParams.userDescription;
 
      vm.automaticCharacterization = function(updateClassification, updateProposal) {
@@ -53,7 +58,9 @@ module.exports = ['$scope', '$state', '$stateParams', '$uibModal', '$http', 'Obj
              template: require('./modals/set-default-environment.html'),
              controller: ["$scope", "helperFunctions", "REST_URLS", function($scope, helperFunctions, REST_URLS) {
                  this.defaultEnv = null;
-                 this.environments = environmentList.data.environments;
+
+                 this.environments = vm.environmentList;
+
                  this.osId = osId;
                  this.osLabel = osLabel;
 
@@ -83,7 +90,8 @@ module.exports = ['$scope', '$state', '$stateParams', '$uibModal', '$http', 'Obj
              template: require('./modals/add-environment.html'),
              controller: ['$scope', function($scope) {
                  this.newEnv = null;
-                 this.environments = environmentList.data.environments;
+                 this.environments = vm.environmentList;
+
                  this.addEnvironment = function() {
                      // check if environment was already added
                      for (var i = 0; i < vm.objEnvironments.length; i++) {

@@ -9,7 +9,7 @@
             {{'ACTIONS_SCREENSHOT' | translate}}
         </button>
         <button type="submit" class="btn btn-default" ng-click="actionsCtrl.openPrintDialog()"
-                ng-disabled="actionsCtrl.emulator.state !== 'STARTED'"
+                ng-disabled="actionsCtrl.emulator.state !== 'STARTED' && actionsCtrl.printJobsAvailable"
                 ng-show="actionsCtrl.enablePrinting">
             {{'ACTIONS_PRINT' | translate}}
         </button>
@@ -20,14 +20,17 @@
             {{'ACTIONS_CHANGE_MEDIA' | translate}}
         </button>
 
-        <button ng-if="actionsCtrl.shutdownByOs"
-                type="submit" class="btn btn-default"
-                uib-tooltip="{{'ACTIONS_SAVESESSION_HELP' | translate}}"
-                ng-click="actionsCtrl.openSaveEnvironmentDialog()"
-                ng-disabled="actionsCtrl.emulator.state !== 'STOPPED'"
-                ng-show="actionsCtrl.type">
-            {{'ACTIONS_SAVE_ENV' | translate}}
-        </button>
+        <span  ng-if="actionsCtrl.shutdownByOs">
+            <button type="submit"
+                    class="btn btn-default"
+                    ng-click="actionsCtrl.openSaveEnvironmentDialog()"  ng-disabled="actionsCtrl.emulator.state != 'STOPPED'"
+                    ng-show="actionsCtrl.type">{{'ACTIONS_SAVE_ENV' | translate}}</button>
+
+            <button ng-if="actionsCtrl.emulator.state != 'STOPPED'"
+                    uib-tooltip="{{'ACTIONS_SAVESESSION_HELP' | translate}}"
+                    type="button"
+                    class="btn btn-default" > <span class="glyphicon glyphicon-question-sign"></span></button>
+        </span>
 
         <button ng-if="!actionsCtrl.shutdownByOs"
                 type="submit"
@@ -68,14 +71,14 @@
         </button>
 
         <button class="btn btn-default"
-                ng-if="(chosenEnv.data.serverMode || chosenEnv.data.localServerMode)"
+                ng-if="(chosenEnv.serverMode || chosenEnv.localServerMode)"
                 ng-disabled="actionsCtrl.emulator.state !== 'STARTED'"
                 ng-click="actionsCtrl.openNetworkDialog()">
             Connection Info
         </button>
 
         <button class="btn btn-default"
-                ng-if="!actionsCtrl.emulator.detached"
+                ng-if="!actionsCtrl.emulator.detached && chosenEnv.connectEnvs"
                 ng-disabled="actionsCtrl.emulator.state !== 'STARTED'"
                 ng-click="actionsCtrl.openDetachDialog()" >
             Detach Network
@@ -94,8 +97,7 @@
         </button>
 -->
         <button  class="btn btn-default"
-                 ng-click="initTitles()"
-                 uib-dropdown-toggle ng-if="idsData.length > 1"
+                 uib-dropdown-toggle ng-if="$root.idsData.length > 1"
                  uib-dropdown on-toggle="toggled(open)">
             <div>Switch View</div>
             <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">

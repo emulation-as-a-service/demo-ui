@@ -13,7 +13,7 @@ module.exports = ["clusters", "allClusterDetails", function (clusters, allCluste
 
      // only keep elements of the type ResourceProvider
      allClusterProviders = allClusterProviders.filter(function (elem, i, arr) {
-         return elem.__resource_type === 'ResourceProvider';buildInfo
+         return elem.__resource_type === 'ResourceProvider';
      });
 
      var resourceProviders = allClusterProviders.map(function (resourceProvider) {

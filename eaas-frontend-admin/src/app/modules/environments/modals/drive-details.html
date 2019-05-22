@@ -1,0 +1,76 @@
+<div class="modal-header">
+    <h3 class="modal-title">Configure Drive</h3>
+</div>
+
+<div class="modal-body">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-2">
+                <label>Media Type</label>
+            </div>
+            <div class="col-sm-2">
+                <select style="max-width: 150px;" theme="bootstrap" ng-model="editDriveCtrl.drive.type"  required>
+                    <option style="display:none" value="">select a type</option>
+                    <option value="cdrom">Optical (CDROM)</option>
+                    <option value="floppy">Floppy</option>
+                    <option value="disk">Disk</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-2"><label>Data binding:</label></div>
+            <div class="col-sm-2">{{editDriveCtrl.drive.data}}</div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-2">
+                <label>Interface:</label>
+            </div>
+            <div class="col-sm-2">
+                <input  type="text"
+                       ng-model="editDriveCtrl.drive.iface"
+                       placeholder="e.g. ide">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-2">
+                <label>Bus:</label>
+            </div>
+            <div class="col-sm-2">
+                <input  type="text"
+                       ng-model="editDriveCtrl.drive.bus"
+                       placeholder="0">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-2">
+                <label>Unit:</label>
+            </div>
+            <div class="col-sm-2">
+                <input  type="text"
+                       ng-model="editDriveCtrl.drive.unit"
+                       placeholder="1">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-2">
+                <label>Filesystem:</label>
+            </div>
+            <div class="col-sm-2">
+                <input type="text"
+                       ng-model="editDriveCtrl.drive.filesystem"
+                       placeholder="ISO">
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="$close();editDriveCtrl.saveEdit();" >Save</button>
+    <button class="btn btn-default" type="button" ng-click="$close()">{{'CONFIRM_DELETE_CANCEL' | translate}}</button>
+</div>

@@ -1,27 +1,61 @@
-module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'environmentList', 'localConfig', 'growl', '$translate',
+module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'localConfig', 'growl', '$translate', 'Environments',
     '$uibModal', 'softwareList', 'helperFunctions', 'userInfo', 'REST_URLS',
-    function ($rootScope, $http, $state, $scope, $stateParams, environmentList,
-              localConfig, growl, $translate, $uibModal, softwareList, helperFunctions, userInfo, REST_URLS) {
+    function ($rootScope, $http, $state, $scope, $stateParams,
+              localConfig, growl, $translate, Environments, $uibModal, softwareList, helperFunctions, userInfo, REST_URLS) {
         var vm = this;
 
         vm.config = localConfig.data;
-        vm.pageSize = 10;
+
         vm.landingPage = localConfig.data.landingPage;
-        vm.view = 0;
         vm.viewArchive = 0;
+
+        vm.updateTable = function(index)
+        {
+            vm.gridOptions.api.setRowData(null);
+            
+            vm.envs = Environments.query().$promise.then(function(response) {
+                var rowData = [];
+                vm.view = index;
+                vm.rowCount = 0;
+                vm.envs = response;
+                if (vm.view == 0)
+                    vm.envs.forEach(function (element) {
+                        if(element.envType != 'base')
+                            return;
+                        if((element.archive == 'default' && vm.viewArchive === 0) ||
+                            ((element.archive == "public" || element.archive == 'emulators') && vm.viewArchive === 1) ||
+                            (element.archive == "remote" && vm.viewArchive === 2))
+                                rowData.push({name: element.title, id: element.envId, archive: element.archive, owner: (element.owner) ? element.owner : "shared"});
+                    });
+                else if (vm.view == 1) {
+                    vm.envs.forEach(function (element) {
+                        if(element.envType != 'object')
+                            return;
+                        rowData.push({name: element.title, id: element.envId, owner: (element.owner) ? element.owner : "shared", objectId : element.objectId})
+                    })
+                } else if (vm.view == 2) {
+                    vm.envs.forEach(function (element) {
+                        if(element.envType != 'container')
+                            return;
+                        rowData.push({name: element.title, id: element.envId, owner: (element.owner) ? element.owner : "shared", objectId : element.objectId})
+                    })
+                }
+                vm.rowCount = rowData.length;
+                vm.gridOptions.api.setRowData(rowData);
+                vm.gridOptions.api.setColumnDefs(vm.initColumnDefs());
+                vm.gridOptions.api.sizeColumnsToFit();
+            });
+        };
+
+        vm.pageSize = 10;
         if($stateParams.showContainers)
-            vm.view = 2;
+             vm.view = 2;
         else if($stateParams.showObjects)
             vm.view = 1;
-
-
-        if (environmentList.data.status !== "0") {
-            $state.go('error', {errorMsg: {title: "Load Environments Error " + environmentList.data.status, message: environmentList.data.message}});
-            return;
-        }
+        else
+            vm.view = 0;
 
         vm.exportEnvironment = function(envId) {
-
             $http.get(localConfig.data.eaasBackendURL + helperFunctions.formatStr(REST_URLS.exportEnvironmentUrl, envId))
                 .then(function(response) {
                     if (response.data.status === "0") {
@@ -29,8 +63,7 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'en
                     } else {
                         growl.error(response.data.message, {title: 'Error ' + response.data.status});
                     }
-                });
-
+            });
         };
 
         vm.addSoftware = function(envId) {
@@ -152,10 +185,8 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'en
             }
         };
 
-        vm.envs = environmentList.data.environments;
         vm.showObjects = $stateParams.showObjects;
         vm.showContainers = $stateParams.showContainers;
-
 
         $scope.onInputSourceSelection = function (obj) {
             // Get chosen input source
@@ -231,7 +262,6 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'en
                 return environmentRenderer;
         }
 
-
         function switchAction(id, selected) {
             vm[selected](id);
         }
@@ -251,7 +281,6 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'en
             }
             if (typeof env.envId == "undefined")
                 $state.go('error', {errorMsg: {title: "Error ", message: "given envId: " + id + " is not found!"}});
-            $rootScope.nativeConfig = env.nativeConfig;
             window.isCollapsed = true;
             $state.go('admin.emulator', {envId: env.envId, objectId: env.objectId, objectArchive: env.objectArchive}, {reload: true});
         };
@@ -269,44 +298,16 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'en
             window.open(vm.landingPage + "?id=" + id);
         };
 
-
-        vm.updateData = function () {
-
-            console.log("view: " + vm.viewArchive);
-            if ($scope.gridOptions.api != null) {
-                $scope.gridOptions.api.setRowData(vm.initRowData());
-                $scope.gridOptions.api.setColumnDefs(vm.initColumnDefs());
-                $scope.gridOptions.api.sizeColumnsToFit();
-            }
+        $scope.onPageSizeChanged = function() {
+            vm.gridOptions.api.paginationSetPageSize(Number(vm.pageSize));
         };
 
-
-        vm.initRowData = function () {
-            var rowData = [];
-            if (vm.view == 0)
-                vm.envs.forEach(function (element) {
-                    if(element.envType != 'base')
-                        return;
-                    if((element.archive == 'default' && vm.viewArchive === 0) ||
-                        ((element.archive == "public" || element.archive == 'emulators') && vm.viewArchive === 1) ||
-                        (element.archive == "remote" && vm.viewArchive === 2))
-                            rowData.push({name: element.title, id: element.envId, archive: element.archive, owner: (element.owner) ? element.owner : "shared"});
-                });
-            else if (vm.view == 1) {
-                vm.envs.forEach(function (element) {
-                    if(element.envType != 'object')
-                        return;
-                    rowData.push({name: element.title, id: element.envId, owner: (element.owner) ? element.owner : "shared", objectId : element.objectId})
-                })
-            } else if (vm.view == 2) {
-                vm.envs.forEach(function (element) {
-                    if(element.envType != 'container')
-                        return;
-                    rowData.push({name: element.title, id: element.envId, owner: (element.owner) ? element.owner : "shared", objectId : element.objectId})
-                })
-            }
-            return rowData;
-        };
+        function onRowSelected(event) {
+            if (vm.gridOptions.api.getSelectedRows().length > 0)
+                $('#overviewDeleteButton').show();
+            else
+                $('#overviewDeleteButton').hide();
+        }
 
         vm.initColumnDefs = function () {
             var columnDefs = [];
@@ -332,16 +333,9 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'en
 
             return columnDefs;
         };
-        vm.initRowData();
-        vm.initColumnDefs();
 
-        $scope.onPageSizeChanged = function() {
-            $scope.gridOptions.api.paginationSetPageSize(Number(vm.pageSize));
-        };
-
-        $scope.gridOptions = {
+        vm.gridOptions = {
             columnDefs: vm.initColumnDefs(),
-            rowData: vm.initRowData(),
             rowHeight: 31,
             groupUseEntireRow:  true,
             rowSelection: 'multiple',
@@ -357,8 +351,8 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'en
             suppressHorizontalScroll: true,
             animateRows: true,
             onGridReady: function (params) {
-                $scope.gridOptions.api.sizeColumnsToFit();
-                $scope.gridOptions.api.redrawRows();
+                 vm.updateTable(0);
+                 vm.gridOptions.api.redrawRows();
             },
             pagination: true,
             paginationPageSize: 20,
@@ -366,17 +360,4 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'en
                 return '[' + params.value.toLocaleString() + ']';
             },
         };
-
-        function onRowSelected(event) {
-         //   if ($scope.gridOptions.api.getSelectedRows().length > 0)
-         //       $('#overviewDeleteButton').show();
-         //   else
-         //       $('#overviewDeleteButton').hide();
-        }
-        // setup the grid after the page has finished loading
-        document.addEventListener('DOMContentLoaded', function () {
-            var gridDiv = document.querySelector('#myGrid');
-            new agGrid.Grid(gridDiv, gridOptions);
-            gridOptions.api.sizeColumnsToFit();
-        });
     }];

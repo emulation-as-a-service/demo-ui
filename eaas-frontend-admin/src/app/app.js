@@ -278,6 +278,10 @@ export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize'
    return $resource(localConfig.data.eaasBackendURL + 'objects/:archiveId/:objectId', {archiveId : "default"});
 })
 
+.factory('Environments', function($http, $resource, localConfig) {
+   return $resource(localConfig.data.eaasBackendURL + 'EmilEnvironmentData/:envId');
+})
+
 .config(['$stateProvider',
         '$urlRouterProvider',
         'growlProvider',
@@ -442,9 +446,6 @@ function($stateProvider,
 
                 kbLayouts: ($http) => $http.get("kbLayouts.json"),
                 buildInfo: ($http, localConfig, REST_URLS) => $http.get(localConfig.data.eaasBackendURL + REST_URLS.buildVersionUrl),
-
-                environmentList: ($http, localConfig, helperFunctions, REST_URLS) =>
-                    $http.get(localConfig.data.eaasBackendURL + REST_URLS.getAllEnvsUrl),
 
                 softwareList: function($http, localConfig, REST_URLS) {
                     return $http.get(localConfig.data.eaasBackendURL + REST_URLS.getSoftwarePackageDescriptions)
@@ -654,9 +655,9 @@ function($stateProvider,
         .state('admin.emulator', {
             url: "/emulator",
             resolve: {
-                chosenEnv: function($http, $stateParams, localConfig, helperFunctions, REST_URLS) {
-                    if($stateParams.type != "saveImport" && $stateParams.type != 'saveCreatedEnvironment')
-                        return $http.get(localConfig.data.eaasBackendURL + helperFunctions.formatStr(REST_URLS.getEmilEnvironmentUrl, $stateParams.envId));
+                chosenEnv: function($stateParams, Environments) {
+                    if(!$stateParams.isDetached && $stateParams.type != "saveImport" && $stateParams.type != 'saveCreatedEnvironment')
+                        return  Environments.get({envId: $stateParams.envId}).$promise;
                     else
                         return {};
                 }

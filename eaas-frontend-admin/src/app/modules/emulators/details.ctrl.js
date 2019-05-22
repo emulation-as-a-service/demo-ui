@@ -1,7 +1,7 @@
-module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'localConfig', 'growl', '$translate',
+module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'localConfig', 'growl', '$translate', '$timeout',
     '$uibModal', 'helperFunctions', 'nameIndexes', 'REST_URLS',
     function ($rootScope, $http, $state, $scope, $stateParams,
-              localConfig, growl, $translate, $uibModal, helperFunctions, nameIndexes, REST_URLS) {
+              localConfig, growl, $translate, $timeout, $uibModal, helperFunctions, nameIndexes, REST_URLS) {
         var vm = this;
 
         if (typeof $stateParams.entries == "undefined" || $stateParams.entries == null) {
@@ -34,12 +34,12 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'lo
             return rowData;
         };
 
-        function JSONBtnRenderer(params) {
+        function BtnRenderer(params) {
             params.$scope.selected = $scope.selected;
-            params.$scope.showJsonDialog = vm.showJsonDialog;
+            params.$scope.updateEmulator = vm.updateEmulator;
 
-            return `<button id="single-button" type="button" ng-click="showJsonDialog(data.entry)" class="dropbtn">
-                  JSON
+            return `<button id="single-button" type="button" ng-click="updateEmulator(data.entry);" class="dropbtn">
+                  Update
                 </button>`;
         }
 
@@ -48,9 +48,9 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'lo
             params.$scope.makeLatest = vm.makeLatest;
 
             return `<button id="single-button" ng-if="!data.isLatest" type="button" ng-click="makeLatest(data.entry.value.name, data.entry.value.version)" class="dropbtn">
-                  Make Latest
+                  Make Default
                 </button>
-                <div ng-if="data.isLatest">The Latest!</div>`;
+                <div ng-if="data.isLatest">&#10003;</div>`;
         }
 
         vm.initColumnDefs = function () {
@@ -60,24 +60,68 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'lo
                 {headerName: "ociSourceUrl", field: "ociSourceUrl"},
                 {headerName: "Docker tag", field: "versionTag"},
                 {
-                    headerName: "Latest", field: "isLatest",
+                    headerName: "Default", field: "isLatest",
                     cellStyle: function (params) {
                         if (params.value)
                             return {
-
-                                backgroundColor: '#aaffaa', // light green
                                 "text-align": "center",
-                                border: "1.5px solid #FFD700 !important"
+                                border: "1.0px solid #FF0000 !important"
                             }
                     },
                     cellRenderer: latestEditorBtnRenderer
                 },
                 {
-                    headerName: "", field: "edit", cellRenderer: JSONBtnRenderer, suppressSorting: true,
+                    headerName: "", field: "edit", cellRenderer: BtnRenderer, suppressSorting: true,
                     suppressMenu: true
                 }
             ];
         };
+
+        vm.updateEmulator = function (entry) {
+             $http.post(localConfig.data.eaasBackendURL + REST_URLS.importEmulator,
+             {
+                 urlString: entry.value.provenance.ociSourceUrl,
+                 tag: entry.value.provenance.versionTag,
+                 alias: null,
+                 isEmulator: true,
+                 imageType: "dockerhub",
+             }).then(function (response) {
+                 if (response.data.status === "0") {
+                     var taskId = response.data.taskId;
+                     vm.modal = $uibModal.open({
+                         backdrop: 'static',
+                         animation: true,
+                         templateUrl: 'partials/wait.html'
+                     });
+                     vm.checkState(taskId, true);
+                 }
+                 else {
+                     $state.go('error', {errorMsg: {title: 'Error ' + response.data.message + "\n\n" + _vm.description}});
+                     vm.model.close();
+                 }
+            });
+        };
+
+        vm.checkState = function (_taskId, stayAtPage) {
+         var taskInfo = $http.get(localConfig.data.eaasBackendURL + helperFunctions.formatStr(REST_URLS.getContainerTaskState, _taskId)).then(function (response) {
+             if (response.data.status == "0") {
+                 if (response.data.isDone) {
+
+                     vm.modal.close();
+                     growl.success("Update successful.");
+                     $state.go('admin.emulators', {}, {reload: true});
+                 }
+                 else
+                     $timeout(function () {
+                         vm.checkState(_taskId, stayAtPage);
+                     }, 2500);
+             }
+             else {
+                 vm.modal.close();
+                 $state.go('error', {errorMsg: {title: 'Error ' + response.data.message}});
+             }
+         });
+     };
 
         vm.showJsonDialog = function (entry) {
             $uibModal.open({

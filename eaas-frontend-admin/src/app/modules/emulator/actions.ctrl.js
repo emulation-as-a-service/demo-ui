@@ -1,20 +1,19 @@
 module.exports = ['$rootScope', '$scope', '$window', '$state', '$http', '$uibModal', '$stateParams', 'growl', 'localConfig', 'Objects',
-                        '$timeout', '$translate', 'chosenEnv', 'helperFunctions', 'REST_URLS',
+                        '$timeout', '$translate', 'chosenEnv', 'Environments', 'helperFunctions', 'REST_URLS',
                         function ($rootScope, $scope, $window, $state, $http, $uibModal, $stateParams, growl, localConfig, Objects,
-                        $timeout, $translate, chosenEnv, helperFunctions, REST_URLS) {
+                        $timeout, $translate, chosenEnv, Environments, helperFunctions, REST_URLS) {
     var vm = this;
     vm.config = localConfig.data;
     vm.type = $stateParams.type;
     vm.emulator = $rootScope.emulator;
     $rootScope.chosenEnv = chosenEnv;
-
-
     vm.currentMediumLabel = null;
+    $scope.idsData;
+    vm.printJobsAvailable = false;
 
     var objectArchive = $stateParams.objectArchive ? $stateParams.objectArchive : "default";
     var objectId = $stateParams.softwareId ? $stateParams.softwareId : $stateParams.objectId;
-    console.log(objectId);
-    console.log(objectArchive);
+
     if(objectId) {
         Objects.get({archiveId: objectArchive, objectId: objectId}).$promise.then(function(response) {
             vm.mediaCollection = response.mediaItems;
@@ -23,20 +22,29 @@ module.exports = ['$rootScope', '$scope', '$window', '$state', '$http', '$uibMod
         });
     }
 
-    if(typeof $rootScope.nativeConfig !== 'undefined')
-        vm.isKVM = ($rootScope.nativeConfig.includes('-enable-kvm'));
+    if(chosenEnv.nativeConfig)
+        vm.isKVM = chosenEnv.nativeConfig.includes('-enable-kvm');
     else
         vm.isKVM = false;
 
-    if (chosenEnv.data)
+    if (chosenEnv)
     {
-        vm.enablePrinting = chosenEnv.data.enablePrinting;
-        vm.shutdownByOs = chosenEnv.data.shutdownByOs;
+        vm.enablePrinting = chosenEnv.enablePrinting;
+        vm.shutdownByOs = chosenEnv.shutdownByOs;
     }
     else
         vm.enablePrinting = false;
 
-     vm.screenshot = async function() {
+    if(vm.enablePrinting) {
+        $rootScope.$on('emulatorStart', function(event, args) {
+            window.eaasClient.eventSource.addEventListener('PrintJobObserver', function(e) {
+                vm.printJobsAvailable = true;
+                growl.info($translate.instant('ACTIONS_PRINT_READY'));
+            });
+        });
+    }
+
+    vm.screenshot = async function() {
         let _header = localStorage.getItem('id_token') ? {"Authorization" : "Bearer " + localStorage.getItem('id_token')} : {};
         const pic = await fetch(window.eaasClient.getScreenshotUrl(), {
             headers: _header,
@@ -134,15 +142,6 @@ module.exports = ['$rootScope', '$scope', '$window', '$state', '$http', '$uibMod
         $timeout(eaasClientReadyTimer, 100);
     };
     $timeout(eaasClientReadyTimer);
-
-    $scope.initTitles =function() {
-        // check if titles were introduced already
-        if (typeof window.$rootScope.idsData[0].title === "undefined") {
-            $rootScope.idsData.forEach(function (idData) {
-                idData.title = $rootScope.environments.find(element => element.envId === idData.env.data.environment).title;
-            })
-        }
-    };
 
     vm.openChangeMediaDialog = function() {
         $uibModal.open({
@@ -292,7 +291,6 @@ module.exports = ['$rootScope', '$scope', '$window', '$state', '$http', '$uibMod
 
                 // Fix to close emulator on page leave
                 $scope.$on('$locationChangeStart', function (event) {
-                    window.$rootScope.idsData = [];
                     eaasClient.release();
                 });
 
@@ -307,7 +305,7 @@ module.exports = ['$rootScope', '$scope', '$window', '$state', '$http', '$uibMod
             template: require('../../../../../landing-page/src/app/modules/client/landing-page/modals/network.html'),
             resolve: {
                 currentEnv: function () {
-                    return chosenEnv.data;
+                    return chosenEnv;
                 },
                 localConfig: function () {
                     return localConfig;
@@ -324,7 +322,7 @@ module.exports = ['$rootScope', '$scope', '$window', '$state', '$http', '$uibMod
             template: require('../../../../../landing-page/src/app/modules/client/landing-page/modals/detach.html'),
             resolve: {
                 currentEnv: function () {
-                    return chosenEnv.data;
+                    return chosenEnv;
                 },
                 localConfig: function () {
                     return localConfig;
@@ -404,9 +402,6 @@ module.exports = ['$rootScope', '$scope', '$window', '$state', '$http', '$uibMod
                     this.showEmu = function() {
                         $('#emulator-container').show();
                     }
-
-
-
                 }],
                 controllerAs: "openSaveEnvironmentDialogCtrl"
             });

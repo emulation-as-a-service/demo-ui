@@ -1,11 +1,11 @@
-module.exports = ['$state', '$rootScope' ,'$http', '$scope', '$uibModalInstance', 'growl', 'groupId','groupName', 'groupComponents', 'environmentList', 'localConfig', 'REST_URLS', 'helperFunctions',
-    function ($state, $rootScope, $http, $scope, $uibModalInstance, growl,  groupId, groupName, groupComponents, environmentList, localConfig, REST_URLS, helperFunctions) {
+module.exports = ['$state', '$rootScope' ,'$http', '$scope', '$uibModalInstance', 'growl', 'groupId','groupName', 'groupComponents', 'environments', 'localConfig', 'REST_URLS', 'helperFunctions',
+    function ($state, $rootScope, $http, $scope, $uibModalInstance, growl,  groupId, groupName, groupComponents, environments, localConfig, REST_URLS, helperFunctions) {
         console.log("groupEnvs", groupComponents);
         $scope.groupId = groupId;
         $scope.groupComponents = [];
         $scope.networkInfo = null;
         $scope.groupName = groupName;
-        $scope.environments = environmentList.data.environments;
+
         var modalCtrl = this;
 
         groupComponents.forEach(function(element){
@@ -19,7 +19,7 @@ module.exports = ['$state', '$rootScope' ,'$http', '$scope', '$uibModalInstance'
 
         $scope.getTitle = function(id)
         {
-            return $scope.environments.find(element => element.envId === id).title;
+                return environments.find(element => element.envId === id).title;
         };
 
         $scope.stopEmulator = function(id){

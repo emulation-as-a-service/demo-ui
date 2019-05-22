@@ -9,7 +9,8 @@ module.exports = ['$state', '$scope', '$stateParams', 'Objects', 'localConfig', 
 
     vm.updateTable = function(index, archive)
     {
-        console.log(archive);
+        if ($scope.gridOptions && $scope.gridOptions.api)
+            $scope.gridOptions.api.setRowData(null);
         vm.objectList = Objects.query({archiveId: archive}).$promise.then(function(response) {
             vm.objectList = response;
             vm.updateData();
@@ -17,18 +18,6 @@ module.exports = ['$state', '$scope', '$stateParams', 'Objects', 'localConfig', 
         vm.activeView = index;
     };
     vm.updateTable(0, vm.archives[0]);
-
-    /*
-    if (objectList.data.status !== "0") {
-        $state.go('error', {
-            errorMsg: {
-                title: "Load Environments Error " + objectList.data.status,
-                message: objectList.data.message
-            }
-        });
-        return;
-    }
-    */
 
     vm.updateData = function () {
         console.log("view: " + vm.viewArchive);

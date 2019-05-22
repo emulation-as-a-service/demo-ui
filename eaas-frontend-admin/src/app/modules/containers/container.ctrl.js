@@ -1,6 +1,10 @@
-module.exports = ['$rootScope', '$scope', '$sce', '$state','$http', '$stateParams', '$translate', 'Upload', 'localConfig', 'growl', '$uibModal', 'environmentList',
-    function ($rootScope, $scope, $sce, $state, $http, $stateParams, $translate, Upload, localConfig, growl, $uibModal, environmentList) {
+module.exports = ['$rootScope', '$scope', '$sce', '$state','$http', '$stateParams', 'Environments', '$translate', 'Upload', 'localConfig', 'growl', '$uibModal',
+    function ($rootScope, $scope, $sce, $state, $http, $stateParams, Environments, $translate, Upload, localConfig, growl, $uibModal) {
         var vm = this;
+
+        Environments.get({envId: $stateParams.envId}).$promise.then(function(response) {
+            vm.env = response;
+        });
 
         $("#container-stopped").hide();
 
@@ -19,17 +23,6 @@ module.exports = ['$rootScope', '$scope', '$sce', '$state','$http', '$stateParam
         window.onunload = function () {
             window.onbeforeunload = null;
         };
-
-        var envList = environmentList.data.environments;
-        console.log(envList);
-        vm.env = null;
-
-        for (var i = 0; i < envList.length; i++) {
-            if (envList[i].envId === $stateParams.envId) {
-                vm.env = envList[i];
-                break;
-            }
-        }
 
         window.eaasClient.onEmulatorStopped = function () {
             $("#emulator-loading-container").hide();

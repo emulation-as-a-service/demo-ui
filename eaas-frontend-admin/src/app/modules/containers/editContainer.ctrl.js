@@ -1,41 +1,28 @@
-module.exports = ['$http', '$scope', '$state', '$stateParams', 'environmentList', 'localConfig', 'growl', '$translate', 'REST_URLS',
-    function ($http, $scope, $state, $stateParams, environmentList, localConfig, growl, $translate, REST_URLS) {
+module.exports = ['$http', '$scope', '$state', '$stateParams', 'Environments', 'localConfig', 'growl', '$translate', 'REST_URLS',
+    function ($http, $scope, $state, $stateParams, Environments, localConfig, growl, $translate, REST_URLS) {
         var vm = this;
         let handlePrefix = "11270/";
 
-
         vm.showDateContextPicker = false;
-        var envList = null;
+        Environments.get({envId: $stateParams.envId}).$promise.then(function(response) {
+            vm.env = response;
 
-        envList = environmentList.data.environments;
-        vm.env = null;
-
-        for (var i = 0; i < envList.length; i++) {
-            if (envList[i].envId === $stateParams.envId) {
-                vm.env = envList[i];
-                break;
+            if(localConfig.data.features.handle) {
+                $http.get(localConfig.data.eaasBackendURL + REST_URLS.getHandleList).then(function (response) {
+                    if (response.data.handles.includes(handlePrefix + vm.env.envId.toUpperCase())) {
+                        vm.handle = handlePrefix + vm.env.envId;
+                    }
+                });
             }
-        }
 
-        if(localConfig.data.features.handle) {
-            $http.get(localConfig.data.eaasBackendURL + REST_URLS.getHandleList).then(function (response) {
-                if (response.data.handles.includes(handlePrefix + vm.env.envId.toUpperCase())) {
-                    vm.handle = handlePrefix + vm.env.envId;
-                }
-            });
-        }
-
-        if (vm.env === null) {
-            growl.error("Container not found");
-            $state.go('admin.standard-envs-overview', {}, {reload: true});
-        }
-        vm.envTitle = vm.env.title;
-        vm.author = vm.env.author;
-        vm.description = vm.env.description;
-        vm.envInput = vm.env.input;
-        vm.envOutput = vm.env.output;
-        vm.processArgs = vm.env.processArgs; // todo deep copy
-        vm.processEnvs = vm.env.processEnvs;
+            vm.envTitle = vm.env.title;
+            vm.author = vm.env.author;
+            vm.description = vm.env.description;
+            vm.envInput = vm.env.input;
+            vm.envOutput = vm.env.output;
+            vm.processArgs = vm.env.processArgs; // todo deep copy
+            vm.processEnvs = vm.env.processEnvs;
+        });
 
         vm.saveEdit = function () {
 
