@@ -75,15 +75,27 @@
 }
 
 
+#header {
+	margin-top: 0px;
+	margin-bottom: 15px;
+}
+
 /* ==========================================================================
         Header
    ========================================================================== */
 
-#footer {
+.footer {
+        height: 40px;
+        margin-bottom: 0;
+        width: 100%;
+        position: absolute;
+          right: 0;
+          bottom: 0;
+          left: 0;
+}
 
-        height: 30px;
-        bottom: 0;
-        font-size: x-small;
+.footer p:last-child {
+        margin-bottom: 0;
 }
 
 #header {
