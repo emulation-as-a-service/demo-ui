@@ -99,7 +99,6 @@ import '../../../eaas-client/guacamole/guacamole.css';
 import '../../../eaas-client/eaas-client.css';
 import './app.css';
 
-
 export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize', 'ngAnimate', 'ngCookies', 'ngResource', 'ui.router', 'ui.bootstrap',
                                    'ui.mask', 'ui.select', 'angular-growl', 'smart-table', 'ng-sortable', 'pascalprecht.translate',
                                    'textAngular', 'mgo-angular-wizard', 'ui.bootstrap.datetimepicker', 'chart.js', 'emilAdminUI.helpers',
@@ -181,6 +180,7 @@ export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize'
     })
 
 .run(async function($rootScope, $state, $http, authService, localConfig) {
+
     $rootScope.emulator = {
         state : '',
         mode : null,
@@ -193,8 +193,8 @@ export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize'
 
     if(localConfig.data.id_token)
     {
-        console.log(data.id_token);
-        localStorage.setItem('id_token', data.id_token);
+        console.log(localConfig.data.id_token);
+        localStorage.setItem('id_token', localConfig.data.id_token);
     }
 
 
@@ -305,6 +305,7 @@ function($stateProvider,
         angularAuth0Provider,
         localConfig
 ) {
+    angular.lowercase = angular.$$lowercase;
     /*
      * Use ng-sanitize for textangular, see https://git.io/vFd7y
      */

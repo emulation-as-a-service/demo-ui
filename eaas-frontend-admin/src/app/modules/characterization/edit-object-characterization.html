@@ -25,7 +25,7 @@
     </div>
     <div class="panel-body">
         <p>
-            <b>Object ID:</b> {{editObjectCharacterizationCtrl.metadata.title}}
+            <b>Object Label:</b> {{editObjectCharacterizationCtrl.metadata.title}}
         </p>
 
         <p ng-bind-html="editObjectCharacterizationCtrl.metadata.summary"></p>
@@ -39,7 +39,7 @@
             </div>
 
         <div class="form-group">
-            <input type="checkbox"  ng-model="editObjectCharacterizationCtrl.isSoftware">
+            <input type="checkbox"  ng-model="editObjectCharacterizationCtrl.isSoftware" ng-isabled="editObjectCharacterizationCtrl.isSoftware">
             <label>Object is software</label>
         </div>
     </div>
@@ -194,7 +194,18 @@
             -->
         </div>
 
+        <div uib-accordion-group class="panel-default" is-open="status.openMets" ng-if="editObjectCharacterizationCtrl.response.metsdata">
+            <uib-accordion-heading>
+                METS Data
+                <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.openMets, 'glyphicon-chevron-right': !status.openMets}"></i>
+            </uib-accordion-heading>
+            <div style="background: grey">
+                <pre lang="xml">{{editObjectCharacterizationCtrl.response.metsdata}}</pre>
+            </div>
+        </div>
     </uib-accordion>
+
+
 </div>
 <div class="fullscreen-overlay-spinner">
     <img style="margin: -72px 0 0 -72px;" height="144" width="144" src="img/gears.gif" />

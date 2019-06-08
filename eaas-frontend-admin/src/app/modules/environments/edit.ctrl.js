@@ -42,18 +42,6 @@ module.exports = ["$http", "$rootScope", "$scope", "$state", "$stateParams", "En
             else
                 vm.xpraEncoding = "jpeg";
 
-            if (typeof vm.env.containerName !== "undefined" && typeof vm.env.containerVersion !== "undefined")
-            {
-              let name = vm.env.containerName;
-              let version = vm.env.containerVersion;
-
-              vm.nameIndexes.forEach(function(element, i)
-              {
-                  if(element.value.version === version)
-                      vm.emulatorContainer = element;
-              });
-            }
-
             vm.envTitle = vm.env.title;
             vm.author = vm.env.author;
             vm.envDescription = vm.env.description;
@@ -103,6 +91,22 @@ module.exports = ["$http", "$rootScope", "$scope", "$state", "$stateParams", "En
             } else {
                vm.nameIndexes = [];
             }
+            vm.nameIndexes.unshift(vm.getNameIndexObj("latest", emulatorContainerName, null));
+
+            if (typeof vm.env.containerName !== "undefined" && typeof vm.env.containerVersion !== "undefined")
+            {
+              let name = vm.env.containerName;
+              let version = vm.env.containerVersion;
+
+              vm.nameIndexes.forEach(function(element, i)
+              {
+                  if(element.value.version === version)
+                      vm.emulatorContainer = element;
+              });
+            }
+            else
+                vm.emulatorContainer = vm.nameIndexes[0];
+        });
 
             vm.getNameIndexObj = function(key, name, version){
                   return {
@@ -113,10 +117,6 @@ module.exports = ["$http", "$rootScope", "$scope", "$state", "$stateParams", "En
                       }
                   }
             };
-
-            vm.nameIndexes.unshift(vm.getNameIndexObj("latest", emulatorContainerName, null));
-            vm.emulatorContainer = vm.nameIndexes[0];
-        });
 
            vm.createHandle = function () {
                     jQuery.when(

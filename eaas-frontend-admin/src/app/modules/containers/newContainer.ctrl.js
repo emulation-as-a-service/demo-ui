@@ -4,7 +4,6 @@ module.exports = ['$http', '$scope', '$state', '$stateParams', 'runtimeList', 'g
         var container = this;
         container.runtimes = runtimeList.data.runtimes;
         console.log(container.runtimes);
-        $stateParams.type = 'saveImport';
         window.eaasClient = new EaasClient.Client(localConfig.data.eaasBackendURL, $("#emulator-container")[0]);
 
         // initialize default values of the form

@@ -44,14 +44,34 @@ module.exports = ['$rootScope', '$scope', '$window', '$state', '$http', '$uibMod
         });
     }
 
-    vm.screenshot = async function() {
-        let _header = localStorage.getItem('id_token') ? {"Authorization" : "Bearer " + localStorage.getItem('id_token')} : {};
-        const pic = await fetch(window.eaasClient.getScreenshotUrl(), {
-            headers: _header,
-        });
 
-        const picBlob = await pic.blob();
-        window.open(URL.createObjectURL(picBlob));
+    $scope.screenshot = function () {
+        vm.screenshotModal = $uibModal.open({
+            backdrop: 'static',
+            animation: true,
+            templateUrl: 'partials/wait-with-eclipse-spinner.html'
+        });
+        console.log("Trying to do");
+        let _header = localStorage.getItem('id_token') ? {"Authorization" : "Bearer " + localStorage.getItem('id_token')} : {};
+
+        async function createScreenshot() {
+            const pic = await fetch(window.eaasClient.getScreenshotUrl(), {
+                headers: _header,
+            });
+
+            const picBlob = await pic.blob();
+
+            var downloadLink = document.createElement("a");
+            downloadLink.href = URL.createObjectURL(picBlob);
+            downloadLink.download = "screenshot.png";
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+        };
+        createScreenshot().then(function () {
+            vm.screenshotModal.close();
+            console.log("screenshot is done!")
+        });
     };
 
 

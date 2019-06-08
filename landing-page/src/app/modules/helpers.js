@@ -16,9 +16,4 @@ emilUIHelpersModule.service('helperFunctions', function () {
             return typeof args[number] !== 'undefined' ? args[number] : match;
         });
     };
-    this.getAllowedEnvironmentTypes = function () {
-        return [{name: "emilContainerEnvironment", isContainer: true},
-            {name: "emilEnvironment", isContainer: false},
-            {name: "emilObjectEnvironment", isContainer: false}];
-    };
 });

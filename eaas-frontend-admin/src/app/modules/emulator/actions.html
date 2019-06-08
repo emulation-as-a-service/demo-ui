@@ -2,12 +2,13 @@
     <div id="actionsHeading" class="panel-heading">{{'ACTIONS_L' | translate}}</div>
 
     <div id="actionsBtnGroup" class="btn-group-vertical" role="group">
-        <button ng-if="baseCtrl.config.features.screenshots && actionsCtrl.emulator.mode === 'guac'"
+        <button id="dwnldScreenBtn" ng-if="baseCtrl.config.features.screenshots && actionsCtrl.emulator.mode === 'guac'"
                 type="submit" class="btn btn-default"
-                ng-click="actionsCtrl.screenshot()"
+                ng-click="screenshot();"
                 ng-disabled="actionsCtrl.emulator.state !== 'STARTED'">
             {{'ACTIONS_SCREENSHOT' | translate}}
         </button>
+
         <button type="submit" class="btn btn-default" ng-click="actionsCtrl.openPrintDialog()"
                 ng-disabled="actionsCtrl.emulator.state !== 'STARTED' && actionsCtrl.printJobsAvailable"
                 ng-show="actionsCtrl.enablePrinting">

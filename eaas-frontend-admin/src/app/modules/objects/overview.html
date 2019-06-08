@@ -4,7 +4,7 @@
     <uib-tab ng-repeat="item in objectOverviewCtrl.archives"
              ng-click="objectOverviewCtrl.updateTable($index, item)"
              index="$index"
-             heading="{{item !== 'zero conf' ? item : 'Local Object Archive'}}">
+             heading="{{ objectOverviewCtrl.getArchiveHeader(item) }}">
 
     </uib-tab>
 </uib-tabset>

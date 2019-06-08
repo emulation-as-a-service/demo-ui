@@ -29,6 +29,7 @@
     "bootstrap-ui-datetime-picker": "2.5.4",
     "chart.js": "2.6.0",
     "downloadjs": "^1.4.7",
+    "angular-resource": "1.5.3",
     "element-resize-detector": "^1.1.14",
     "font-awesome": "4.6.3",
     "jquery": "3.2.1",

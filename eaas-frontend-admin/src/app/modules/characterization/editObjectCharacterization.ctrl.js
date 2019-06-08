@@ -13,6 +13,7 @@ module.exports = ['$scope', '$state', '$stateParams', '$uibModal', '$http', 'Obj
 
      Objects.get({archiveId: vm.objectArchive, objectId: vm.objectId}).$promise.then(function(response) {
         vm.metadata = response.metadata;
+        vm.response = response;
         vm.objEnvironments = response.objectEnvironments.environmentList;
         vm.suggested = response.objectEnvironments.suggested;
         vm.fileFormatMap = response.objectEnvironments.fileFormatMap;
@@ -153,7 +154,8 @@ module.exports = ['$scope', '$state', '$stateParams', '$uibModal', '$http', 'Obj
 
      vm.saveSoftware = function() {
         vm.softwareObj.objectId = $stateParams.objectId;
-        vm.softwareObj.label = vm.softwareObj.objectId;
+        vm.softwareObj.label = vm.metadata.title;
+
         vm.softwareObj.archiveId = $stateParams.objectArchive;
 
         if(vm.softwareObj.isOperatingSystem && vm.operatingSystemId)
@@ -171,7 +173,6 @@ module.exports = ['$scope', '$state', '$stateParams', '$uibModal', '$http', 'Obj
            if (response.data.status === "0") {
                growl.success(response.data.message);
                $state.go('admin.sw-overview', {}, {reload: true});
-
            } else {
                growl.error(response.data.message, {title: 'Error ' + response.data.status});
            }

@@ -2,6 +2,7 @@ module.exports = ['$http', '$scope', '$state', '$stateParams', 'Environments', '
     function ($http, $scope, $state, $stateParams, Environments, localConfig, growl, $translate, REST_URLS) {
         var vm = this;
         let handlePrefix = "11270/";
+        vm.isOpen = false;
 
         vm.showDateContextPicker = false;
         Environments.get({envId: $stateParams.envId}).$promise.then(function(response) {
@@ -25,6 +26,11 @@ module.exports = ['$http', '$scope', '$state', '$stateParams', 'Environments', '
         });
 
         vm.saveEdit = function () {
+
+            if(vm.processArgs.length === 0){
+                growl.error('Process is required');
+                return;
+            }
 
             vm.env.title = vm.envTitle;
             vm.env.input = vm.envInput;

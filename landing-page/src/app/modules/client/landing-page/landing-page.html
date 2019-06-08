@@ -335,7 +335,7 @@
                     <p id="container-running">please wait... container is running.</p>
                     <div class="center-wrapper">
                     <br>
-                    <div class="modal-body">
+                    <div ng-hide="containerLandingCtrl.env.isContainer" class="modal-body">
                         <div class="centered-content">
                             <div id="emulator-container" class="eaas-emulator-container-transcursor"></div>
                             <br>
@@ -362,10 +362,14 @@
 
                         <p>{{'CONTAINER_STOPPED_T' | translate}}</p>
 
+                        <div id="containerOutputDwnldSpinner" ng-if="containerLandingCtrl.isContOutDownloading">
+                            <img src="img/Eclipse-1s-200px.gif">
+                        </div>
 
-                        <button ng-hide="hideme" id="container-download-btn" ng-click="hideme=true;containerLandingCtrl.downloadLink()">Download
+                        <button id="containerOutputDownloadBtn" ng-hide="hideme" ng-click="hideme=true;">Download
                             result
                         </button>
+
                     </div>
                 </div>
             </div>

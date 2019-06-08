@@ -300,6 +300,7 @@
 
   "IMPORT_WAIT_TITLE" : "Importing Image",
   "IMPORT_WAIT_MSG" : "Depending on the file size and server/network performance, image import may take several minutes.",
+  "GENERAL_WAIT_MSG" : "Working on it...",
 
   "OBJECTS_L" : "Objects",
   "OBJECTS_SEARCH" : "Search...",
@@ -341,6 +342,8 @@
   "EDIT_CONTAINER_INPUT_PH" : "path within the container",
   "EDIT_CONTAINER_OUTPUT" : "Output folder",
   "EDIT_CONTAINER_OUTPUT_PH" : "path within the container",
+  "EDIT_CONTAINER_ACCORDION_INPUT_OUTPUT" : "Input/Output folders",
+  "EDIT_CONTAINER_ACCORDION_PROCESS_VARIABLES" : "Processes and Variables",
   "EDIT_CONTAINER_HELPTEXT" : "Description",
   "EDIT_CONTAINER_CANCEL" : "Cancel",
   "EDIT_CONTAINER_SAVE" : "Save",

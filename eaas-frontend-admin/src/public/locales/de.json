@@ -339,6 +339,8 @@
   "EDIT_CONTAINER_INPUT_PH" : "Pfad im Container",
   "EDIT_CONTAINER_OUTPUT" : "Ouput Ordner",
   "EDIT_CONTAINER_OUTPUT_PH" :  "Pfad im Container",
+  "EDIT_CONTAINER_ACCORDION_INPUT_OUTPUT" : "Input/Output Ordner",
+  "EDIT_CONTAINER_ACCORDION_PROCESS_VARIABLES" : "Processes und Variables",
   "EDIT_CONTAINER_HELPTEXT" : "Beschreibung",
   "EDIT_CONTAINER_CANCEL" : "Abbrechen",
   "EDIT_CONTAINER_SAVE" : "Speichern",
