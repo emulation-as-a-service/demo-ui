@@ -82,6 +82,7 @@
   "SETTINGS_DLG_CLOSE_DLG" : "Schließen",
   "SETTINGS_DLG_SYNC_OBJECTS" : "Objektarchive synchronisieren",
   "SETTINGS_DLG_SYNC_IMAGES" : "Umgebungen sychronisieren",
+  "SETTINGS_DLG_TITLE" : "Erweiterte Einstellungen",
 
   "SET_KEYBOARD_DLG_TITLE" : "Lokale Tastaturlayout ändern",
   "ADVANCED_OPTIONS" : "Advanced Optionen",

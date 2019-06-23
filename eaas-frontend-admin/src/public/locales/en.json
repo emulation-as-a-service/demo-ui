@@ -85,6 +85,7 @@
   "SETTINGS_DLG_CLOSE_DLG" : "Close",
   "SETTINGS_DLG_SYNC_OBJECTS" : "Sync Object Archives",
   "SETTINGS_DLG_SYNC_IMAGES" : "Sync Image Archive",
+  "SETTINGS_DLG_TITLE" : "Advanced settings",
 
   "SET_KEYBOARD_DLG_TITLE" : "Set local keyboard layout and language",
   "ADVANCED_OPTIONS" : "Advanced Options",
