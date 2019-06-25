@@ -1,0 +1,151 @@
+<div class="modal-header">
+    <h3 class="modal-title">{{'ADVANCED_OPTIONS' | translate}}</h3>
+</div>
+
+<div class="modal-body">
+
+    <button class="btn btn-default btn-lg btn-block tekst" type="button" ng-hide="runtime != 0"
+            ng-click="runtime=1;">{{'BASE_MENU_ADVANED_DATABASE_CONTENT'|
+        translate}}</button>
+    <!--Database Content-->
+
+    <div ng-hide="runtime != 1">
+        <span>Deprecated. Works with old style DB</span>
+
+        <button class="btn btn-default btn-lg btn-block" type="button"
+            ng-click="hideTextArea=false;advancedDialogCtrl.showEmilEnvs()">{{'BASE_MENU_ADVANED_SETTINGS_DLG_EMIL_ENV'|
+        translate}}</button>
+    <button class="btn btn-default btn-lg btn-block" type="button"
+            ng-click="hideTextArea=false;advancedDialogCtrl.showObjectEmilEnvs()">{{'BASE_MENU_ADVANED_SETTINGS_DLG_OBJECT_ENV'|
+        translate}}</button>
+    <button class="btn btn-default btn-lg btn-block" type="button"
+            ng-click="hideTextArea=false;advancedDialogCtrl.showContainerEmilEnvs()">{{'BASE_MENU_ADVANED_SETTINGS_DLG_CONTAINER_ENV'|
+        translate}}</button>
+    <pre ng-hide="hideTextArea" id="json-renderer"></pre>
+        
+        <span>New style DB is coming...</span>
+
+    </div>
+
+
+    <button class="btn btn-default btn-lg btn-block" type="button" ng-hide="runtime != 0"
+            ng-click="hideTextArea=false;advancedDialogCtrl.getNameIndexes()">Show NameIndexes (in the log)</button>
+    <button class="btn btn-default btn-lg btn-block" type="button" ng-hide="runtime != 0"
+            ng-click="hideTextArea=false;advancedDialogCtrl.groupIds()">Show Network GroupIds</button>
+
+    <!--Import Emulator Functionality-->
+
+    <button class="btn btn-default btn-lg btn-block tekst" type="button" ng-hide="runtime != 0"
+            ng-click="runtime=2;">{{'ADVANCED_IMPORT_EMULATOR'|
+        translate}}</button>
+
+    <div class="panel panel-default" ng-show="runtime==2;">
+        <div class="panel-heading">Docker</div>
+        <div class="panel-body">
+
+            <h4>Image Format</h4>
+            <p>{{'SW_NEW_CONTAINER_FORMAT_DOCKER' | translate}}</p>
+            <p>{{'SW_NEW_CONTAINER_IMAGE_STRUCTURE' | translate}}</p>
+
+
+            <label>
+                <input type="radio" ng-model="advancedDialogCtrl.imageType" value="dockerhub">
+                <span>{{'SW_NEW_CONTAINER_IMAGE_DOCKERHUB' | translate}}</span>
+            </label>
+            <br>
+            <label>
+                <input type="radio" ng-model="advancedDialogCtrl.imageType" value="readymade">
+                <span>{{'SW_NEW_CONTAINER_IMAGE_URL' | translate}}</span>
+            </label>
+            <br>
+
+
+            <div ng-if="advancedDialogCtrl.imageType">
+
+                <!--DOCKER-->
+                <div class="panel panel-default" ng-hide="advancedDialogCtrl.imageType != 'dockerhub'">
+                    <div class="panel-heading">{{'SW_NEW_CONTAINER_DOCKER' | translate}}</div>
+                    <div class="panel-body">
+                        <div class="tekst">
+                            Name:
+                            <input type="text" placeholder="{{'SW_NEW_CONTAINER_DOCKER_DOCKERHUB_NAME' | translate}}"
+                                   class="form-control" ng-model="advancedDialogCtrl.imageUrl"
+                                   ng-required="advancedDialogCtrl.imageType == 'dockerhub'"/>
+                        </div>
+                        Tag:
+                        <input type="text" placeholder="{{'SW_NEW_CONTAINER_DOCKER_DOCKERHUB_TAG' | translate}}"
+                               class="form-control" ng-model="advancedDialogCtrl.tag"
+                               ng-required="advancedDialogCtrl.imageType == 'dockerhub'"/>
+                    </div>
+                </div>
+
+
+
+                <!--READY-MADE-->
+
+
+                <div class="panel panel-default" ng-hide="advancedDialogCtrl.imageType != 'readymade'">
+                    <div class="panel-heading">{{'SW_NEW_CONTAINER_DOCKER' | translate}}</div>
+                    <div class="panel-body">
+
+                        <label>
+                            <input type="radio" ng-model="advancedDialogCtrl.importMethod" value="url">
+                            <span>{{'SW_NEW_CONTAINER_DOCKER_IMAGE_IMPORT_URL' | translate}}</span>
+                        </label>
+                        <br>
+                        <label>
+                            <input type="radio" ng-model="advancedDialogCtrl.importMethod" value="file">
+                            <span>{{'SW_NEW_CONTAINER_DOCKER_IMAGE_IMPORT_FILE' | translate}}</span>
+                        </label>
+
+                        <div class="tekst">
+                            <input type="text" placeholder="{{'SW_NEW_CONTAINER_DOCKER_IMAGE_URL' | translate}}"
+                                   class="form-control" ng-model="advancedDialogCtrl.imageUrl"
+                                   ng-disabled="advancedDialogCtrl.importMethod != 'url'"
+                                   ng-required="advancedDialogCtrl.importMethod == 'url'"/>
+                        </div>
+
+                        <div class="tekst">
+                            <button type="button" class="btn btn-default" ng-show="advancedDialogCtrl.importMethod == 'file'"
+                                    ngf-select="advancedDialogCtrl.onImportFilesChosen($file)">Select Files
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+                <!--Emulator Options-->
+                <div class="form-group">
+                    <label>{{'ADVANCED_IMPORT_EMULATOR_TYPE' | translate}}</label>
+                    <select class="form-control" name="repeatSelect" id="repeatSelect" ng-model="advancedDialogCtrl.emulatorType">
+                        <option ng-repeat="emulator in advancedDialogCtrl.emulators" value="emucon-rootfs/{{emulator}}">{{emulator}}
+                        </option>
+                    </select>
+                </div>
+                <div class="tekst">
+                    <label>{{'ADVANCED_IMPORT_EMULATOR_VERSION' | translate}}</label>
+                    <input type="text" placeholder="{{'ADVANCED_IMPORT_EMULATOR_VERSION_PLC' | translate}}"
+                           class="form-control" ng-model="advancedDialogCtrl.version"
+                           ng-required="advancedDialogCtrl.imageType == 'dockerhub'"/>
+                </div>
+                <div class="tekst">
+                    <label>{{'ADVANCED_IMPORT_EMULATOR_ALIAS' | translate}}</label>
+                    <input type="text" placeholder="{{'ADVANCED_IMPORT_EMULATOR_ALIAS_PLC' | translate}}"
+                           class="form-control" ng-model="advancedDialogCtrl.alias"
+                           ng-required="advancedDialogCtrl.imageType == 'dockerhub'"/>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-default" type="button" ng-click="$close()">{{'SETTINGS_DLG_CLOSE_DLG'
+        | translate}}</button>
+    <button type="button" class="btn btn-primary" ng-show="runtime==2;" ng-click="advancedDialogCtrl.import()">{{'ADVANCED_IMPORT_EMULATOR' | translate}}</button>
+</div>

@@ -1,0 +1,37 @@
+<div class="modal-header">
+    <h3 class="modal-title">{{'CONTAINER_RUN_L' | translate}}</h3>
+</div>
+
+<div class="modal-body">
+    <container-input-list-modified list="runContainerDlgCtrl.inputs"
+                heading="Define input sources"
+                list-empty-note="Add input sources to the container. File-names are relative to the containers input folder."
+                add-button-text="Add Input Source"
+                input-source-button-text="runContainerDlgCtrl.inputSourceButtonText"
+                new-input-url="runContainerDlgCtrl.newInputUrl"
+                new-input-name="runContainerDlgCtrl.newInputName"
+                import-urls="runContainerDlgCtrl.importUrls"
+                uniprot-batch="runContainerDlgCtrl.uniprotBatch"
+                uniprot-query="runContainerDlgCtrl.uniprotQuery"
+                pride-accession="runContainerDlgCtrl.prideAccession"
+                pride-files="runContainerDlgCtrl.prideFiles"
+                upload-files="runContainerDlgCtrl.uploadFiles"
+                on-input-source-selection="runContainerDlgCtrl.onInputSourceSelection"
+                on-import-files-chosen="runContainerDlgCtrl.onImportFilesChosen"
+                on-file-upload="runContainerDlgCtrl.onFileUpload"
+                on-uniprot="runContainerDlgCtrl.onUniprot"
+                on-import-from-url="runContainerDlgCtrl.onImportFromUrl"
+                on-uniprot-batch-file-chosen="runContainerDlgCtrl.onUniprotBatchFileChosen"
+                on-uniprot-batch="runContainerDlgCtrl.onUniprotBatch"
+                on-uniprot-query="runContainerDlgCtrl.onUniprotQuery"
+                on-pride-list-files="runContainerDlgCtrl.onPrideListFiles"
+                on-pride-add-files="runContainerDlgCtrl.onPrideAddFiles"
+                on-pride-master-checkbox="runContainerDlgCtrl.onPrideMasterCheckbox"
+                show-dialogs="runContainerDlgCtrl.showDialogs">
+    </container-input-list-modified>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ui-sref="admin.standard-envs-overview({showObjects: false, showContainers: true})" ng-click="$close();" >{{'CONTAINER_RUN_CANCEL' | translate}}</button>
+    <button class="btn btn-default" type="button" ng-click="$close();runContainerDlgCtrl.run()">{{'CONTAINER_RUN_RUN' | translate}}</button>
+</div>

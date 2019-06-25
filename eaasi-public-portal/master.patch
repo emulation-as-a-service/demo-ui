@@ -1,0 +1,2176 @@
+--- a/eaas-frontend-admin/src/app/app.js
++++ b/eaas-frontend-admin/src/app/app.js
+@@ -445,12 +445,12 @@ function($stateProvider,
+                     return $http.get(localConfig.data.eaasBackendURL + REST_URLS.getSoftwarePackageDescriptions)
+                 },
+                 userInfo: ($http, localConfig, REST_URLS) =>
+-                    {
+-                        if(auth0config.AUTH_CONFIGURED)
+-                           return  $http.get(localConfig.data.eaasBackendURL + REST_URLS.getUserInfo);
+-                        else
+-                           return {};
+-                    }
++                {
++                    if(auth0config.AUTH_CONFIGURED)
++                       return  $http.get(localConfig.data.eaasBackendURL + REST_URLS.getUserInfo);
++                    else
++                       return {};
++                }
+             },
+             controller: "BaseController as baseCtrl"
+         })
+@@ -591,7 +591,7 @@ function($stateProvider,
+                 showContainers: false
+             },
+             resolve : {
+-
++                defaultEnvironments: ($http, localConfig, REST_URLS) => $http.get(localConfig.data.eaasBackendURL + REST_URLS.defaultEnvironments)
+             },
+             views: {
+                 'wizard': {
+diff --git a/eaas-frontend-admin/src/app/modules/base/settingsDialog.ctrl.js b/eaas-frontend-admin/src/app/modules/base/settingsDialog.ctrl.js
+index 0c7b8e7..fa84dad 100644
+--- a/eaas-frontend-admin/src/app/modules/base/settingsDialog.ctrl.js
++++ b/eaas-frontend-admin/src/app/modules/base/settingsDialog.ctrl.js
+@@ -41,6 +41,18 @@ module.exports = ['$state', '$http', '$scope', '$uibModal', 'localConfig', 'kbLa
+          );
+      };
+ 
++     vm.exportClassificationData = function () {
++        $scope.$close();
++        $http.get(localConfig.data.eaasBackendURL + REST_URLS.exportClassificationData).then(function (response) {
++            if (response.data.status === "0") {
++                $state.go('admin.standard-envs-overview', {}, {reload: true});
++                growl.success(response.data.message);
++            } else {
++                growl.error(response.data.message, {title: 'Error ' + response.data.status});
++            }
++        });
++     };
++
+      vm.syncImages = function () {
+          $scope.$close();
+ 
+diff --git a/eaas-frontend-admin/src/app/modules/characterization/edit-object-characterization.html b/eaas-frontend-admin/src/app/modules/characterization/edit-object-characterization.html
+index c8b2f83..47402f3 100644
+--- a/eaas-frontend-admin/src/app/modules/characterization/edit-object-characterization.html
++++ b/eaas-frontend-admin/src/app/modules/characterization/edit-object-characterization.html
+@@ -25,8 +25,52 @@
+     </div>
+     <div class="panel-body">
+         <p>
+-            <b>Object ID:</b> {{editObjectCharacterizationCtrl.metadata.title}}
+-        </p>
++            <div ng-if="editObjectCharacterizationCtrl.metadata.idn">
++                <b>IDN:</b> {{editObjectCharacterizationCtrl.metadata.idn}}<br>
++            </div>
++            <div ng-if="editObjectCharacterizationCtrl.metadata.title">
++                <b>Titel:</b> <div ng-bind-html="editObjectCharacterizationCtrl.metadata.title"></div><br>
++            </div>
++            <div ng-if="editObjectCharacterizationCtrl.metadata.os">
++                <b>Betriebssystem: </b> <div ng-bind-html="editObjectCharacterizationCtrl.metadata.os" ></div><br>
++            </div>
++            <div ng-if="editObjectCharacterizationCtrl.metadata['internal.externalDescription']">
++                <b>Interne Bemerkung: </b> <div ng-bind-html="editObjectCharacterizationCtrl.metadata['internal.externalDescription']" style="hyphens: auto;"></div>	<br>
++            </div>
++            <div ng-if="editObjectCharacterizationCtrl.metadata['internal.copyprotection']">
++                <b>Kopierschutz </b> <div ng-bind-html="editObjectCharacterizationCtrl.metadata['internal.copyprotection']" style="hyphens: auto;"></div>	<br>
++            </div>
++            <div ng-if="editObjectCharacterizationCtrl.metadata['internal.operability']">
++                <b>Lauffähigkeit </b> <div ng-bind-html="editObjectCharacterizationCtrl.metadata['internal.operability']" style="hyphens: auto;"></div>	<br>
++            </div>
++            <div ng-if="editObjectCharacterizationCtrl.metadata['internal.licenceType']">
++                <b>Lizenzart:</b> <div ng-bind-html="editObjectCharacterizationCtrl.metadata['internal.licenceType']" style="hyphens: auto;"></div><br>
++            </div>
++            <div ng-if="editObjectCharacterizationCtrl.metadata['internal.dependencies']">
++                <b>Abhängigkeiten:</b> <div ng-bind-html="editObjectCharacterizationCtrl.metadata['internal.dependencies']" style="hyphens: auto;"></div><br>
++            </div>
++            <div ng-if="editObjectCharacterizationCtrl.metadata['external.externalDescription']">
++                <b>Öffentliche Bemerkungen:</b> <div ng-bind-html="editObjectCharacterizationCtrl.metadata['external.externalDescription']" style="hyphens: auto;"></div><br>
++            </div>
++            <div ng-if="editObjectCharacterizationCtrl.metadata['external.licenceInfo']">
++                <b>Freischaltinformationen:</b> <div ng-bind-html="editObjectCharacterizationCtrl.metadata['external.licenceInfo']" style="hyphens: auto;"></div><br>
++            </div>
++            <div ng-if="editObjectCharacterizationCtrl.metadata['external.usage']">
++                <b>Anweisung:</b> <div ng-bind-html="editObjectCharacterizationCtrl.metadata['external.usage']" style="hyphens: auto;"></div><br>
++            </div>
++            <div ng-if="editObjectCharacterizationCtrl.metadata['external.additionalInfo']">
++                <b>Inhaltliche Bemerkungen:</b> <div ng-bind-html="editObjectCharacterizationCtrl.metadata['external.additionalInfo']" style="hyphens: auto;"></div><br>
++            </div>
++           </p>
++    </div>
++
++    <div class="panel-heading">
++        {{'CHAR_ENV_LIST' | translate}}
++    </div>
++    <div class="panel-body">
++
++        <b>Object ID:</b> {{editObjectCharacterizationCtrl.metadata.title}}
++
+ 
+         <p ng-bind-html="editObjectCharacterizationCtrl.metadata.summary"></p>
+             <p>
+@@ -69,7 +113,7 @@
+                             <li class="list-group-item" ng-repeat="env in editObjectCharacterizationCtrl.objEnvironments">
+                             <div class="handle btn btn-primary"><i class="glyphicon glyphicon-move"></i></div>
+                             <div style="display: inline-block;">{{env.label}} <span ng-if="env.objectEnvironment">(OE)</span></div>
+-                            <div class="btn btn-default" style="float: right; color: #CC322E;" ng-click="editObjectCharacterizationCtrl.removeEnvironment(env)">
++                            <div class="btn btn-default" tabindex="0" style="float: right; color: #CC322E;" ng-click="editObjectCharacterizationCtrl.removeEnvironment(env)">
+                                 <i class="glyphicon glyphicon-remove"></i>
+                             </div>
+                             <div style="float: right;"><button type="submit" class="btn btn-primary"
+@@ -81,7 +125,6 @@
+                             </div>
+                         </li>
+                     </ul>
+-
+                 </div>
+         </div>
+         <div uib-accordion-group class="panel-default" is-open="status.open">
+@@ -149,6 +192,7 @@
+                    ng-model="editObjectCharacterizationCtrl.softwareObj.allowedInstances">
+             <br/>
+ 
++
+             <label>{{'SW_INGEST_QID' | translate}}</label>
+             <input type="text" class="form-control"
+                    ng-model="editObjectCharacterizationCtrl.softwareObj.qid">
+diff --git a/eaas-frontend-admin/src/app/modules/characterization/editObjectCharacterization.ctrl.js b/eaas-frontend-admin/src/app/modules/characterization/editObjectCharacterization.ctrl.js
+index f96d21a..9c50475 100644
+--- a/eaas-frontend-admin/src/app/modules/characterization/editObjectCharacterization.ctrl.js
++++ b/eaas-frontend-admin/src/app/modules/characterization/editObjectCharacterization.ctrl.js
+@@ -11,8 +11,10 @@ module.exports = ['$scope', '$state', '$stateParams', '$uibModal', '$http', 'Obj
+      vm.softwareObj = softwareObj.data;
+      vm.osList = osList;
+ 
++
+      Objects.get({archiveId: vm.objectArchive, objectId: vm.objectId}).$promise.then(function(response) {
+-        vm.metadata = response.metadata;
++        vm.metadata = response.metadata.customData;
++        // vm.metadata = metadata.data.customData;
+         vm.objEnvironments = response.objectEnvironments.environmentList;
+         vm.suggested = response.objectEnvironments.suggested;
+         vm.fileFormatMap = response.objectEnvironments.fileFormatMap;
+        $uibModal.open({
+diff --git a/eaas-frontend-admin/src/app/modules/emulator/start.ctrl.js b/eaas-frontend-admin/src/app/modules/emulator/start.ctrl.js
+index 9166439..805029c 100644
+--- a/eaas-frontend-admin/src/app/modules/emulator/start.ctrl.js
++++ b/eaas-frontend-admin/src/app/modules/emulator/start.ctrl.js
+@@ -1,7 +1,10 @@
+-module.exports = ['$rootScope', '$uibModal', '$scope', '$http', '$sce', '$state', '$stateParams', '$cookies', '$translate', 'localConfig', 'growl', 'Environments', 'REST_URLS', 'chosenEnv',
+-                                    function ($rootScope, $uibModal, $scope, $http, $sce,   $state, $stateParams, $cookies, $translate, localConfig, growl, Environments, REST_URLS, chosenEnv) {
++module.exports = ['$rootScope', '$uibModal', '$scope', '$http', '$sce', '$state', '$stateParams', '$cookies', '$translate', 'localConfig', 'growl', 'Environments', 'REST_URLS', 'chosenEnv', 'metadata',
++                                    function ($rootScope, $uibModal, $scope, $http, $sce,   $state, $stateParams, $cookies, $translate, localConfig, growl, Environments, REST_URLS, chosenEnv, metadata) {
+         var vm = this;
+ 
++        if(metadata)
++            vm.metadata = metadata.data.customData;
++
+         window.isCollapsed = true;
+         window.$rootScope = $rootScope;
+         $rootScope.emulator.state = '';
+@@ -10,6 +13,7 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$http', '$sce', '$state'
+         vm.runEmulator = function(selectedEnvs, attachId) {
+ 
+             let type = "machine";
++            $("#pointerlock-help").hide();
+             window.eaasClient = new EaasClient.Client(localConfig.data.eaasBackendURL, $("#emulator-container")[0]);
+ 
+             eaasClient.onError = function (message) {
+@@ -33,8 +37,10 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$http', '$sce', '$state'
+                 this.link += "&objectId=" + $stateParams.objectId;
+ 
+             window.eaasClient.onEmulatorStopped = function () {
+-                if ($rootScope.emulator.state == 'STOPPED')
+-                    return;
++                //if ($rootScope.emulator.state == 'STOPPED')
++                //    return;
++
++                console.log("emulator stopped");
+ 
+                 $rootScope.emulator.state = 'STOPPED';
+                 $rootScope.emulator.detached = false;
+@@ -45,8 +51,8 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$http', '$sce', '$state'
+             };
+ 
+             // fallback to defaults when no cookie is found
+-            var kbLayoutPrefs = $cookies.getObject('kbLayoutPrefs') || {
+-                language: {name: 'us'},
++            var kbLayoutPrefs = {
++                language: {name: 'de'},
+                 layout: {name: 'pc105'}
+             };
+ 
+@@ -153,8 +159,9 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$http', '$sce', '$state'
+                         $rootScope.tcpGatewayConfig = eaasClient.tcpGatewayConfig;
+                     }
+                     if (eaasClient.params.pointerLock === "true") {
+-                        growl.info($translate.instant('EMU_POINTER_LOCK_AVAILABLE'));
++                        // growl.info($translate.instant('EMU_POINTER_LOCK_AVAILABLE'));
+                         BWFLA.requestPointerLock(eaasClient.guac.getDisplay().getElement(), 'click');
++                        $("#pointerlock-help").show()
+                     }
+                 });
+             } else {
+@@ -166,6 +173,8 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$http', '$sce', '$state'
+                     $rootScope.emulator.state = 'STARTED';
+                     $rootScope.idsData = eaasClient.envsComponentsData;
+ 
++                    $rootScope.$broadcast("emulatorStart", "success");
++
+                     $rootScope.idsData.forEach(function (idData) {
+                         Environments.get({envId: idData.env.data.environment}).$promise.then(function(response) {
+                             idData.title = response.title;
+
+diff --git a/eaas-frontend-admin/src/app/modules/characterization/modals/set-default-environment.html b/eaas-frontend-admin/src/app/modules/environments/modals/set-default-environment.html
+similarity index 100%
+rename from eaas-frontend-admin/src/app/modules/characterization/modals/set-default-environment.html
+rename to eaas-frontend-admin/src/app/modules/environments/modals/set-default-environment.html
+diff --git a/eaas-frontend-admin/src/app/modules/environments/overview.ctrl.js b/eaas-frontend-admin/src/app/modules/environments/overview.ctrl.js
+index acfc348..227015d 100644
+--- a/eaas-frontend-admin/src/app/modules/environments/overview.ctrl.js
++++ b/eaas-frontend-admin/src/app/modules/environments/overview.ctrl.js
+@@ -1,12 +1,14 @@
+ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'localConfig', 'growl', '$translate', 'Environments',
+-    '$uibModal', 'softwareList', 'helperFunctions', 'userInfo', 'REST_URLS',
++    '$uibModal', 'softwareList', 'helperFunctions', 'userInfo', 'operatingSystemsMetadata', 'defaultEnvironments','REST_URLS',
+     function ($rootScope, $http, $state, $scope, $stateParams,
+-              localConfig, growl, $translate, Environments, $uibModal, softwareList, helperFunctions, userInfo, REST_URLS) {
++              localConfig, growl, $translate, Environments, $uibModal, softwareList, helperFunctions, userInfo, operatingSystemsMetadata,
++               defaultEnvironments, REST_URLS) {
+         var vm = this;
+ 
+         vm.config = localConfig.data;
+ 
+         vm.landingPage = localConfig.data.landingPage;
++        vm.operatingSystemsMetadata = operatingSystemsMetadata.data.operatingSystemInformations;
+         vm.viewArchive = 0;
+ 
+         vm.updateTable = function(index)
+@@ -55,6 +57,52 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'lo
+         else
+             vm.view = 0;
+ 
++        console.log(environmentList);
++        vm.getDefaultEnvironment = function(osid)
++        {
++            var env = defaultEnvironments.data[osid];
++            if(!env)
++                return null;
++
++            var envs = environmentList.data.environments;
++            var selectedEnv = envs.find(x => x.envId === env);
++            if(selectedEnv)
++                return selectedEnv.title + " (" + selectedEnv.envId + ")";
++        }
++
++        vm.openDefaultEnvDialog = function(osId, osLabel) {
++             $uibModal.open({
++                 animation: true,
++                 template: require('./modals/set-default-environment.html'),
++                 controller: ["$scope", "helperFunctions", "REST_URLS", function($scope, helperFunctions, REST_URLS) {
++                     this.defaultEnv = null;
++                     this.environments = environmentList.data.environments.slice(0);
++                     this.environments.unshift({ title: "-", envId: null });
++
++                     this.osId = osId;
++                     this.osLabel = osLabel;
++
++                     this.setEnvironment = function() {
++                         $http.get(localConfig.data.eaasBackendURL + helperFunctions.formatStr(REST_URLS.setDefaultEnvironmentUrl, this.osId, this.defaultEnv.envId))
++                             .then(function(response) {
++                                 if (response.data.status !== "0") {
++                                     growl.error(response.data.message, {title: 'Error ' + response.data.message});
++                                     $scope.$close();
++                                 }
++                                 else {
++                                     console.log("set default env for " + osId);
++                                 }
++                         })['finally'](function() {
++                             $scope.$close();
++                             $state.reload();
++                         });
++
++                     };
++                 }],
++                 controllerAs: "setDefaultEnvDialogCtrl"
++             });
++        };
++
+         vm.exportEnvironment = function(envId) {
+             $http.get(localConfig.data.eaasBackendURL + helperFunctions.formatStr(REST_URLS.exportEnvironmentUrl, envId))
+                 .then(function(response) {
+@@ -63,6 +111,7 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'lo
+                     } else {
+                         growl.error(response.data.message, {title: 'Error ' + response.data.status});
+                     }
++
+             });
+         };
+ 
+@@ -77,6 +126,7 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'lo
+                 }],
+                 controllerAs: "addSoftwareDialogCtrl"
+             });
++            return false;
+         };
+ 
+         var confirmDeleteFn = function(envId)
+diff --git a/eaas-frontend-admin/src/app/modules/environments/overview.html b/eaas-frontend-admin/src/app/modules/environments/overview.html
+index 77fc0c7..1b0444b 100644
+--- a/eaas-frontend-admin/src/app/modules/environments/overview.html
++++ b/eaas-frontend-admin/src/app/modules/environments/overview.html
+@@ -3,7 +3,6 @@
+ 
+ <uib-tabset active="standardEnvsOverviewCtrl.view">
+     <uib-tab index="0" ng-click="standardEnvsOverviewCtrl.updateTable(0)" heading="{{'CHOOSE_BASEENV_L' | translate}}">
+-
+     </uib-tab>
+     <uib-tab index="1" heading="{{'CHOOSE_OBJENV_L' | translate}}" ng-click="standardEnvsOverviewCtrl.updateTable(1)" ng-if="standardEnvsOverviewCtrl.config.features.objectEnvironments" >
+     </uib-tab>
+@@ -48,4 +47,4 @@
+     <button type="button" class="btn btn-default" ng-click="standardEnvsOverviewCtrl.deleteSelected()">
+         {{'CHOOSE_DELETE_SELECTED' | translate}}
+     </button>
+-</div>
+\ No newline at end of file
++</div>
+diff --git a/eaas-frontend-admin/src/app/modules/environments/sessions.html b/eaas-frontend-admin/src/app/modules/environments/sessions.html
+index 6df1e5e..1cfc8e8 100644
+--- a/eaas-frontend-admin/src/app/modules/environments/sessions.html
++++ b/eaas-frontend-admin/src/app/modules/environments/sessions.html
+@@ -11,7 +11,7 @@
+ 
+     <tbody>
+     <tr ng-repeat="row in sessions">
+-        <td><b>{{row.title}}</b> UserId: {{row.userId}} {{row.objectId}} Creation Date: {{row.creationDate | date:'medium'}}
++        <td><b>{{row.title}}</b> UserId: {{row.userName}} IDN: {{row.objectId}} Erstellt am: {{row.creationDate | date:'medium'}}
+             <br/><a
+                 ui-sref="admin.emulator({envId: row.envId, objectId: row.objectId, objectArchive: row.objectArchive, type: 'saveUserSession', userId: row.userId})">{{'USER_SESSIONS_RUN' | translate}}</a>
+             <a href="#"
+diff --git a/eaas-frontend-admin/src/app/modules/helpers.js b/eaas-frontend-admin/src/app/modules/helpers.js
+index 22c6da8..1818244 100644
+--- a/eaas-frontend-admin/src/app/modules/helpers.js
++++ b/eaas-frontend-admin/src/app/modules/helpers.js
+@@ -10,6 +10,7 @@ emilAdminUIHelpersModule.service('REST_URLS', function () {
+     this.repositoriesListUrl = "objects/archives";
+     this.syncObjectsUrl = "objects/syncObjects";
+     this.getObjectImportTaskState = "objects/objectImportTaskState?taskId={0}";
++    this.exportClassificationData = "EmilObjectData/exportClassificationData";
+ 
+     this.getHandleValue = "handles/";
+     this.deleteHandle = "handles/";
+@@ -37,6 +38,7 @@ emilAdminUIHelpersModule.service('REST_URLS', function () {
+     this.overrideObjectCharacterizationUrl = "EmilEnvironmentData/overrideObjectCharacterization";
+     this.getObjectDependencies = "EmilEnvironmentData/objectDependencies?envId={0}";
+     this.getOperatingSystemsMetadata = "EmilEnvironmentData/operatingSystemMetadata";
++    this.defaultEnvironments = "EmilEnvironmentData/defaultEnvironments";
+     this.replicateImage = "EmilEnvironmentData/replicateImage";
+     this.getNameIndexes = "EmilEnvironmentData/getNameIndexes";
+     this.getGroupIds = "networks/";
+diff --git a/eaas-frontend-admin/src/app/modules/objects/import.ctrl.js b/eaas-frontend-admin/src/app/modules/objects/import.ctrl.js
+index f6dd39e..21a26de 100644
+--- a/eaas-frontend-admin/src/app/modules/objects/import.ctrl.js
++++ b/eaas-frontend-admin/src/app/modules/objects/import.ctrl.js
+@@ -54,10 +54,10 @@ module.exports = ["$http", "$scope", "$state", "$stateParams", "growl", "localCo
+                        animation: true,
+                        template: require('./modals/wait.html'),
+                        controller : ["$scope", function($scope) {
+-                           this.info = {};
++                            this.info = {};
+ 
+-                           this.info.title = "Objekt Synchronisation";
+-                           this.info.msg = "Objekte werden importiert. Dieser Vorgang kann einige Minuten dauern.";
++                            this.info.title = "Objekt Synchronisation";
++                            this.info.msg = "Objekte werden importiert. Dieser Vorgang kann einige Minuten dauern.";
+                        }],
+                        controllerAs: "waitMsgCtrl"
+                    });
+@@ -101,10 +101,10 @@ module.exports = ["$http", "$scope", "$state", "$stateParams", "growl", "localCo
+                          uploadCnt--;
+                          if(uploadCnt === 0) {
+                            $http.post(localConfig.data.eaasBackendURL + REST_URLS.pushUploadUrl, {
+-                                                       objectId: vm.objectId
++                                                       objectId: vm.objectId, archive: localConfig.data.softwareArchiveId
+                            }).then(function(response) {
+                                if (response.data.status === "0") {
+-                                   $state.go('admin.object-overview', {}, {reload: true});
++                                   $state.go('admin.sw-overview', {}, {reload: true});
+                                }
+                                else
+                                {
+diff --git a/eaas-frontend-admin/src/app/modules/objects/import.html b/eaas-frontend-admin/src/app/modules/objects/import.html
+index 8aec488..9d68d38 100644
+--- a/eaas-frontend-admin/src/app/modules/objects/import.html
++++ b/eaas-frontend-admin/src/app/modules/objects/import.html
+@@ -2,7 +2,38 @@
+ <br>
+ 
+ <uib-tabset active="active">
+-    <uib-tab index="0" heading="From File">
++    <uib-tab index="0" heading="DMU">
++        <form name="fromRepo" ng-submit="uploadCtrl.import()">
++
++            <label>{{'OBJECT_INGEST_CHOOSE_REPO_L' | translate}}</label>
++            <div style="max-width: 450px;">
++                <ui-select ng-model="uploadCtrl.selectedArchive" theme="bootstrap"
++                           title="{{'OBJECT_INGEST_CHOOSE_REPO_PH' | translate}}" required>
++                    <ui-select-match placeholder="{{'OBJECT_INGEST_CHOOSE_REPO_PH' | translate}}">{{$select.selected}}</ui-select-match>
++                    <ui-select-choices repeat="obj in uploadCtrl.repositories | filter: $select.search">
++                        {{obj}}
++                    </ui-select-choices>
++                </ui-select>
++            </div>
++
++            <br>
++
++            <div class="form-group">
++                <input-list list="uploadCtrl.importRequest.objectIDs"
++                            heading="{{'OBJECT_INGEST_REPO_HEADER' | translate}}"
++                            list-empty-note="{{'OBJECT_INGEST_REPO_EMPTY' | translate}}"
++                            input-placeholder="{{'OBJECT_INGEST_REPO_PH' | translate}}"
++                            add-button-text="{{'OBJECT_INGEST_REPO_BUTTON' | translate}}"></input-list>
++            </div>
++
++            <div style="text-align: right;">
++                <button type="button" class="btn btn-default"
++                        ui-sref="admin.standard-envs-overview">{{'OBJECT_INGEST_CANCEL_BUTTON' | translate}}</button>
++                <button type="submit" class="btn btn-primary">{{'OBJECT_INGEST_SAVE_BUTTON' | translate}}</button>
++            </div>
++        </form>
++    </uib-tab>
++    <uib-tab index="1" heading="Software Archiv">
+         <form name="fromFile" ng-submit="uploadCtrl.upload()">
+             <div class="form-group">
+                 <label>{{'OBJECT_INGEST_ID' | translate}}</label>
+@@ -43,35 +74,5 @@
+             </div>
+         </form>
+     </uib-tab>
+-    <uib-tab index="1" heading="From Repository">
+-        <form name="fromRepo" ng-submit="uploadCtrl.import()">
+ 
+-            <label>{{'OBJECT_INGEST_CHOOSE_REPO_L' | translate}}</label>
+-            <div style="max-width: 450px;">
+-                <ui-select ng-model="uploadCtrl.selectedArchive" theme="bootstrap"
+-                           title="{{'OBJECT_INGEST_CHOOSE_REPO_PH' | translate}}" required>
+-                    <ui-select-match placeholder="{{'OBJECT_INGEST_CHOOSE_REPO_PH' | translate}}">{{$select.selected}}</ui-select-match>
+-                    <ui-select-choices repeat="obj in uploadCtrl.repositories | filter: $select.search">
+-                        {{obj}}
+-                    </ui-select-choices>
+-                </ui-select>
+-            </div>
+-
+-            <br>
+-
+-            <div class="form-group">
+-                <input-list list="uploadCtrl.importRequest.objectIDs"
+-                            heading="{{'OBJECT_INGEST_REPO_HEADER' | translate}}"
+-                            list-empty-note="{{'OBJECT_INGEST_REPO_EMPTY' | translate}}"
+-                            input-placeholder="{{'OBJECT_INGEST_REPO_PH' | translate}}"
+-                            add-button-text="{{'OBJECT_INGEST_REPO_BUTTON' | translate}}"></input-list>
+-            </div>
+-
+-            <div style="text-align: right;">
+-                <button type="button" class="btn btn-default"
+-                        ui-sref="admin.standard-envs-overview">{{'OBJECT_INGEST_CANCEL_BUTTON' | translate}}</button>
+-                <button type="submit" class="btn btn-primary">{{'OBJECT_INGEST_SAVE_BUTTON' | translate}}</button>
+-            </div>
+-        </form>
+-    </uib-tab>
+ </uib-tabset>
+\ No newline at end of file
+diff --git a/eaas-frontend-admin/src/app/modules/objects/overview.html b/eaas-frontend-admin/src/app/modules/objects/overview.html
+index 27e6bb0..4757305 100644
+--- a/eaas-frontend-admin/src/app/modules/objects/overview.html
++++ b/eaas-frontend-admin/src/app/modules/objects/overview.html
+@@ -28,7 +28,7 @@
+                                                             class="glyphicon glyphicon-plus"></span>
+                                                             {{'OBJECTS_NEW_OBJECT' | translate}}
+                     </button>
+-            </span>
++        </span>
+     </div>
+ </div>
+ <div style="text-align: right; margin-bottom: 15px;">
+diff --git a/eaas-frontend-admin/src/app/modules/software/overview.html b/eaas-frontend-admin/src/app/modules/software/overview.html
+index 8c81729..ca37076 100644
+--- a/eaas-frontend-admin/src/app/modules/software/overview.html
++++ b/eaas-frontend-admin/src/app/modules/software/overview.html
+@@ -1,4 +1,4 @@
+-<h1 class="m-t-0">{{'SW_OVERVIEW_HEADER' | translate}}</h1>
++<h2 class="m-t-0">{{'SW_OVERVIEW_HEADER' | translate}}</h2>
+ 
+ <div style="margin-bottom: 15px;" class="ag-theme-balham">
+     <div style="text-align: justify; text-align-last: justify">
+@@ -29,4 +29,4 @@
+            placeholder="{{'CHOOSE_ENV_SEARCH' | translate}}"/>
+ </div>
+ 
+-<div ag-grid="gridOptions" class="ag-theme-balham"></div>
+\ No newline at end of file
++<div ag-grid="gridOptions" class="ag-theme-balham"></div>
+diff --git a/eaas-frontend-admin/src/public/img/DNB_1024.png b/eaas-frontend-admin/src/public/img/DNB_1024.png
+new file mode 100644
+index 0000000..3bc3245
+Binary files /dev/null and b/eaas-frontend-admin/src/public/img/DNB_1024.png differ
+diff --git a/eaas-frontend-admin/src/public/img/dnb.gif b/eaas-frontend-admin/src/public/img/dnb.gif
+new file mode 100644
+index 0000000..39c52c0
+Binary files /dev/null and b/eaas-frontend-admin/src/public/img/dnb.gif differ
+diff --git a/eaas-frontend-admin/src/public/index.ejs b/eaas-frontend-admin/src/public/index.ejs
+index 6f181c9..ed97b5f 100644
+--- a/eaas-frontend-admin/src/public/index.ejs
++++ b/eaas-frontend-admin/src/public/index.ejs
+@@ -3,7 +3,7 @@
+     <head>
+         <meta charset="utf-8">
+         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+-        <title>EaaS Demo UI</title>
++        <title>EMiL Administration</title>
+         <meta name="description" content="">
+         <meta name="viewport" content="width=device-width, initial-scale=1">
+         
+@@ -17,7 +17,7 @@
+         <![endif]-->
+         
+         <!-- views will be injected here -->
+-        <div ui-view></div>
++        <div ui-view style="position: relative; min-height: calc(100vh - 15px);"></div>
+         
+         <!-- growl directive -->
+         <div growl></div>
+diff --git a/eaas-frontend-admin/src/public/locales/de.json b/eaas-frontend-admin/src/public/locales/de.json
+index cd3020e..e80140d 100644
+--- a/eaas-frontend-admin/src/public/locales/de.json
++++ b/eaas-frontend-admin/src/public/locales/de.json
+@@ -65,6 +65,7 @@
+   "BASE_MENU_CONTAINER" : "Import Container",
+   "BASE_MENU_CONTAINER_ENVS" : "Container",
+   "BASE_MENU_NEW_OBJECT" : "Objekt importieren",
++  "BASE_MENU_LOGOUT" : "Abmelden",
+   "BASE_MENU_MD" : "OAI PMH",
+   "BASE_EMULATORS" : "Emulators",
+ 
+@@ -81,10 +82,11 @@
+   "SETTINGS_DLG_CLOSE_DLG" : "Schließen",
+   "SETTINGS_DLG_SYNC_OBJECTS" : "Objektarchive synchronisieren",
+   "SETTINGS_DLG_SYNC_IMAGES" : "Umgebungen sychronisieren",
++  "SETTINGS_DLG_EXPORT_CLASSIFICATION" : "Klassifikationsdaten Export",
+ 
+-  "SET_KEYBOARD_DLG_TITLE" : "Lokale Tastaturlayout ändern",
+-  "ADVANCED_OPTIONS" : "Advanced Optionen",
+-  "SET_KEYBOARD_DLG_HELP" : "Um die Tasten Ihres Computers auf die richten Tasten des Emulators zu legen, wählen Sie bitte Ihre lokale Spracheinstellung und ihr Tastaturmodell. Wenn Sie bzgl. Ihres Tastaturmodells unsicher sind wählen Sie pc-105 (eine standard Windows tastatur).",
++  "SETTINGS_DLG_TITLE" : "Einstellungen",
++  "ADVANCED_OPTIONS" : "Erweiterte Einstellungen",
++  "SET_KEYBOARD_DLG_HELP" : "Um die Tasten Ihres Computers auf die richtigen Tasten des Emulators zu legen, wählen Sie bitte Ihre lokale Spracheinstellung und ihr Tastaturmodell. Wenn Sie bzgl. Ihres Tastaturmodells unsicher sind wählen Sie pc-105 (eine standard Windows tastatur).",
+   "SET_KEYBOARD_DLG_CHOOSE_LANG" : "Sprache auswählen",
+   "SET_KEYBOARD_DLG_CHOOSE_LANG_PH" : "Wählen oder suchen sie eine Sprache...",
+   "SET_KEYBOARD_DLG_CHOOSE_LAYOUT" : "Tastaturlayout wählen",
+@@ -192,14 +194,14 @@
+   "EDITENV_OS" : "Betriebssystem",
+   "EDITENV_SW" : "Software",
+   "EDITENV_SAVE" : "Speichern",
+-  "EDITENV_HELPTEXT": "(Wahlweise) Hilfetext zur Netzwerk",
++  "EDITENV_HELPTEXT": "Hilfe zur Benutzung",
+   "EDITENV_CANCEL" : "Abbrechen",
+   "EDITENV_REVS" : "Revisionen",
+   "EDITENV_DATE_CONTEXT": "Datum",
+   "EDITENV_RELMOUSE": "Relative Maus (Pointerlock)",
+   "EDITENV_PRINTING" : "Umgebung enthält Druckfunktion",
+   "EDITENV_SHUTDOWNBYOS": "Gast OS kann Emulation beenden",
+-  "EDITENV_OS_PH" : "Bertriebssytem ID",
++  "EDITENV_OS_PH" : "Betriebssytem ID",
+   "EDITENV_USERSORTTAG" : "User-Tag",
+   "EDITENV_TAG_PH" : "User Tag",
+   "EDITENV_TAG_EDIT" : "Bearbeiten",
+@@ -301,7 +303,7 @@
+   "HANDLES_L" : "Handles",
+   "OBJECTS_SEARCH" : "Eintippen zum Suchen...",
+ 
+-  "DEFAULTENV_L" : "Standardumgebung",
++  "DEFAULTENV_L" : "Basisumgebung",
+   "DEFAULTENV_ID_L" : "System ",
+   "DEFAULTENV_SEARCH" : "Umgebung auswählen...",
+   "DEFAULTENV_SAVE" : "Speichern",
+diff --git a/eaas-frontend-admin/src/public/locales/en.json b/eaas-frontend-admin/src/public/locales/en.json
+index 65206d6..0739781 100644
+--- a/eaas-frontend-admin/src/public/locales/en.json
++++ b/eaas-frontend-admin/src/public/locales/en.json
+@@ -68,6 +68,7 @@
+   "BASE_MENU_CONTAINER" : "Import Container",
+   "BASE_MENU_CONTAINER_ENVS" : "Containers",
+   "BASE_MENU_NEW_OBJECT" : "Import Object",
++  "BASE_MENU_LOGOUT" : "Logout",
+   "BASE_MENU_MD" : "OAI PMH",
+   "BASE_EMULATORS" : "Emulators",
+ 
+@@ -84,6 +85,7 @@
+   "SETTINGS_DLG_CLOSE_DLG" : "Close",
+   "SETTINGS_DLG_SYNC_OBJECTS" : "Sync Object Archives",
+   "SETTINGS_DLG_SYNC_IMAGES" : "Sync Image Archive",
++  "SETTINGS_DLG_EXPORT_CLASSIFICATION" : "Export Classification Data",
+ 
+   "SET_KEYBOARD_DLG_TITLE" : "Set local keyboard layout and language",
+   "ADVANCED_OPTIONS" : "Advanced Options",
+diff --git a/eaas-frontend-admin/webpack.config.js b/eaas-frontend-admin/webpack.config.js
+index f3bd77a..6710cc9 100644
+--- a/eaas-frontend-admin/webpack.config.js
++++ b/eaas-frontend-admin/webpack.config.js
+@@ -130,7 +130,7 @@ module.exports = function makeWebpackConfig() {
+       // Rename the file using the asset hash
+       // Pass along the updated reference to your code
+       // You can add here any file extension you want to get copied to your output
+-      test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)$/,
++      test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot|otf)$/,
+       loader: 'file-loader',
+         options: {
+             publicPath: isProd ? PRODUCTION_PATH : LOCAL_WEBSERVER_PATH
+diff --git a/eaas-frontend-user/src/app/app.js b/eaas-frontend-user/src/app/app.js
+new file mode 100644
+index 0000000..4979535
+--- /dev/null
++++ b/eaas-frontend-user/src/app/app.js
+@@ -0,0 +1,288 @@
++/*
++ * Import third party libraries
++ */
++
++import angular from 'angular';
++import 'angular-loading-bar';
++import ngSanitize from 'angular-sanitize';
++import ngAnimate from 'angular-animate';
++import ngCookies from 'angular-cookies';
++import 'angular-ui-router';
++import 'angular-ui-bootstrap';
++import 'ui-select';
++import 'angular-growl-v2';
++import 'angular-ellipsis';
++import 'angular-bootstrap-contextmenu';
++import 'angular-translate';
++import 'angular-translate-loader-static-files';
++import 'angular-smart-table';
++
++/*
++ * Import legacy emulator libraries
++ */
++
++const $ = require('jquery');
++window.$ = window.jQuery = $; // publish jQuery into window scope for emulator libs
++
++const appendScript = function(scriptText) {
++    let script   = document.createElement("script");
++    script.type  = "text/javascript";
++    script.text  = scriptText;
++    document.body.appendChild(script);
++};
++
++import guacamolejs from 'raw-loader!../../../eaas-client/guacamole/guacamole.js';
++appendScript(guacamolejs);
++
++import eaasclientjs from 'raw-loader!../../../eaas-client/eaas-client.js';
++appendScript(eaasclientjs);
++
++/*
++ * Import application specific modules
++ */
++
++import './modules/helpers.js';
++import './modules/modules.js';
++
++/*
++ * Import stylesheets
++ */
++
++import 'bootstrap/dist/css/bootstrap.css';
++import 'bootstrap/dist/css/bootstrap-theme.css';
++import 'ui-select/dist/select.css';
++import 'angular-growl-v2/build/angular-growl.css';
++import 'angular-loading-bar/build/loading-bar.css';
++import '../../../eaas-client/guacamole/guacamole.css';
++import '../../../eaas-client/eaas-client.css';
++import './app.css';
++
++export default angular.module('emilUI', ['angular-loading-bar', 'ngSanitize', 'ngAnimate', 'ngCookies', 'ui.router', 'ui.bootstrap', 'ui.select', 'angular-growl',
++               'dibari.angular-ellipsis', 'ui.bootstrap.contextMenu', 'pascalprecht.translate', 'smart-table', 'emilUI.modules', 'emilUI.helpers'])
++
++
++    .run(function($rootScope) {
++        $rootScope.emulator = {state : ''};
++
++        $rootScope.idleTimer = {};
++        $rootScope.idleTimer.idleTime = 0;
++
++        $rootScope.initIdleTimer = function(idleTimeout)
++        {
++            if(idleTimeout <= 0)
++                return;
++
++            $rootScope.idleTimer.idleTime = 0;
++            $rootScope.idleTimer.idleTimeout = idleTimeout;
++            clearInterval($rootScope.idleTimer.idleInterval);
++            $rootScope.idleTimer.idleInterval = setInterval($rootScope.idleTimer.timerIncrement, 60000); // 1 minute
++            console.log("TIMER started");
++        }
++
++        $rootScope.disableIdleTimer = function()
++        {
++            clearInterval($rootScope.idleTimer.idleInterval);
++            console.log("TIMER stopped");
++        }
++
++        $(document).ready(function () {
++            //Zero the idle timer on mouse movement.
++            $(this).mousemove(function (e) {
++                $rootScope.idleTimer.idleTime = 0;
++            });
++
++            $(this).keypress(function (e) {
++                $rootScope.idleTimer.idleTime = 0;
++            });
++        });
++
++        $rootScope.idleTimer.timerIncrement = function() {
++            $rootScope.idleTimer.idleTime = $rootScope.idleTimer.idleTime + 1;
++
++            if ($rootScope.idleTimer.idleTime > $rootScope.idleTimer.idleTimeout - 1) {
++                if($rootScope.idleTimeoutWarnFn)
++                    $rootScope.idleTimeoutWarnFn();
++            }
++
++            if ($rootScope.idleTimer.idleTime > $rootScope.idleTimer.idleTimeout) {
++                if($rootScope.idleTimeoutFn)
++                    $rootScope.idleTimeoutFn();
++                $rootScope.disableIdleTimer();
++            }
++        };
++    })
++
++
++    .filter('trustAsHtml', function ($sce) {
++        return function (text) {
++            return $sce.trustAsHtml(text);
++        };
++    })
++
++.config(function($stateProvider, $urlRouterProvider, growlProvider, $httpProvider, $translateProvider) {
++    /*
++     * Internationalization 
++     */
++    $translateProvider.useStaticFilesLoader({
++        prefix: 'locales/',
++        suffix: '.json'
++    });
++
++    // escape HTML in the translation
++    // $translateProvider.useSanitizeValueStrategy('escape');
++
++    $translateProvider.registerAvailableLanguageKeys(['en', 'de'], {
++      'en_*': 'en',
++      'de_*': 'de'
++    });
++
++    // automatically choose best language for user
++    $translateProvider.determinePreferredLanguage();
++    // $translateProvider.preferredLanguage('en');
++
++    var httpResponseErrorModal = null;
++
++    // Add a global AJAX error handler
++    $httpProvider.interceptors.push(function($q, $injector, $timeout) {
++        return {
++            responseError: function(rejection) {
++                  if(rejection.status === 500 || rejection.status === -1) {
++                    var $state = $injector.get('$state'); // manually inject $state service using $injector
++                    var defer = $q.defer();
++                    if(rejection.status == 500 || rejection.status === -1){
++                        $state.go('error', {}, {reload: true, inherit: false});
++                    }
++                    defer.reject(rejection);
++                    return defer.promise;
++                  }
++                  return $q.reject(rejection);
++
++
++//                if (httpResponseErrorModal === null) {
++//                    httpResponseErrorModal = $injector.get('$uibModal').open({
++//                        animation: true,
++//                        backdrop: 'static',
++//                        templateUrl: 'partials/server-error-dialog.html'
++//                    });
++//                }
++
++//                return $timeout(function() {
++//                    var $http = $injector.get('$http');
++//
++//                    var req = $http(rejection.config);
++//                    req.then(function() {
++//                        if (httpResponseErrorModal !== null) {
++//                            httpResponseErrorModal.close();
++//                            httpResponseErrorModal = null;
++//                        }
++//                    });
++//                    return req;
++//                }, 5000);
++            }
++        };
++    });
++
++    // For any unmatched url
++    $urlRouterProvider.otherwise("/default");
++
++    // Now set up the states
++    $stateProvider
++        .state('default', {
++            controller : function($state, $stateParams)
++            {
++               window.location = "http://d-nb.info/"
++            },
++            controllerAs: ""
++        })
++        .state('emulation-redirect', {
++            url: "/emulationSession?objectId&environmentId&userId",
++            controller : function($state, $stateParams)
++            {
++                $state.go('wf-b.emulator', {envId: $stateParams.environmentId, objectId: $stateParams.objectId, userId: $stateParams.userId});
++            },
++            controllerAs: ""
++        })
++        .state('error', {
++            url: "/error",
++            template: require('./modules/emulator/error.html'),
++            params: {
++                errorMsg: {title: "", message: ""}
++            },
++            controller: 'ErrorController as errorCtrl'
++        })
++        .state('object-overview', {
++            url: "/object-overview",
++            template: require('./modules/objects/overview.html'),
++            resolve: {
++                localConfig: ($http) => $http.get("config.json"),
++                objectList: ($http, localConfig, REST_URLS) => $http.get(localConfig.data.eaasBackendURL + REST_URLS.getObjectListURL)
++            },
++            controller: "ObjectsOverviewController as objectOverviewCtrl"
++        })
++        .state('wf-b', {
++            abstract: true,
++            url: "/wf-b?objectId&userId",
++            template: require('./modules/base/base.html'),
++            resolve: {
++                localConfig: ($http) => $http.get("config.json"),
++                objEnvironments: ($stateParams, $http, localConfig, helperFunctions, REST_URLS) => $http.get(localConfig.data.eaasBackendURL + helperFunctions.formatStr(REST_URLS.loadEnvsUrl, $stateParams.objectId)),
++                objMetadata: ($stateParams, $http, localConfig, helperFunctions, REST_URLS) => $http.get(localConfig.data.eaasBackendURL + helperFunctions.formatStr(REST_URLS.metadataUrl, $stateParams.objectId)),
++                allEnvironments: ($stateParams, $http, localConfig, helperFunctions, REST_URLS) => $http.get(localConfig.data.eaasBackendURL + REST_URLS.getAllEnvsUrl),
++                userSession: ($stateParams, $http, localConfig, helperFunctions, REST_URLS) =>
++                {
++                    if($stateParams.userId)
++                        return $http.get(localConfig.data.eaasBackendURL + helperFunctions.formatStr(REST_URLS.getUserSessionUrl, $stateParams.userId, $stateParams.objectId))
++                    else
++                        return null;
++                },
++                kbLayouts: ($http) => $http.get("kbLayouts.json"),
++            },
++            controller: "BaseController as baseCtrl"
++        })
++        .state('wf-b.choose-env', {
++            url: "/choose-environment",
++            views: {
++                'wizard': {
++                    template: require('./modules/emulator/choose-env.html'),
++                    controller: "ChooseEnvController as chooseEnvCtrl"
++                },
++                'metadata': {
++                    template: require('./modules/emulator/metadata.html'),
++                    controller: 'MetadataController as metadataCtrl'
++                }
++            }
++        })
++        .state('wf-b.emulator', {
++            url: "/emulator",
++            resolve: {
++                chosenEnv: ($http, $stateParams, localConfig, helperFunctions, REST_URLS) => $http.get(localConfig.data.eaasBackendURL + helperFunctions.formatStr(REST_URLS.getEmilEnvironmentUrl, $stateParams.envId)),
++                mediaCollection: ($http, $stateParams, localConfig, helperFunctions, REST_URLS) => $http.get(localConfig.data.eaasBackendURL + helperFunctions.formatStr(REST_URLS.mediaCollectionURL, $stateParams.objectId)),
++                environmentMetaData: function($http, $stateParams, localConfig, helperFunctions, REST_URLS) {
++                    if($stateParams.envId == null)
++                        return { data : { status : "1"}};
++
++                    return $http.get(localConfig.data.eaasBackendURL + helperFunctions.formatStr(REST_URLS.environmentMetaDataUrl, $stateParams.envId));
++                }
++            },
++            params: {
++                envId: null,
++                isUserSession: false
++            },
++            views: {
++                'wizard': {
++                    template: require('./modules/emulator/emulator.html'),
++                    controller: 'StartEmulatorController as startEmuCtrl'
++                },
++                'actions': {
++                    template: require('./modules/emulator/actions.html'),
++                    controller: 'ActionsController as actionsCtrl'
++                },
++                'metadata': {
++                    template: require('./modules/emulator/metadata.html'),
++                    controller: 'MetadataController as metadataCtrl'
++                }
++            }
++        });
++
++    growlProvider.globalTimeToLive(8000);
++});
+diff --git a/eaas-frontend-user/src/app/font/Crimson-Bold.otf b/eaas-frontend-user/src/app/font/Crimson-Bold.otf
+new file mode 100755
+index 0000000..909c36a
+Binary files /dev/null and b/eaas-frontend-user/src/app/font/Crimson-Bold.otf differ
+diff --git a/eaas-frontend-user/src/app/font/Crimson-BoldItalic.otf b/eaas-frontend-user/src/app/font/Crimson-BoldItalic.otf
+new file mode 100755
+index 0000000..452526c
+Binary files /dev/null and b/eaas-frontend-user/src/app/font/Crimson-BoldItalic.otf differ
+diff --git a/eaas-frontend-user/src/app/font/Crimson-Italic.otf b/eaas-frontend-user/src/app/font/Crimson-Italic.otf
+new file mode 100755
+index 0000000..011e3dc
+Binary files /dev/null and b/eaas-frontend-user/src/app/font/Crimson-Italic.otf differ
+diff --git a/eaas-frontend-user/src/app/font/Crimson-Roman.otf b/eaas-frontend-user/src/app/font/Crimson-Roman.otf
+new file mode 100755
+index 0000000..f5e33e1
+Binary files /dev/null and b/eaas-frontend-user/src/app/font/Crimson-Roman.otf differ
+diff --git a/eaas-frontend-user/src/app/font/Crimson-Semibold.otf b/eaas-frontend-user/src/app/font/Crimson-Semibold.otf
+new file mode 100755
+index 0000000..0a57424
+Binary files /dev/null and b/eaas-frontend-user/src/app/font/Crimson-Semibold.otf differ
+diff --git a/eaas-frontend-user/src/app/font/Crimson-SemiboldItalic.otf b/eaas-frontend-user/src/app/font/Crimson-SemiboldItalic.otf
+new file mode 100755
+index 0000000..0dab805
+Binary files /dev/null and b/eaas-frontend-user/src/app/font/Crimson-SemiboldItalic.otf differ
+diff --git a/eaas-frontend-user/src/app/font/Montserrat-Black.otf b/eaas-frontend-user/src/app/font/Montserrat-Black.otf
+new file mode 100755
+index 0000000..3be9844
+Binary files /dev/null and b/eaas-frontend-user/src/app/font/Montserrat-Black.otf differ
+diff --git a/eaas-frontend-user/src/app/font/Montserrat-Bold.otf b/eaas-frontend-user/src/app/font/Montserrat-Bold.otf
+new file mode 100755
+index 0000000..ee37373
+Binary files /dev/null and b/eaas-frontend-user/src/app/font/Montserrat-Bold.otf differ
+diff --git a/eaas-frontend-user/src/app/font/Montserrat-ExtraBold.otf b/eaas-frontend-user/src/app/font/Montserrat-ExtraBold.otf
+new file mode 100755
+index 0000000..5cca605
+Binary files /dev/null and b/eaas-frontend-user/src/app/font/Montserrat-ExtraBold.otf differ
+diff --git a/eaas-frontend-user/src/app/font/Montserrat-ExtraLight.otf b/eaas-frontend-user/src/app/font/Montserrat-ExtraLight.otf
+new file mode 100755
+index 0000000..a964b6d
+Binary files /dev/null and b/eaas-frontend-user/src/app/font/Montserrat-ExtraLight.otf differ
+diff --git a/eaas-frontend-user/src/app/font/Montserrat-Light.otf b/eaas-frontend-user/src/app/font/Montserrat-Light.otf
+new file mode 100755
+index 0000000..f2f0e2d
+Binary files /dev/null and b/eaas-frontend-user/src/app/font/Montserrat-Light.otf differ
+diff --git a/eaas-frontend-user/src/app/font/Montserrat-Medium.otf b/eaas-frontend-user/src/app/font/Montserrat-Medium.otf
+new file mode 100755
+index 0000000..6bb0e3e
+Binary files /dev/null and b/eaas-frontend-user/src/app/font/Montserrat-Medium.otf differ
+diff --git a/eaas-frontend-user/src/app/font/Montserrat-Regular.otf b/eaas-frontend-user/src/app/font/Montserrat-Regular.otf
+new file mode 100755
+index 0000000..f61d57e
+Binary files /dev/null and b/eaas-frontend-user/src/app/font/Montserrat-Regular.otf differ
+diff --git a/eaas-frontend-user/src/app/font/Montserrat-SemiBold.otf b/eaas-frontend-user/src/app/font/Montserrat-SemiBold.otf
+new file mode 100755
+index 0000000..22a1fc3
+Binary files /dev/null and b/eaas-frontend-user/src/app/font/Montserrat-SemiBold.otf differ
+diff --git a/eaas-frontend-user/src/app/font/Montserrat-Thin.otf b/eaas-frontend-user/src/app/font/Montserrat-Thin.otf
+new file mode 100755
+index 0000000..a1fd939
+Binary files /dev/null and b/eaas-frontend-user/src/app/font/Montserrat-Thin.otf differ
+diff --git a/eaas-frontend-user/src/app/font/MontserratAlternates-Black.otf b/eaas-frontend-user/src/app/font/MontserratAlternates-Black.otf
+new file mode 100755
+index 0000000..3844dbf
+Binary files /dev/null and b/eaas-frontend-user/src/app/font/MontserratAlternates-Black.otf differ
+diff --git a/eaas-frontend-user/src/app/font/MontserratAlternates-Bold.otf b/eaas-frontend-user/src/app/font/MontserratAlternates-Bold.otf
+new file mode 100755
+index 0000000..647fec0
+Binary files /dev/null and b/eaas-frontend-user/src/app/font/MontserratAlternates-Bold.otf differ
+diff --git a/eaas-frontend-user/src/app/font/MontserratAlternates-ExtraBold.otf b/eaas-frontend-user/src/app/font/MontserratAlternates-ExtraBold.otf
+new file mode 100755
+index 0000000..3137f36
+Binary files /dev/null and b/eaas-frontend-user/src/app/font/MontserratAlternates-ExtraBold.otf differ
+diff --git a/eaas-frontend-user/src/app/font/MontserratAlternates-ExtraLight.otf b/eaas-frontend-user/src/app/font/MontserratAlternates-ExtraLight.otf
+new file mode 100755
+index 0000000..689ef8b
+Binary files /dev/null and b/eaas-frontend-user/src/app/font/MontserratAlternates-ExtraLight.otf differ
+diff --git a/eaas-frontend-user/src/app/font/MontserratAlternates-Light.otf b/eaas-frontend-user/src/app/font/MontserratAlternates-Light.otf
+new file mode 100755
+index 0000000..775f7c1
+Binary files /dev/null and b/eaas-frontend-user/src/app/font/MontserratAlternates-Light.otf differ
+diff --git a/eaas-frontend-user/src/app/font/MontserratAlternates-Medium.otf b/eaas-frontend-user/src/app/font/MontserratAlternates-Medium.otf
+new file mode 100755
+index 0000000..b19151f
+Binary files /dev/null and b/eaas-frontend-user/src/app/font/MontserratAlternates-Medium.otf differ
+diff --git a/eaas-frontend-user/src/app/font/MontserratAlternates-Regular.otf b/eaas-frontend-user/src/app/font/MontserratAlternates-Regular.otf
+new file mode 100755
+index 0000000..58ba4a6
+Binary files /dev/null and b/eaas-frontend-user/src/app/font/MontserratAlternates-Regular.otf differ
+diff --git a/eaas-frontend-user/src/app/font/MontserratAlternates-SemiBold.otf b/eaas-frontend-user/src/app/font/MontserratAlternates-SemiBold.otf
+new file mode 100755
+index 0000000..2963f58
+Binary files /dev/null and b/eaas-frontend-user/src/app/font/MontserratAlternates-SemiBold.otf differ
+diff --git a/eaas-frontend-user/src/app/font/MontserratAlternates-Thin.otf b/eaas-frontend-user/src/app/font/MontserratAlternates-Thin.otf
+new file mode 100755
+index 0000000..8fcb647
+Binary files /dev/null and b/eaas-frontend-user/src/app/font/MontserratAlternates-Thin.otf differ
+diff --git a/eaas-frontend-user/src/app/modules/base/base.ctrl.js b/eaas-frontend-user/src/app/modules/base/base.ctrl.js
+new file mode 100644
+index 0000000..e5b5860
+--- /dev/null
++++ b/eaas-frontend-user/src/app/modules/base/base.ctrl.js
+@@ -0,0 +1,59 @@
++
++module.exports = ["$rootScope", "$scope", "$uibModal", "objMetadata", function($rootScope, $scope, $uibModal, objMetadata) {
++    function showHelpDialog(helpText) {
++        $uibModal.open({
++            animation: true,
++            template: require('./modals/help-emil-dialog.html'),
++            controller: ["$scope", function($scope) {
++                this.helpText = helpText;
++            }],
++            controllerAs: "helpDialogCtrl"
++        });
++    }
++    var vm = this;
++
++    vm.showEmilHelpDialog = function() {
++        $uibModal.open({
++            animation: true,
++                template: require('./modals/help-emil-dialog.html'),
++                controller: function($scope) {
++                    this.helpTitle = "Über EMiL";
++                    this.helpText = "Das EMiL-Bereitstellungssystem wurde im DFG-Projekt <em>Bereitstellung von Multimedia-Objekten durch Emulation</em> "
++                     + "(2014-2016) nach Anforderungen der Deutsche Nationalbibliothek, der Bayerischen Staatsbibliothek und der Staatlichen Hochschule für "
++                     + " Gestaltung | ZKM Karlsruhe von einem Entwicklerteam der "
++                     + " Albert-Ludwigs-Universität Freiburg entwickelt. Ziel des Projekts war es, komplexe Publikationen mithilfe "
++                     + "  der Technologie Emulation plattformunabhängig in ihren originären Systemumgebungen nutzbar zu machen."
++                },
++                controllerAs: "helpDialogCtrl"
++            });
++    };
++
++    vm.showObjectHelpDialog = function() {
++        $uibModal.open({
++            animation: true,
++                template: require('./modals/help-object-dialog.html'),
++                controller: ["$rootScope", "$scope", function($rootScope, $scope) {
++                    this.text = "Keine Informationen vorhanden."
++                    console.log($rootScope.metadata)
++                }],
++                controllerAs: "objectHelpDialogCtrl"
++            });
++    };
++
++
++    vm.showSetKeyboardLayoutDialog = function() {
++        return;
++        $uibModal.open({
++            animation: true,
++            template: require('./modals/set-keyboard-layout-dialog.html'),
++            resolve: {
++                kbLayouts: ($http) => $http.get("kbLayouts.json")
++            },
++            controller: "KeyboardLayoutDialogController as setKeyboardLayoutDialogCtrl"
++        });
++    };
++
++    $scope.$on('showSetKeyboardLayoutDialog', function(event, args) {
++        vm.showSetKeyboardLayoutDialog();
++    });
++}];
+\ No newline at end of file
+diff --git a/eaas-frontend-user/src/app/modules/base/base.html b/eaas-frontend-user/src/app/modules/base/base.html
+new file mode 100644
+index 0000000..7b19a6a
+--- /dev/null
++++ b/eaas-frontend-user/src/app/modules/base/base.html
+@@ -0,0 +1,56 @@
++<div id="content" class="main-container container">
++
++    <div class="row main-row">
++        <div class="col-xs-12"><div id="header"><img src="img/dnb.gif" alt="Logo Deutsche Nationalbibliothek"/></div></div>
++
++        <div class="col-sm-4">
++
++            <div class="panel-default dnb-actions">
++                <!--<div id="actionsHeading" class="panel-heading">{{'ACTIONS_L' | translate}}</div>-->
++
++                <div id="actionsBtnGroup" class="btn-group-vertical" role="group">
++
++                    <button type="submit" class="btn btn-default-help"
++                            ng-click="baseCtrl.showEmilHelpDialog()"
++                            ng-bind-html="'BASE_MENU_HELP_EMIL'| translate | trustAsHtml"></button>
++                </div>
++            </div>
++
++            <!--
++            <div class="sidebar-nav">
++                <div class="navbar navbar-default" role="navigation">
++                    <div class="navbar-header">
++                        <button type="button" class="navbar-toggle" ng-init="isCollapsed = true" ng-click="isCollapsed = !isCollapsed">
++                            <span class="sr-only">{{'BASE_SHOW_MENU' | translate}}</span>
++                            <span class="icon-bar"></span>
++                            <span class="icon-bar"></span>
++                            <span class="icon-bar"></span>
++                        </button>
++                        <span class="visible-xs navbar-brand">{{'BASE_MENU_L' | translate}}</span>
++                    </div>
++                    <div class="navbar-collapse collapse sidebar-navbar-collapse" collapse="isCollapsed">
++                        <ul class="nav navbar-nav">
++                            <li>
++
++                                        -->
++                               <!-- <a ng-click="baseCtrl.showEmilHelpDialog()" href="">{{'BASE_MENU_HELP_EMIL' | translate}}</a></li> -->
++                           <!-- <li><a ng-click="baseCtrl.showObjectHelpDialog()" href="">{{'BASE_MENU_HELP_OBJ' | translate}}</a></li> -->
++            <!--
++                        </ul>
++                    </div>
++                </div>
++            </div>
++            -->
++            
++            <div ui-view="actions"></div>
++        </div>
++        
++        <div class="col-sm-8">
++            <div ui-view="wizard"></div>
++        </div>
++    </div>
++</div>
++<div class="footer" style="text-align: right">
++    <p>powered by <img height="40" src="img/openslx-logo.jpg"></p>
++</div>
++
+diff --git a/eaas-frontend-user/src/app/modules/base/modals/help-object-dialog.html b/eaas-frontend-user/src/app/modules/base/modals/help-object-dialog.html
+new file mode 100644
+index 0000000..07a7baa
+--- /dev/null
++++ b/eaas-frontend-user/src/app/modules/base/modals/help-object-dialog.html
+@@ -0,0 +1,14 @@
++<div class="modal-header">
++    <h3 class="modal-title">{{'HELP_OBJECT_T' | translate}}</h3>
++</div>
++
++<div class="modal-body">
++    <div ng-repeat="metadatapoint in objectHelpDialogCtrl.metadata">
++        <b>{{metadatapoint.label}}</b>
++        <p>{{metadatapoint.value}}</p>
++    </div>
++</div>
++
++<div class="modal-footer">
++    <button class="btn btn-primary" type="button" ng-click="$close()">OK</button>
++</div>
+diff --git a/eaas-frontend-user/src/app/modules/emulator/actions.ctrl.js b/eaas-frontend-user/src/app/modules/emulator/actions.ctrl.js
+new file mode 100644
+index 0000000..c2e5ee0
+--- /dev/null
++++ b/eaas-frontend-user/src/app/modules/emulator/actions.ctrl.js
+@@ -0,0 +1,254 @@
++module.exports = ["$rootScope", "$scope", "$window", "$state", "$http", "$timeout", "$uibModal", "$stateParams", "$sce",
++                  "mediaCollection", "growl", "localConfig", "$translate", "chosenEnv", "objMetadata", "objEnvironments",
++                  "userSession", "environmentMetaData", "helperFunctions", "REST_URLS",
++                   function($rootScope, $scope, $window, $state, $http, $timeout, $uibModal, $stateParams, $sce,
++                          mediaCollection, growl, localConfig, $translate, chosenEnv, objMetadata, objEnvironments, userSession, environmentMetaData, helperFunctions, REST_URLS) {
++
++  //  $scope.html = '<ul><li>render me please</li></ul>';
++  //  $scope.trustedHtml = $sce.trustAsHtml($scope.html)
++    var vm = this;
++    vm.objEnvironments = objEnvironments.data.environmentList;
++    vm.metadata = objMetadata.data.customData;
++
++    function showHelpDialog(helpText) {
++        $uibModal.open({
++            animation: true,
++            template: require('./modals/help-emil-dialog.html'),
++            controller: ["$scope", function($scope) {
++                this.helpTitel = "Hilfe zur Bereitstellungsumgebung";
++                this.helpText = helpText;
++            }],
++            controllerAs: "helpDialogCtrl"
++        });
++    }
++
++    vm.printingSupported = chosenEnv.data.enablePrinting;
++    vm.enablePrinting = false;
++    vm.shutdownByOs = chosenEnv.data.shutdownByOs;
++    vm.emulator = $rootScope.emulator;
++    vm.userCtx = $stateParams.userId;
++    vm.media = mediaCollection.data.medium;
++
++    if(vm.printingSupported) {
++        $rootScope.$on('emulatorStart', function(event, args) {
++            console.log(window.eaasClient.eventSource);
++            window.eaasClient.eventSource.addEventListener('PrintJobObserver', function(e) {
++                vm.enablePrinting = true;
++                growl.info("Ein neuer Druckauftrag liegt vor.");
++            });
++        });
++    }
++
++    vm.help = function() {
++        showHelpDialog(chosenEnv.data.helpText);
++    };
++
++    vm.screenshot = function() {
++        window.open(window.eaasClient.getScreenshotUrl());
++    };
++
++    var printSuccessFn = function(data) {
++        $uibModal.open({
++            animation: true,
++            template: require('./modals/printed-list-dialog.html'),
++            controller: ["$scope", function($scope) {
++                this.printJobs = data;
++
++                this.download = function(label)
++                {
++                    window.open(window.eaasClient.downloadPrint(label));
++                }
++            }],
++            controllerAs: "openPrintDialogCtrl"
++        });
++        // window.open(window.eaasClient.getPrintUrl());
++    };
++
++    vm.openPrintDialog = function ()
++    {
++        window.eaasClient.getPrintJobs(printSuccessFn);
++    }
++
++    vm.sendCtrlAltDel = function() {
++        window.eaasClient.sendCtrlAltDel();
++    };
++
++    vm.saveSession = function() {
++
++//        if(window.eaasClient.getEmulatorState() != "STOPPED")
++//        {
++//            if (!window.confirm("Please make sure to shutdown the guest OS before creating derivatives")) { // $translate.instant('JS_DELENV_OK')
++//                return;
++//            }
++//        }
++
++        var postReq = {};
++        postReq.type = "saveUserSession";
++        postReq.objectId = $stateParams.objectId;
++        postReq.userId = $stateParams.userId;
++        postReq.envId = $stateParams.envId;
++
++        var waitModal = $uibModal.open({
++            animation: true,
++            template: require('./modals/save-wait-dialog.html')
++        });
++
++        window.onbeforeunload = null;
++        window.onbeforeunload = null;
++        var snapshotDoneFunc = function(data, status) {
++            waitModal.close();
++            $uibModal.open({
++                animation: true,
++                template: require('./modals/save-done-dialog.html'),
++                controller: ["$scope", function($scope) {
++                    this.done = function () {
++                        window.eaasClient.release();
++                        $('#emulator-container').hide();
++                        window.location = "http://d-nb.info/" + $stateParams.objectId;
++                    };
++
++                    this.start = function() {
++                        window.eaasClient.release();
++                        $('#emulator-container').hide();
++                        $state.go('wf-b.choose-env', {objectId : $stateParams.objectId}, {reload: true});
++                    }
++                }],
++                controllerAs: "saveSessionWaitDlg"
++            });
++        };
++        window.eaasClient.snapshot(postReq, snapshotDoneFunc);
++    }
++
++    vm.restartEmulator = function() {
++
++        $uibModal.open({
++            animation: true,
++            template: require('./modals/confirm-restart-dialog.html'),
++            controller: ["$scope", function($scope) {
++                this.isUserSession = $stateParams.isUserSession;
++
++                this.confirmed = function(deleteUserSession)
++                {
++                    window.eaasClient.release();
++                    if(deleteUserSession)
++                    {
++                        $http.get(localConfig.data.eaasBackendURL + helperFunctions.formatStr(REST_URLS.deleteSessionUrl, userSession.data.envId))
++                            .then(function(response) {
++                                $state.go('wf-b.choose-env', {objectId : $stateParams.objectId}, {reload: true});
++                            });
++                    }
++                    else
++                        $state.reload();
++                };
++            }],
++            controllerAs: "confirmRestartDialogCtrl"
++        });
++    };
++
++    vm.stopEmulator = function () {
++        $uibModal.open({
++            animation: true,
++            template: require('./modals/confirm-stop-dialog.html'),
++            controller: ["$scope", function($scope) {
++                this.confirmed = function()
++                {
++                    window.onbeforeunload = null;
++                    window.eaasClient.release();
++                    $('#emulator-stopped-container').show();
++                    window.location = "http://d-nb.info/" + $stateParams.objectId;
++                };
++            }],
++            controllerAs: "confirmStopDialogCtrl"
++        });
++    };
++
++    var currentMediumLabel = mediaCollection.data.medium.length > 0 ? mediaCollection.data.medium[0].items[0].label : null;
++
++    var eaasClientReadyTimer = function() {
++        if ((window.eaasClient !== undefined) && (window.eaasClient.driveId !== undefined) && (window.eaasClient.driveId !== null)) {
++            vm.driveId = window.eaasClient.driveId;
++            return;
++        }
++
++        $timeout(eaasClientReadyTimer, 100);
++    };
++    $timeout(eaasClientReadyTimer);
++
++    vm.openChangeEnvDialog = function() {
++        $uibModal.open({
++            animation: true,
++            template: require('./modals/choose-env-dialog.html'),
++            controller: ["$scope", function($scope) {
++                this.custom_env = null;
++                this.title = objMetadata.data.title;
++                this.environments = objEnvironments.data.environmentList;
++
++                this.changeEnv= function()
++                {
++                    window.eaasClient.release();
++                    $state.go('wf-b.emulator', {envId: this.custom_env.id}, {reload: true});
++                };
++            }],
++            controllerAs: "changeEnvDialogCtrl"
++        });
++    };
++
++
++    var changeMediaDlgFunc = function() {
++        $uibModal.open({
++            animation: true,
++            template: require('./modals/change-media-dialog.html'),
++            controller: ["$scope", function($scope) {
++                this.chosen_medium_label = currentMediumLabel;
++                this.media = mediaCollection.data.medium;
++                this.isChangeMediaSubmitting = false;
++
++                this.changeMedium = function(newMediumLabel) {
++                    if (newMediumLabel == null) {
++                        growl.warning($translate.instant('JS_MEDIA_NO_MEDIA'));
++                        return;
++                    }
++
++                    var postObj = {};
++                    postObj.objectId = $stateParams.objectId;
++                    postObj.driveId = window.eaasClient.driveId;
++                    postObj.label = newMediumLabel;
++
++                    var changeSuccsessFunc = function(data, status) {
++                        growl.success($translate.instant('JS_MEDIA_CHANGETO') + newMediumLabel);
++                        currentMediumLabel = newMediumLabel;
++                        $scope.$close();
++                        $("html, body").removeClass("wait");
++                    };
++
++                    $("html, body").addClass("wait");
++                    eaasClient.changeMedia(postObj, changeSuccsessFunc);
++                };
++            }],
++            controllerAs: "openChangeMediaDialogCtrl"
++        });
++    };
++
++    var changeMediaNotAvailableDlgFunc = function () {
++        $uibModal.open({
++            animation: true,
++            template: require('./modals/help-emil-dialog.html'),
++            controller: ["$scope", function($scope) {
++                this.helpTitle = $translate.instant('CHANGEM_TITLE');
++                this.helpText = $translate.instant('CHANGEM_ALT_TEXT');
++            }],
++            controllerAs: "helpDialogCtrl"
++        });
++    };
++
++    if(environmentMetaData.data.mediaChangeSupport)
++        vm.openChangeMediaDialog = changeMediaDlgFunc;
++    else
++        vm.openChangeMediaDialog = changeMediaNotAvailableDlgFunc;
++
++    vm.mediaChangeEnabled = false;
++    var i;
++    for(i = 0; i < mediaCollection.data.medium.length; i++)
++        if(mediaCollection.data.medium[i].items.length > 1)
++            vm.mediaChangeEnabled = true;
++}];
+\ No newline at end of file
+diff --git a/eaas-frontend-user/src/app/modules/emulator/actions.html b/eaas-frontend-user/src/app/modules/emulator/actions.html
+new file mode 100644
+index 0000000..7ff7f75
+--- /dev/null
++++ b/eaas-frontend-user/src/app/modules/emulator/actions.html
+@@ -0,0 +1,84 @@
++<div class="panel panel-default dnb-actions">
++    <!--<div id="actionsHeading" class="panel-heading">{{'ACTIONS_L' | translate}}</div>-->
++
++    <div id="actionsBtnGroup" class="btn-group-vertical" role="group">
++
++        <button type="submit" class="btn btn-default-help"
++                ng-click="actionsCtrl.help()"
++                ng-bind-html="'ACTIONS_HELP'| translate | trustAsHtml"></button>
++
++        <button type="submit"
++                class="btn btn-default"
++                ng-click="actionsCtrl.openChangeMediaDialog()"
++                ng-bind-html="'ACTIONS_CHANGE_MEDIA'| translate | trustAsHtml"
++                ng-show="actionsCtrl.mediaChangeEnabled"></button>
++        <!-- <button type="submit" class="btn btn-default" ng-click="actionsCtrl.openChangeMediaNativeDialog()" ng-show="actionsCtrl.driveId == -1">{{'ACTIONS_CHANGE_MEDIA' | translate}}</button> -->
++
++        <button type="submit" class="btn btn-default" ng-click="actionsCtrl.screenshot()"
++                ng-bind-html="'ACTIONS_SCREENSHOT'| translate | trustAsHtml"></button>
++
++        <span ng-show="actionsCtrl.printingSupported">
++            <button type="submit" class="btn btn-default" ng-click="actionsCtrl.openPrintDialog()"
++                    ng-disabled="!actionsCtrl.enablePrinting"
++                    ng-bind-html="'ACTIONS_PRINT'| translate | trustAsHtml"></button>
++
++            <button ng-if="!actionsCtrl.enablePrinting"
++                    uib-tooltip="Keine Druckaufträge vorhanden."
++                    type="button"
++                    class="btn btn-default" > <span class="glyphicon glyphicon-question-sign"></span></button>
++        </span>
++        <!-- <button type="submit" class="btn btn-default" ng-click="actionsCtrl.sendCtrlAltDel()">{{'ACTIONS_CTRLALTDEL' | translate}}</button> -->
++
++        <span  ng-if="actionsCtrl.userCtx && actionsCtrl.shutdownByOs"><button   type="submit"
++                        class="btn btn-default"
++                    ng-click="actionsCtrl.saveSession()" ng-disabled="actionsCtrl.emulator.state != 'STOPPED'"
++                    ng-bind-html="'ACTIONS_SAVESESSION'| translate | trustAsHtml"></button>
++
++            <button ng-if="actionsCtrl.emulator.state != 'STOPPED'"
++                    uib-tooltip="{{'ACTIONS_SAVESESSION_HELP' | translate}}"
++                    type="button"
++                    class="btn btn-default" > <span class="glyphicon glyphicon-question-sign"></span></button>
++        </span>
++        
++        <button ng-if="actionsCtrl.userCtx && !actionsCtrl.shutdownByOs" type="submit" class="btn btn-default"
++                ng-click="actionsCtrl.saveSession()"
++                ng-bind-html="'ACTIONS_SAVESESSION'| translate | trustAsHtml"></button>
++
++
++        <button type="submit" class="btn btn-default" ng-click="actionsCtrl.restartEmulator()"
++                ng-bind-html="'ACTIONS_RESTART'| translate | trustAsHtml"></button>
++        <button type="submit" class="btn btn-default" ng-click="actionsCtrl.stopEmulator()"
++                ng-bind-html="'ACTIONS_STOP'| translate | trustAsHtml"></button>
++        <button type="submit" class="btn btn-default" ng-click="actionsCtrl.openChangeEnvDialog()"
++                ng-if="actionsCtrl.objEnvironments.length > 1"
++                ng-bind-html="'ACTIONS_ALTENVS'| translate | trustAsHtml"></button>
++    </div>
++
++</div>
++
++<div>
++
++    <div ng-if="actionsCtrl.metadata['external.externalDescription']
++        || actionsCtrl.metadata['external.additionalInfo']
++        || actionsCtrl.metadata['external.usage']
++        || actionsCtrl.metadata['external.licenceInfo']">
++        <h4>Informationen zur Publikation</h4>
++        <p style="hyphens: auto; overflow-wrap: break-word;">
++        <div ng-if="actionsCtrl.metadata['external.externalDescription']" >
++            <b>Beschreibung: </b>
++            <div ng-bind-html="actionsCtrl.metadata['external.externalDescription']" style="overflow-wrap: break-word;"></div><br>
++        </div>
++        <div ng-if="actionsCtrl.metadata['external.additionalInfo']">
++            <b>Freischaltinformation: </b>
++            <div ng-bind-html="actionsCtrl.metadata['external.additionalInfo']" style="overflow-wrap: break-word; hyphens: auto;"></div><br>
++        </div>
++        <div ng-if="actionsCtrl.metadata['external.usage']" >
++            <b>Anweisungen: </b>
++            <div ng-bind-html="actionsCtrl.metadata['external.usage']" style="overflow-wrap: break-word; hyphens: auto;"></div><br>
++        </div>
++        <div ng-if="actionsCtrl.metadata['external.licenceInfo']"> <b>Inhaltliche Anmerkungen: </b>
++            <div ng-bind-html="actionsCtrl.metadata['external.licenceInfo']" style="overflow-wrap: break-word; hyphens: auto;"></div><br>
++        </div>
++        </p>
++    </div>
++</div>
+\ No newline at end of file
+diff --git a/eaas-frontend-user/src/app/modules/emulator/choose-env.ctrl.js b/eaas-frontend-user/src/app/modules/emulator/choose-env.ctrl.js
+new file mode 100644
+index 0000000..3d116b2
+--- /dev/null
++++ b/eaas-frontend-user/src/app/modules/emulator/choose-env.ctrl.js
+@@ -0,0 +1,138 @@
++module.exports = ["$rootScope", "$scope", "$state", "$cookies", "objMetadata", "objEnvironments", "allEnvironments", "growl", "$translate", "userSession", "$uibModal", "$http", "localConfig", "helperFunctions", "REST_URLS", "$stateParams",
++    function($rootScope, $scope, $state, $cookies, objMetadata, objEnvironments, allEnvironments, growl, $translate, userSession, $uibModal, $http, localConfig, helperFunctions, REST_URLS, $stateParams) {
++    var vm = this;
++
++    $rootScope.metadata = objMetadata.data;
++
++    vm.noSuggestion = false;
++
++    if (objMetadata.data.status !== "0") {
++        $state.go('error', {errorMsg: {title: "FEHLER: OBJEKT "
++            + $stateParams.objectId + " NICHT VORHANDEN"}});
++        return;
++    }
++
++    if (objEnvironments.data.status !== "0") {
++        // $state.go('error', {errorMsg: {title: "no environment could be determined automatically. please use the admin page to assign an environment manually."}});
++
++        $state.go('error', {errorMsg: {title: "FEHLER: OBJEKT "
++                + $stateParams.objectId + " NICHT VORHANDEN"}});
++        return;
++    }
++
++    else if (objEnvironments.data.environmentList.length === 0)
++    {
++         $state.go('error', {errorMsg: {title: "Es konnte keine geeignete Bereitstellungsumgebung für die Publikation "
++          + $stateParams.objectId + " ermittelt werden. Bitte wenden Sie sich an die Information."}});
++           return;
++    }
++
++    if(userSession && userSession.data.envId)
++    {
++        console.log("starting user session");
++        $state.go('wf-b.emulator', {envId: userSession.data.envId, isUserSession: true});
++
++//        $uibModal.open({
++//            animation: true,
++//            template: require('./modals/user-session-dialog.html'),
++//            controller: ["$scope", function($scope) {
++//                this.startDefault = function() {
++//                    $scope.$close();
++//                    if (objEnvironments.data.environmentList.length >= 1)
++//                    {
++//                        $state.go('wf-b.emulator', {envId: objEnvironments.data.environmentList[0].id});
++//                        return;
++//                    }
++//
++//                    if (objMetadata.data.status !== "0") {
++//                        $state.go('error', {errorMsg: {title: "Es konnte keine geeignete Bereitstellungsumgebung für die Publikation "
++//                               + $stateParams.objectId + " ermittelt werden. Bitte wenden Sie sich an die Information."}});
++//                        return;
++//                    }
++//
++//                    vm.objecttitle = objMetadata.data.title;
++//
++//                    if(vm.noSuggestion) {
++//                        if(allEnvironments.data.status === "0") {
++//                            vm.environments = allEnvironments.data.environments;
++//                        } else {
++//                            $state.go('error', {errorMsg: {title: "Es konnte keine geeignete Bereitstellungsumgebung für die Publikation "
++//                               + $stateParams.objectId + " ermittelt werden. Bitte wenden Sie sich an die Information."}});
++//                        }
++//                    } else {
++//                        vm.environments = objEnvironments.data.environmentList;
++//                    }
++//                };
++//
++//                this.startSession = function() {
++//                    $scope.$close();
++//
++//                };
++//
++//                this.deleteSession = function() {
++//                    if (window.confirm($translate.instant('JS_DELENV_OK'))) {
++//
++//                        $http.get(localConfig.data.eaasBackendURL + helperFunctions.formatStr(REST_URLS.deleteSessionUrl, userSession.data.envId))
++//                        .then(function(response) {
++//                            $scope.$close();
++//                            if (objEnvironments.data.environmentList.length >= 1)
++//                            {
++//                                $state.go('wf-b.emulator', {envId: objEnvironments.data.environmentList[0].id});
++//                                return;
++//                            }
++//
++//                            if (objMetadata.data.status !== "0") {
++//                                $state.go('error', {errorMsg: {title: "Es konnte keine geeignete Bereitstellungsumgebung für die Publikation "
++//                                       + $stateParams.objectId + " ermittelt werden. Bitte wenden Sie sich an die Information."}});
++//                                return;
++//                            }
++//                            vm.objecttitle = objMetadata.data.title;
++//                            if(vm.noSuggestion) {
++//                                if(allEnvironments.data.status === "0") {
++//                                    vm.environments = allEnvironments.data.environments;
++//                                } else {
++//                                    $state.go('error', {errorMsg: {title: "Es konnte keine geeignete Bereitstellungsumgebung für die Publikation "
++//                                        + $stateParams.objectId + " ermittelt werden. Bitte wenden Sie sich an die Information."}});
++//                                }
++//                            } else {
++//                                vm.environments = objEnvironments.data.environmentList;
++//                            }
++//                        });
++//                    }
++//                };
++//            }],
++//            controllerAs: "userSessionDialogCtrl"
++//        });
++    }
++    else {
++        if (objEnvironments.data.environmentList.length >= 1)
++        {
++          $state.go('wf-b.emulator', {envId: objEnvironments.data.environmentList[0].id});
++          return;
++        }
++
++        if (objMetadata.data.status !== "0") {
++          $state.go('error', {errorMsg: {title: "Es konnte keine geeignete Bereitstellungsumgebung für die Publikation "
++            + $stateParams.objectId + " ermittelt werden. Bitte wenden Sie sich an die Information."}});
++          return;
++        }
++
++        vm.objecttitle = objMetadata.data.title;
++
++        if(vm.noSuggestion) {
++          if(allEnvironments.data.status === "0") {
++              vm.environments = allEnvironments.data.environments;
++          } else {
++              $state.go('error', {errorMsg: {title: "Es konnte keine geeignete Bereitstellungsumgebung für die Publikation "
++                + $stateParams.objectId + " ermittelt werden. Bitte wenden Sie sich an die Information."}});
++          }
++        } else {
++          vm.environments = objEnvironments.data.environmentList;
++        }
++    }
++
++//    if (!$cookies.getObject('kbLayoutPrefs')) {
++//        growl.warning($translate.instant('CHOOSE_ENV_NO_KEYBOARD_LAYOUT_WARNING'));
++//        $scope.$emit('showSetKeyboardLayoutDialog');
++//    }
++}];
+diff --git a/eaas-frontend-user/src/app/modules/emulator/choose-env.html b/eaas-frontend-user/src/app/modules/emulator/choose-env.html
+new file mode 100644
+index 0000000..0f8b230
+--- /dev/null
++++ b/eaas-frontend-user/src/app/modules/emulator/choose-env.html
+@@ -0,0 +1,27 @@
++
++<div ng-if="!chooseEnvCtrl.noSuggestion">
++    <p>{{'CHOOSE_ENV_PROPOSAL' | translate: chooseEnvCtrl}}</p>
++    <p><b>{{chooseEnvCtrl.environments[0].label}}</b></p>
++    <button type="button" class="btn btn-primary" ui-sref="wf-b.emulator({envId:chooseEnvCtrl.environments[0].id})">{{'CHOOSE_ENV_BTN_PROPOSAL' | translate}}</button>
++</div>
++
++<!--
++<div ng-if="chooseEnvCtrl.noSuggestion">
++    <p>{{'CHOOSE_ENV_NOPROPOSAL' | translate: chooseEnvCtrl}}</p>
++</div>
++<br><br><br><br>
++
++<form name="chooseEnvCtrl.altEnvForm">
++    <p>{{'CHOOSE_ENV_SELECT_L' | translate: chooseEnvCtrl}}</p>
++    <div style="max-width: 375px;">
++        <ui-select id="chooseCustomEnvSelect" ng-model="chooseEnvCtrl.custom_env" theme="bootstrap" title="{{'CHOOSE_ENV_SELECT_PH' | translate}}" required>
++            <ui-select-match placeholder="{{'CHOOSE_ENV_SELECT_PH' | translate}}">{{$select.selected.label}}</ui-select-match>
++            <ui-select-choices repeat="env in chooseEnvCtrl.environments | filter: $select.search">
++                <span ng-bind-html="env.label | highlight: $select.search"></span>
++            </ui-select-choices>
++        </ui-select>
++    </div>
++
++    <button type="submit" class="btn btn-default" ui-sref="wf-b.emulator({envId:chooseEnvCtrl.custom_env.id})" ng-disabled="!chooseEnvCtrl.altEnvForm.$valid">{{'CHOOSE_ENV_SELECT_BTN' | translate}}</button>
++</form>
++-->
+diff --git a/eaas-frontend-user/src/app/modules/emulator/emulator.html b/eaas-frontend-user/src/app/modules/emulator/emulator.html
+new file mode 100644
+index 0000000..25683c8
+--- /dev/null
++++ b/eaas-frontend-user/src/app/modules/emulator/emulator.html
+@@ -0,0 +1,18 @@
++<div id="metadata" style="line-height: 12pt;">
++    <b>Katalogdatensatz:</b> <a href="http://d-nb.info/{{startEmuCtrl.objectId}}/" target="_blank">http://d-nb.info/{{startEmuCtrl.objectId}}</a>
++</div>
++
++<div ng-if="startEmuCtrl.metadata.title"><b>Titel:</b> {{startEmuCtrl.metadata.title}}</div>
++<p>     </p>
++<div id="pointerlock-help">Hinweis: Zum Lösen des Mauszeigers aus der Emulationsumgebung drücken Sie bitte ESC.</div>
++
++<div id="emulator-container" class="eaas-emulator-container-transcursor"></div>
++
++<div id="emulator-loading-container">
++    <h4>{{'EMU_TITLE' | translate}}</h4>
++    <img id="emulator-loading-spinner" height="144" width="144" src="img/gears.gif" />
++</div>
++
++<div id="emulator-stopped-container">
++    <h4>{{'EMU_STOPPED' | translate}}</h4>
++</div>
+\ No newline at end of file
+diff --git a/eaas-frontend-user/src/app/modules/emulator/modals/change-media-dialog.html b/eaas-frontend-user/src/app/modules/emulator/modals/change-media-dialog.html
+new file mode 100644
+index 0000000..845dc5d
+--- /dev/null
++++ b/eaas-frontend-user/src/app/modules/emulator/modals/change-media-dialog.html
+@@ -0,0 +1,24 @@
++<div class="modal-header">
++    <h3 class="modal-title">{{'CHANGEM_TITLE' | translate}}</h3>
++</div>
++
++<div class="modal-body">
++    <p>{{'CHANGEM_T' | translate}}</p>
++    <uib-tabset id="change-media-tabhost">
++        <uib-tab ng-repeat="medium in openChangeMediaDialogCtrl.media" heading="{{medium.mediumType}}">
++            <form>
++                <div ng-repeat="item in medium.items">
++                    <label>
++                        <input type="radio" ng-model="openChangeMediaDialogCtrl.chosen_medium_label" value="{{item.id}}"> {{item.label}}
++                    </label>
++                </div>
++                <!-- <input type="radio" ng-model="openChangeMediaDialogCtrl.chosen_medium_label" value=""> <b>* Empty Drive *</b> -->
++            </form>
++        </uib-tab>
++    </uib-tabset>
++</div>
++
++<div class="modal-footer">
++    <button class="btn btn-primary" type="button" ng-click="openChangeMediaDialogCtrl.changeMedium(openChangeMediaDialogCtrl.chosen_medium_label); " ng-disabled="openChangeMediaDialogCtrl.isChangeMediaSubmitting">{{'CHANGEM_OK' | translate}}</button>
++    <button class="btn btn-default" type="button" ng-click="$close()">{{'CHANGEM_CANCEL' | translate}}</button>
++</div>
+diff --git a/eaas-frontend-user/src/app/modules/emulator/modals/choose-env-dialog.html b/eaas-frontend-user/src/app/modules/emulator/modals/choose-env-dialog.html
+new file mode 100644
+index 0000000..599ac35
+--- /dev/null
++++ b/eaas-frontend-user/src/app/modules/emulator/modals/choose-env-dialog.html
+@@ -0,0 +1,26 @@
++<div class="modal-header">
++    <h3 class="modal-title">{{'CHOOSE_ENV_DLG_L' | translate}}</h3>
++</div>
++
++<form name="changeEnvDialogCtrl.altEnvForm">
++    <div class="modal-body">
++        <p>
++            {{'CHOOSE_ENV_DLG_T1' | translate}} {{'CHOOSE_ENV_DLG_T2' | translate}}
++        </p>
++        <div style="max-width: 500px;">
++            <ui-select id="chooseCustomEnvSelect" ng-model="changeEnvDialogCtrl.custom_env" theme="bootstrap" title="{{'CHOOSE_ENV_SELECT_PH' | translate}}" required>
++                <ui-select-match placeholder="{{'CHOOSE_ENV_SELECT_PH' | translate}}">{{$select.selected.label}}</ui-select-match>
++                <ui-select-choices repeat="env in changeEnvDialogCtrl.environments | filter: $select.search">
++                    <span ng-bind-html="env.label | highlight: $select.search"></span>
++                </ui-select-choices>
++            </ui-select>
++        </div>
++    </div>
++
++    <div class="modal-footer">
++        <button class="btn btn-default" type="button" ng-click="$close()">{{'CHANGEM_CANCEL' | translate}}</button>
++        <button type="submit" class="btn btn-default" ng-click="changeEnvDialogCtrl.changeEnv();$close()"
++                ng-disabled="!changeEnvDialogCtrl.altEnvForm.$valid">{{'CHOOSE_ENV_SELECT_BTN' | translate}}</button>
++    </div>
++</form>
++
+diff --git a/eaas-frontend-user/src/app/modules/emulator/modals/confirm-restart-dialog.html b/eaas-frontend-user/src/app/modules/emulator/modals/confirm-restart-dialog.html
+new file mode 100644
+index 0000000..6238d79
+--- /dev/null
++++ b/eaas-frontend-user/src/app/modules/emulator/modals/confirm-restart-dialog.html
+@@ -0,0 +1,19 @@
++<div class="modal-header">
++    <h3 class="modal-title">{{'CONFIRM_RESTART_H' | translate}}</h3>
++</div>
++
++<div class="modal-body">
++    <p ng-if="confirmRestartDialogCtrl.isUserSession">{{'CONFIRM_RESTART_SESSION_T' | translate}}</p>
++    <p ng-if="!confirmRestartDialogCtrl.isUserSession">{{'CONFIRM_RESTART_T' | translate}}</p>
++</div>
++
++<div class="modal-footer" ng-if="confirmRestartDialogCtrl.isUserSession">
++    <button class="btn btn-primary" type="button" ng-click="$close();confirmRestartDialogCtrl.confirmed(false);">{{'CONFIRM_RESTART_OK_2' | translate}}</button>
++    <button class="btn btn-primary" type="button" ng-click="$close();confirmRestartDialogCtrl.confirmed(true);" >{{'CONFIRM_RESTART_OK' | translate}}</button>
++    <button class="btn btn-default" type="button" ng-click="$close()">{{'CONFIRM_RESTART_CANCEL' | translate}}</button>
++</div>
++
++<div class="modal-footer" ng-if="!confirmRestartDialogCtrl.isUserSession">
++    <button class="btn btn-primary" type="button" ng-click="$close();confirmRestartDialogCtrl.confirmed(false);" >{{'CONFIRM_RESTART_OK' | translate}}</button>
++    <button class="btn btn-default" type="button" ng-click="$close()">{{'CONFIRM_RESTART_CANCEL' | translate}}</button>
++</div>
+\ No newline at end of file
+diff --git a/eaas-frontend-user/src/app/modules/emulator/modals/confirm-stop-dialog.html b/eaas-frontend-user/src/app/modules/emulator/modals/confirm-stop-dialog.html
+new file mode 100644
+index 0000000..17ca9ae
+--- /dev/null
++++ b/eaas-frontend-user/src/app/modules/emulator/modals/confirm-stop-dialog.html
+@@ -0,0 +1,12 @@
++<div class="modal-header">
++    <h3 class="modal-title">{{'CONFIRM_STOP_H' | translate}}</h3>
++</div>
++
++<div class="modal-body">
++    <p>{{'CONFIRM_STOP_T' | translate}}</p>
++</div>
++
++<div class="modal-footer">
++    <button class="btn btn-primary" type="button" ng-click="$close();confirmStopDialogCtrl.confirmed();" >{{'CONFIRM_STOP_OK' | translate}}</button>
++    <button class="btn btn-default" type="button" ng-click="$close()">{{'CONFIRM_STOP_CANCEL' | translate}}</button>
++</div>
+\ No newline at end of file
+diff --git a/eaas-frontend-user/src/app/modules/emulator/start.ctrl.js b/eaas-frontend-user/src/app/modules/emulator/start.ctrl.js
+new file mode 100644
+index 0000000..00c7f9f
+--- /dev/null
++++ b/eaas-frontend-user/src/app/modules/emulator/start.ctrl.js
+@@ -0,0 +1,90 @@
++module.exports = ["$rootScope", "$scope", "$sce", "$state", "$stateParams", "$cookies", "$translate", "chosenEnv", "growl", "localConfig", "objMetadata",
++    function ($rootScope, $scope, $sce, $state, $stateParams, $cookies, $translate, chosenEnv, growl, localConfig, objMetadata) {
++
++    $("#pointerlock-help").hide();
++
++    this.metadata = objMetadata.data.customData;
++
++    if(!chosenEnv || chosenEnv.data.status === '1')
++        $state.go('error', {errorMsg: {title: "Die Bereitstellungsumgebung konnte nicht geladen werden."}});
++
++    var kbLayoutPrefs = {language: {name: 'de'}, layout: {name: 'pc105'}};
++
++    window.eaasClient = new EaasClient.Client(localConfig.data.eaasBackendURL, $("#emulator-container")[0]);
++
++    this.objectId = $stateParams.objectId;
++
++    $rootScope.initIdleTimer(8);
++
++    window.onbeforeunload = function(e) {
++        var dialogText = $translate.instant('MESSAGE_QUIT');
++        e.returnValue = dialogText;
++        return dialogText;
++    };
++
++    $rootScope.idleTimeoutWarnFn = function()
++    {
++        $uibModal.open({
++            animation: true,
++            template: require('./modals/help-emil-dialog.html'),
++            controller: ["$scope", function($scope) {
++                this.helpTitle = $translate.instant('TIMEOUT_DLG_TITLE');
++                this.helpText = $translate.instant('TIMEOUT_DLG_MESSAGE');
++            }],
++            controllerAs: "helpDialogCtrl"
++        });
++    }
++
++    $rootScope.idleTimeoutFn = function()
++    {
++        window.onbeforeunload = null;
++        window.eaasClient.release();
++        $('#emulator-stopped-container').show();
++        window.location = localConfig.data.stopEmulatorRedirectURL;
++    }
++
++    window.onunload = function() {
++        window.onbeforeunload = null;
++        $rootScope.disableIdleTimer();
++    }
++
++    eaasClient.onError = function(message) {
++        $state.go('error', {errorMsg: {title: "Die Bereitstellungsumgebung für die Publikation "
++            + $stateParams.objectId + " steht nicht zur Verfügung. Bitte wenden Sie sich an die Information."}});
++    };
++
++    window.eaasClient.onEmulatorStopped = function() {
++        if($rootScope.emulator.state == 'STOPPED')
++            return;
++
++        $rootScope.emulator.state = 'STOPPED';
++        $("#emulator-container").hide();
++        $("#emulator-loading-container").show();
++        $("#emulator-loading-container").text($translate.instant('JS_EMU_STOPPED'));
++        $scope.$apply();
++    };
++
++    var params = {
++        keyboardLayout: kbLayoutPrefs.language.name,
++        keyboardModel: kbLayoutPrefs.layout.name,
++        object: $stateParams.objectId,
++        userId: $stateParams.userId
++    };
++
++    if($stateParams.isUserSession)
++        params.lockEnvironment = true;
++
++    eaasClient.startEnvironment($stateParams.envId, params).then(function () {
++        eaasClient.connect().then(function() {
++            $("#emulator-loading-container").hide();
++            $("#emulator-container").show();
++
++            if (eaasClient.params.pointerLock === 'true') {
++                $("#pointerlock-help").show();
++                BWFLA.requestPointerLock(eaasClient.guac.getDisplay().getElement(), 'click');
++            }
++
++            $rootScope.$broadcast("emulatorStart", "success");
++        });
++    });
++}];
+\ No newline at end of file
+diff --git a/eaas-frontend-user/src/app/modules/objects/overview.html b/eaas-frontend-user/src/app/modules/objects/overview.html
+new file mode 100644
+index 0000000..32f1f9f
+--- /dev/null
++++ b/eaas-frontend-user/src/app/modules/objects/overview.html
+@@ -0,0 +1,71 @@
++<div id="content" class="main-container container">
++    <div class="row"><div class="col-xs-12"><div id="header"><img height="50" src="img/logo.png" /><a href="/admin/">Administration</a></div></div></div>
++
++    <div class="row">
++        <div id="object-grid-container" class="panel panel-default">
++            <div class="panel-body">
++                <h3 class="m-t-0">{{'OVERVIEW_L' | translate}}</h3> <br>
++
++                <table st-table="displayObjects" st-safe-src="objectOverviewCtrl.objectList">
++                    <thead>    
++                        <tr>            
++                            <th colspan="5">
++                                <input st-search="" class="form-control" placeholder="{{'OVERVIEW_SEARCH' | translate}}" type="text"/><br>
++                            </th>
++                        </tr>    
++                    </thead>
++                    
++                    <tbody>
++                        <tr>
++                            <td>
++                                <div ng-repeat="object in displayObjects" class="object-container">
++                                    <a class="cover-container" ui-sref="wf-b.choose-env({objectId: object.id, userId: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.IlVs-wsHG3ed882c4dlw-0psDaagec7sn9NTuFLn7Q4'})" context-menu="objectOverviewCtrl.menuOptions">
++                                      <img class="cover" ng-src="{{object.thumbnail ? object.thumbnail : 'img/empty-cover.png'}}"></img>
++                                    </a>
++                                    
++                                    <a class="title-container" ui-sref="wf-b.choose-env({objectId: object.id, userId: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.IlVs-wsHG3ed882c4dlw-0psDaagec7sn9NTuFLn7Q4'})" context-menu="objectOverviewCtrl.menuOptions">
++                                      <span class="title">{{object.title}}</span>
++                                    </a>
++                                    
++                                    <div class="description" ng-bind="object.description" data-ellipsis></div>
++                                </div>
++                            </td>
++                        </tr>
++                    </tbody>
++                    
++                    <tfoot>
++                        <tr>
++                            <td colspan="5" class="text-center">
++                                <div st-pagination="" st-items-by-page="12" st-displayed-pages="7"></div>
++                            </td>
++                        </tr>
++                    </tfoot>
++                </table>
++            </div>
++        </div>
++    </div>
++
++    <!--
++    <div class="row">
++                <div id="object-grid-container" class="panel panel-default">
++                        <div class="panel-body">
++                                <h3 class="m-t-0">Environment {{'OVERVIEW_L' | translate}}</h3> <br>
++
++                                <div ng-repeat="env in objectOverviewCtrl.environmentList" class="object-container">
++                    <div ng-if="env.objectEnvironment">
++                                        <a class="cover-container" ui-sref="wf-b.choose-env({objectId: object.id})" context-menu="objectOverviewCtrl.menuOptions">
++                                          <img class="cover" src="{{object.thumbnail ? object.thumbnail : 'img/empty-cover.png'}}"></img>
++                                        </a>
++
++                                        <a class="title-container" ui-sref="wf-b.choose-env({objectId: object.id})" context-menu="objectOverviewCtrl.menuOptions">
++                                          <span class="title">{{env.title}}</span>
++                                        </a>
++
++                                        <div class="description" ng-bind="object.description" data-ellipsis></div>
++                    </div>
++                                </div>
++                        </div>
++                </div>
++        </div>
++    -->
++</div>
+\ No newline at end of file
+diff --git a/eaas-frontend-user/src/public/img/DNB_1024.png b/eaas-frontend-user/src/public/img/DNB_1024.png
+new file mode 100644
+index 0000000..3bc3245
+Binary files /dev/null and b/eaas-frontend-user/src/public/img/DNB_1024.png differ
+diff --git a/eaas-frontend-user/src/public/img/dnb.gif b/eaas-frontend-user/src/public/img/dnb.gif
+new file mode 100644
+index 0000000..39c52c0
+Binary files /dev/null and b/eaas-frontend-user/src/public/img/dnb.gif differ
+diff --git a/eaas-frontend-user/src/public/img/openslx-logo.jpg b/eaas-frontend-user/src/public/img/openslx-logo.jpg
+new file mode 100755
+index 0000000..94f2aa8
+Binary files /dev/null and b/eaas-frontend-user/src/public/img/openslx-logo.jpg differ
+diff --git a/landing-page/src/app/modules/client/clienterror/client-error.ctrl.js b/landing-page/src/app/modules/client/clienterror/client-error.ctrl.js
+index d5ce212..31b1cd4 100644
+--- a/landing-page/src/app/modules/client/clienterror/client-error.ctrl.js
++++ b/landing-page/src/app/modules/client/clienterror/client-error.ctrl.js
+@@ -4,5 +4,10 @@ module.exports = function($state, $stateParams) {
+         return;
+     }
+ 
++    this.redirect = function()
++    {
++         window.location = "http://d-nb.info/";
++    }
++
+     this.errorMsg = $stateParams.errorMsg;
+ };
+\ No newline at end of file
+diff --git a/landing-page/src/public/index.ejs b/landing-page/src/public/index.ejs
+index 60c86f5..d6af50d 100644
+--- a/landing-page/src/public/index.ejs
++++ b/landing-page/src/public/index.ejs
+@@ -3,7 +3,7 @@
+     <head>
+         <meta charset="utf-8">
+         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+-        <title>EaaS landing page</title>
++        <title>EMiL</title>
+         <meta name="description" content="">
+         <meta name="viewport" content="width=device-width, initial-scale=1">
+         
+@@ -18,7 +18,7 @@
+         <![endif]-->
+         
+         <!-- views will be injected here -->
+-        <div ui-view></div>
++        <div ui-view style="position: relative; min-height: calc(100vh - 15px);"></div>
+         
+         <!-- growl directive -->
+         <div growl></div>
+diff --git a/landing-page/src/public/locales/de.json b/landing-page/src/public/locales/de.json
+index 12ddfe0..960075a 100644
+--- a/landing-page/src/public/locales/de.json
++++ b/landing-page/src/public/locales/de.json
+@@ -11,35 +11,38 @@
+   "CHOOSE_ENV_PROPOSAL" : "EMiL schlägt für “{{objecttitle}}” folgende Umgebung vor:",
+   "CHOOSE_ENV_BTN_PROPOSAL" : "Mit Vorschlag starten",
+   "CHOOSE_ENV_SELECT_L" : "Sie möchten “{{objecttitle}}” lieber in einer anderen Umgebung starten?",
+-  "CHOOSE_ENV_SELECT_PH" : "Wählen oder suchen sie eine Umgebung...",
+-  "CHOOSE_ENV_SELECT_BTN" : "mit Auswahl starten",
++  "CHOOSE_ENV_SELECT_PH" : "Wählen oder suchen Sie eine Umgebung...",
++  "CHOOSE_ENV_SELECT_BTN" : "Neue Bereitstellungsumgebung starten",
+   "CHOOSE_ENV_NO_KEYBOARD_LAYOUT_WARNING" : "Bitte wählen sie ihre bevorzugte Tastatur aus",
+ 
++  "CHOOSE_ENV_DLG_L" : "Alternative Bereitstellungsumgebungen",
++  "CHOOSE_ENV_DLG_T1": "Diese Publikation kann in verschiedenen Bereitstellungsumgebungen aufgerufen werden. Mit dem Aufruf einer neuen Bereitstellungsumgebung wird die aktuelle Sitzung abgebrochen und gespeicherte Daten gehen verloren.",
++  "CHOOSE_ENV_DLG_T2": "",
++
+   "OVERVIEW_L" : "Objekte",
+   "OVERVIEW_SEARCH" : "Eintippen zum Suchen...",
+ 
+   "ERROR_MODAL_TITLE": "Information",
+-  "ERROR_MODAL_TEXT": "Momentan ist der EAAS Dienst nicht bereit. Sobald der Dienst bereit ist können sie automatisch fortfahren.",
++  "ERROR_MODAL_TEXT": "Das EMiL-Bereitstellungssystem steht zurzeit nicht zur Verfügung. Bitte wenden Sie sich an die Information.",
+ 
+-  "ERROR_RETURN_BTN" : "Zurück zur Übersicht",
++  "ERROR_RETURN_BTN" : "Zurück zum Katalog",
+ 
+   "ACTIONS_L" : "Aktionen",
+-  "ACTIONS_HELP" : "Hilfe",
+-  "ACTIONS_CHANGE_MEDIA" : "Medienwechsel",
+-  "ACTIONS_RESTART" : "Sitzung Zurücksetzen",
+-  "ACTIONS_SCREENSHOT" : "Screenshot",
++  "ACTIONS_HELP" : "Hilfe zur Bereit&shy;stellung",
++  "ACTIONS_CHANGE_MEDIA" : "Enthaltene Datenträger",
++  "ACTIONS_RESTART" : "Änderungen zurücksetzen",
++  "ACTIONS_SCREENSHOT" : "Screenshot erstellen",
+   "ACTIONS_STOP" : "Beenden",
+-  "ACTIONS_PRINT" : "Gedruckte Dokumente",
++  "ACTIONS_PRINT" : "Druckaufträge",
+   "ACTIONS_CTRLALTDEL" : "Ctr-Alt-Del",
+   "ACTIONS_SAVESESSION" : "Sitzung speichern",
+   "ACTIONS_SAVESESSION_HELP" : "Die Sitzung kann erst gespeichert werden, wenn das Betriebssystem der Bereitstellungs-Sitzung heruntergefahren wurde. Eine Anleitung zum Herunterfahren finden Sie in der 'Hilfe zur Bereitstellungsumgebung'",
+-  "ACTIONS_ALTENVS" : "Alternative Bereitstellungsumgebungen",
+-
++  "ACTIONS_ALTENVS" : "Alternative Bereit&shy;stellungs&shy;umgebungen",
+ 
+   "BASE_SHOW_MENU" : "Menu anzeigen",
+   "BASE_MENU_L" : "Menu",
+-  "BASE_MENU_HELP_EMIL" : "Hilfe/EMIL",
+-  "BASE_MENU_HELP_OBJ" : "Hilfe/Objekt",
++  "BASE_MENU_HELP_EMIL" : "Über EMiL",
++  "BASE_MENU_HELP_OBJ" : "Hilfe zur Publikation",
+   "BASE_MENU_FEEDB" : "Feedback/Support",
+   "BASE_MENU_SET_KEYBOARD_LAYOUT" : "Tastaturlayout ändern",
+ 
+@@ -53,8 +56,9 @@
+   "SET_KEYBOARD_DLG_SAVE_CANCEL" : "Abbrechen",
+   "SET_KEYBOARD_DLG_SAVE_SUCCESS": "Gewählte Tastatur wurde auf diesem Rechner gespeichert",
+ 
+-  "CHANGEM_TITLE" : "Medienwechsel",
+-  "CHANGEM_OK" : "Medium wechseln",
++  "CHANGEM_TITLE" : "Enthaltene Datenträger",
++  "CHANGEM_T" : "Die bereitgestellte Publikation enthält mehrere Datenträger. Durch die Auswahl eines Datenträgers aus der folgenden Auflistung wird der entsprechende Datenträger im Laufwerk der Bereitstellungsumgebung eingelegt.",
++  "CHANGEM_OK" : "Datenträger wechseln",
+   "CHANGEM_CANCEL" : "Abbrechen",
+   "CHANGEM_ALT_TEXT" : "Die bereitgestellte Publikation enthält mehrere Datenträger. Informationen zum Wechsel der Datenträger sind in der „Hilfe zur Bereitstellungsumgebung“ aufgeführt.",
+ 
+@@ -74,19 +78,23 @@
+   "JS_EMU_STOPPED" : "Das Betriebssystem der Bereitstellungssitzung wurde heruntergefahren.",
+   "JS_USERSESSION_SUCCESS" : "Die Sitzung wurde gespeichert. Die Bereitstellung wird beendet.",
+ 
+-
+   "USERSESSION_L" : "Sitzung wieder herstellen",
+   "USERSESSION_TEXT" : "Letzte Sitzung wieder herstellen?",
+   "USERSESSION_START" : "Gespeicherte Sitzung starten",
+   "USERSESSION_DELETE" : "Gespeicherte Sitzung löschen",
+   "USERSESSION_DEFAULT" : "Neue Sitzung starten",
+ 
++  "HELP_OBJECT_T" : "Hilfe zur Publikation",
++
++  "MESSAGE_QUIT" : "Beenden? Nicht gespeicherte Daten gehen verloren.",
++
+   "CONFIRM_STOP_H" : "Beenden",
+   "CONFIRM_STOP_T" : "Nicht gespeicherte Daten gehen verloren.",
+   "CONFIRM_STOP_OK" : "Beenden",
+   "CONFIRM_STOP_CANCEL" : "Zurück zur Bereitstellung",
+ 
+   "CONFIRM_RESTART_H" : "Zurücksetzen",
++  "CONFIRM_RESTART_SESSION_T" : "Durch das Zurücksetzen werden nicht gespeicherte Änderungen verworfen und der vorherige Stand wiederhergestellt. Durch die Wiederherstellung der Grundkonfiguration werden alle bisherigen Änderungen verworfen",
+   "CONFIRM_RESTART_T" : "Durch das Zurücksetzen werden alle bisherigen Änderungen verworfen und die Grundkonfiguration wiederhergestellt.",
+   "CONFIRM_RESTART_OK" : "Grundkonfiguration wiederherstellen",
+   "CONFIRM_RESTART_OK_2" : "Letzte Änderungen verwerfen",
+diff --git a/landing-page/src/public/locales/en.json b/landing-page/src/public/locales/en.json
+index 0770fa6..d6cac7a 100644
+--- a/landing-page/src/public/locales/en.json
++++ b/landing-page/src/public/locales/en.json
+@@ -57,6 +57,7 @@
+   "SET_KEYBOARD_DLG_SAVE_SUCCESS": "Choosen keyboard was saved on this computer",
+ 
+   "CHANGEM_TITLE" : "Change media",
++  "CHANGEM_T": "",
+   "CHANGEM_OK" : "OK",
+   "CHANGEM_CANCEL" : "Cancel",
+   "CHANGEM_ALT_TEXT" : "No direct change media support. Consult environment help for guidance.",
+@@ -83,6 +84,10 @@
+   "USERSESSION_DELETE" : "Delete Session",
+   "USERSESSION_DEFAULT" : "New Session",
+ 
++  "HELP_OBJECT_T" : "Object Help",
++
++  "MESSAGE_QUIT" : "Quit? All session data will be lost.",
++
+   "CONFIRM_STOP_H" : "Stop Session",
+   "CONFIRM_STOP_T" : "If you continue, all changes made during this session will be lost.",
+   "CONFIRM_STOP_OK" : "Continue",
+@@ -90,6 +95,7 @@
+ 
+   "CONFIRM_RESTART_H" : "Restart Session",
+   "CONFIRM_RESTART_T" : "If you continue, all changes made during this session will be lost.",
++  "CONFIRM_RESTART_SESSION_T" : "If you continue, all changes made during this session will be lost.",
+   "CONFIRM_RESTART_OK" : "Continue",
+   "CONFIRM_RESTART_OK2" : "Reset current changes",
+   "CONFIRM_RESTART_CANCEL" : "Cancel",

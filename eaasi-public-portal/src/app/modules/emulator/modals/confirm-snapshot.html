@@ -1,0 +1,12 @@
+<div class="modal-header">
+    <h3 class="modal-title">{{'CONFIRM_SNAPSHOT_H' | translate}}</h3>
+</div>
+
+<div class="modal-body">
+    <h4>{{'CONFIRM_SNAPSHOT_T' | translate}}</h4>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="$close();confirmSnapshotDialogCtrl.confirmed();" >{{'CONFIRM_SNAPSHOT_OK' | translate}}</button>
+    <button class="btn btn-default" type="button" ng-click="$close();confirmSnapshotDialogCtrl.showEmu()">{{'CONFIRM_SNAPSHOT_CANCEL' | translate}}</button>
+</div>

@@ -1,0 +1,35 @@
+<h2 class="m-t-0">{{'METADATA_L' | translate}}</h2>
+
+<table id="oai-endpoint-table" st-table="endpoints" st-safe-src="metadataCtrl.oaiHarvesterList" class="table">
+    <thead>
+    <tr>
+        <th colspan="6">
+            {{'METADATA_PROVIDER_TH' | translate}}
+        </th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr>
+        <td colspan="6">
+    <div style="text-align: right;">
+
+        <button type="button"
+                class="btn btn-outline-dark" ng-click="metadataCtrl.addEndpoint()">{{'METADATA_ADD_BTN' | translate}}</button>
+
+    </div>  </td>
+    </tr>
+    <tr ng-repeat="row in endpoints">
+        <td>{{row}}</td><td> <button ng-click="metadataCtrl.sync(row)">Synchronize</button> <button ng-click="metadataCtrl._delete(row)">Delete</button></td>
+    </tr>
+    </tbody>
+
+    <tfoot>
+
+    <tr>
+        <td colspan="5" class="text-center">
+            <div st-pagination="" st-items-by-page="10" st-displayed-pages="7"></div>
+        </td>
+    </tr>
+    </tfoot>
+</table>

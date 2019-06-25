@@ -1,0 +1,12 @@
+{
+  "operatingSystems" : [
+    {"id":"os:windows:xp:32bit", "puids" : [ {"puid": "x-fmt/411"}, {"puid": "fmt/899"}]},
+    {"id":"os:windows:xp:64bit", "puids" : [ {"puid": "x-fmt/411"}, {"puid": "fmt/899"}, {"puid": "fmt/900"}]},
+    {"id":"os:windows:9x", "puids": [{"puid": "x-fmt/410"}, {"puid": "x-fmt/409"}, {"puid": "x-fmt/411"}, {"puid": "fmt/899"}]},
+    {"id":"os:windows:311", "puids": [{"puid": "x-fmt/410"}, {"puid": "x-fmt/409"}]},
+    {"id":"os:dos", "puids": [{"puid":  "x-fmt/409"}]},
+    {"id":"os:mac:ppc", "puids": [{"puid": "bwfla/1"}, {"puid": "x-fmt/416"}]},
+    {"id":"os:mac:mk68", "puids": [{"puid": "x-fmt/416"}]},
+    {"id":"os:linux:x86:rpm", "puids": [{"puid": "fmt/689"}, {"puid": "fmt/795"}, {"puid": "fmt/794"}, {"puid": "fmt/793"} ]}
+  ]
+}

@@ -1,0 +1,59 @@
+<h2 class="m-t-0">{{'HANDLES_L' | translate}}</h2>
+
+<div class="form-group">
+
+    <div id="handles-grid-container">
+        <div  ng-hide="showHandle" style="display: inline-block;">
+            <button  id="show-addHandle-field" class="btn btn-default" ng-click="showHandle=true">
+                <span style="color: green" class="glyphicon glyphicon-plus"></span> {{'ADD_HANDLE' | translate}}</button>
+        </div>
+
+        <form  ng-if="showHandle" ng-submit="handleOverview.addHandle()">
+
+            <div style="display: inline-block;">
+                <button type="submit" id="save-addHandle-field" class="btn btn-default"">
+                    <span class="glyphicon glyphicon-floppy-disk"></span> {{'SAVE_HANDLE' | translate}}</button>
+            </div>
+
+            <br>
+
+            <input required type="text" id="addHandle" placeholder="Handle name" style="width:700px;font-size:12pt;" >
+            <input required type="url" id="addHandleValue" placeholder="Handle value (your url)" style="width:700px;font-size:12pt;" >
+        </form>
+
+        <table st-table="displayHandles" st-safe-src="handleOverview.handles">
+            <thead>
+            <tr>
+                <th colspan="5">
+                    <input st-search="" class="form-control" placeholder="{{'OBJECTS_SEARCH' | translate}}" type="text"/><br>
+                </th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr>
+                <td>
+                    <div ng-repeat="handle in displayHandles" class="object-container">
+                        <a class="cover-container" ui-sref="admin.edit-handle({handle: handle})">
+                        </a>
+
+                        <a class="title-container" ui-sref="admin.edit-handle({handle: handle})">
+                            <span class="title">{{handle}}</span>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+
+            <tfoot>
+            <tr>
+                <td colspan="5" class="text-center">
+                    <div st-pagination="" st-items-by-page="20" st-displayed-pages="7"></div>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+
+
+    </div>
+</div>

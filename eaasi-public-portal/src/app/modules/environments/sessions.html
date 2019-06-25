@@ -1,0 +1,30 @@
+<h2 class="m-t-0">{{'USER_SESSIONS_L' | translate}}</h2>
+
+<table id="user-sessions-table" st-table="sessions" st-safe-src="sessionListCtrl.sessionList" class="table">
+    <thead>
+    <tr>
+        <th colspan="6">
+            {{'USER_SESSIONS_TH' | translate}}
+        </th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr ng-repeat="row in sessions">
+        <td><b>{{row.title}}</b> UserId: {{row.userId}} {{row.objectId}} Creation Date: {{row.creationDate | date:'medium'}}
+            <br/><a
+                ui-sref="admin.emulator({envId: row.envId, objectId: row.objectId, objectArchive: row.objectArchive, type: 'saveUserSession', userId: row.userId})">{{'USER_SESSIONS_RUN' | translate}}</a>
+            <a href="#"
+               ng-click="sessionListCtrl.deleteSession(row.envId)">{{'USER_SESSION_DEL'| translate}}</a>
+        </td>
+    </tr>
+    </tbody>
+
+    <tfoot>
+    <tr>
+        <td colspan="5" class="text-center">
+            <div st-pagination="" st-items-by-page="10" st-displayed-pages="7"></div>
+        </td>
+    </tr>
+    </tfoot>
+</table>

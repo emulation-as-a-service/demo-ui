@@ -1,0 +1,166 @@
+<div>
+    <div ng-repeat="resourceProvider in dashboardCtrl.resourceProviders">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Resource Provider: {{resourceProvider.name}} (type: {{resourceProvider.type}}, cluster: {{resourceProvider.cluster_name}})</h3>
+            </div>
+            <div class="panel-body dashboard-panel-body">
+                <div class="row">
+                    <div class="dashboard-entry-metric-outer col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                        <span class="dashboard-entry-metric-label">Total Requests</span>
+                        <div class="dashboard-entry-metric-value">{{resourceProvider.num_requests}}</div>
+                    </div>
+
+                    <div class="dashboard-entry-metric-outer col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                        <span class="dashboard-entry-metric-label">Deferred Requests</span>
+                        <div class="dashboard-entry-metric-value">{{resourceProvider.num_requests_deferred}}</div>
+                    </div>
+
+                    <div class="dashboard-entry-metric-outer col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                        <span class="dashboard-entry-metric-label">Expired Requests</span>
+                        <div class="dashboard-entry-metric-value">{{resourceProvider.num_requests_expired}}</div>
+                    </div>
+
+                    <div class="dashboard-entry-metric-outer col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                        <span class="dashboard-entry-metric-label">Failed Requests</span>
+                        <div class="dashboard-entry-metric-value">{{resourceProvider.num_requests_failed}}</div>
+                    </div>
+                </div>
+
+                <div class="panel panel-default dashboard-node-panel">
+                    <div class="panel-body dashboard-node-panel-body">
+                        <div class="dashboard-entry-title">
+                            <h2 class="dashboard-entry-title-header">State <small>Current state of this resource provider</small></h2>
+                        </div>
+
+                        <div><b>Node Count: </b> {{resourceProvider.num_nodes}}</div>
+                        <div><b>CPU Capacity: </b> {{resourceProvider.capacity_cpu}}</div>
+                        <div><b>Memory Capacity: </b> {{resourceProvider.capacity_memory}}MB</div>
+
+                        <br>
+
+                        <div class="row">
+                            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 text-center" ng-show="resourceProvider.num_nodes">
+                                <div style="height: 260px; width: 230px; display: inline-block;">
+                                    <h4 class="dashboard-entry-chart-label">Node Usage</h4>
+                                    <canvas class="chart chart-doughnut"
+                                            chart-data="resourceProvider.nodes_usage" chart-labels="dashboardCtrl.chartNodeUsageLabels"
+                                            chart-options="dashboardCtrl.chartNodesOptions">
+                                    </canvas>
+                                </div>
+                            </div>
+
+                            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 text-center" ng-show="resourceProvider.num_nodes">
+                                <div style="height: 260px; width: 230px; display: inline-block;">
+                                    <h4 class="dashboard-entry-chart-label">Node Health</h4>
+                                    <canvas class="chart chart-doughnut"
+                                            chart-data="resourceProvider.nodes_health" chart-labels="dashboardCtrl.chartNodeHealthLabels"
+                                            chart-options="dashboardCtrl.chartNodesOptions" chart-colors="['rgb(70,191,189)', 'rgb(247,70,74)']">
+                                    </canvas>
+                                </div>
+                            </div>
+
+                            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 text-center" ng-show="resourceProvider.capacity_cpu">
+                                <div style="height: 260px; width: 230px; display: inline-block;">
+                                    <h4 class="dashboard-entry-chart-label">CPU</h4>
+                                    <canvas class="chart chart-doughnut"
+                                            chart-data="resourceProvider.chart_cpu_values" chart-labels="dashboardCtrl.chartCPULabels"
+                                            chart-options="dashboardCtrl.chartCPUOptions">
+                                    </canvas>
+                                </div>
+                            </div>
+
+                            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 text-center" ng-show="resourceProvider.capacity_memory">
+                                <div style="height: 260px; width: 230px; display: inline-block;">
+                                    <h4 class="dashboard-entry-chart-label">Memory</h4>
+                                    <canvas class="chart chart-doughnut"
+                                            chart-data="resourceProvider.chart_memory_values" chart-labels="dashboardCtrl.chartMemoryLabels"
+                                            chart-options="dashboardCtrl.chartMemoryOptions">
+                                    </canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div ng-hide="resourceProvider.allocation_requests.num_entries === 0">
+                            <b>Allocation Requests</b>
+                            <div>
+                                <pre>{{resourceProvider.allocation_requests | json}}</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel panel-default dashboard-node-panel" ng-repeat="node in resourceProvider.nodes">
+                    <div class="panel-body dashboard-node-panel-body">
+                        <div class="dashboard-entry-title">
+                            <h2 class="dashboard-entry-title-header">Node {{node.id}}<small>Associated resources of this single node</small></h2>
+                        </div>
+
+                        <div><b>Used: </b> {{node.used}}</div>
+                        <div><b>Healthy: </b> {{node.healthy}}</div>
+
+                        <div ng-show="node.state">
+                            <b>State: </b> {{node.state}}
+                        </div>
+
+                        <div><b>CPU Capacity: </b> {{node.capacity_cpu}}</div>
+                        <div><b>Memory Capacity: </b> {{node.capacity_memory}}MB</div>
+                        <div><b>Allocation Count: </b> {{node.allocations.length}}</div>
+
+                        <br>
+
+                        <div class="row" ng-show="node.allocations.length">
+                            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 text-center">
+                                <div style="height: 200px; width: 170px; display: inline-block;">
+                                    <h4 class="dashboard-entry-chart-label">CPU</h4>
+                                    <canvas class="chart chart-doughnut"
+                                            chart-data="node.chart_cpu_values" chart-labels="dashboardCtrl.chartNodeCPULabels"
+                                            chart-options="dashboardCtrl.nodeChartCPUOptions">
+                                    </canvas>
+                                </div>
+                            </div>
+
+                            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 text-center">
+                                <div style="height: 200px; width: 170px; display: inline-block;">
+                                    <h4 class="dashboard-entry-chart-label">Memory</h4>
+                                    <canvas class="chart chart-doughnut"
+                                            chart-data="node.chart_memory_values" chart-labels="dashboardCtrl.chartNodeMemoryLabels"
+                                            chart-options="dashboardCtrl.nodeChartMemoryOptions">
+                                    </canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                        <br>
+
+                        <uib-accordion close-others="oneAtATime" ng-show="node.allocations.length > 0">
+                            <div uib-accordion-group class="panel-default" is-open="node._allocations_visible">
+                                <uib-accordion-heading>
+                                    Allocation Details <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': node._allocations_visible, 'glyphicon-chevron-right': !node._allocations_visible}"></i>
+                                </uib-accordion-heading>
+
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>CPU</th>
+                                            <th>Memory</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr ng-repeat="allocation in node.allocations">
+                                            <td>{{allocation.id}}</td>
+                                            <td>{{allocation.allocated_cpu}}m</td>
+                                            <td>{{allocation.allocated_memory}}MB</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </uib-accordion>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,32 @@
+{
+  "eaasBackendURL": "http://localhost:8080/emil/",
+  "stopEmulatorRedirectURL":"http://localhost:8080/demo-ui",
+  "dashboardClusterAPIBaseURL" : "http://localhost:8080/eaas/api/v1/clusters/",
+  "dashboardAccessToken": "secret",
+  "baseEmulatorUrl" : "http://localhost:8080/demo-ui/",
+  "landingPage": "http://localhost:8080/landing-page/",
+  "oaipmhServiceBaseUrl" : "http://localhost:8080/oaipmh/",
+
+
+  "features" : {
+      "screenshots" : false,
+      "snapshots": false,
+      "containers" : false,
+      "objectEnvironments": true,
+      "objects" : true,
+      "network" : false,
+      "software" : true,
+      "handle" : false,
+      "advanced": true,
+      "objectUpload" : true,
+      "oaipmh" : true,
+      "emulators": true,
+      "networking": true
+    },
+
+    "auth0Config" : {
+        "clientID": "",
+        "domain": ".auth0.com"
+    }
+}
+

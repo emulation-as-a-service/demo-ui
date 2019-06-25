@@ -1,0 +1,77 @@
+<h3 class="m-t-0">{{'OBJECT_INGEST_HEADER' | translate}}</h3>
+<br>
+
+<uib-tabset active="active">
+    <uib-tab index="0" heading="From File">
+        <form name="fromFile" ng-submit="uploadCtrl.upload()">
+            <div class="form-group">
+                <label>{{'OBJECT_INGEST_ID' | translate}}</label>
+                <input width="150px" type="text" class="form-control" ng-model="uploadCtrl.objectId" required>
+                <p>
+                    <b>{{'OBJECT_INGEST_NOTE' | translate }}</b> {{ 'OBJECT_INGEST_NOTE_OBJID' | translate }}
+                </p>
+                <br/>
+                <label>{{'OBJECT_INGEST_MEDIATYPE' | translate}}</label>
+                <select style="max-width: 150px;" class="form-control" theme="bootstrap" ng-model="uploadCtrl.mediumType"  required>
+                    <option style="display:none" value="">select a type</option>
+                    <option value="iso">ISO</option>
+                    <option value="floppy">Floppy</option>
+                    <option value="disk">Disk</option>
+                    <option value="file">Files</option>
+                </select>
+                <p> <b>{{'OBJECT_INGEST_NOTE' | translate }}</b> {{'OBJECT_INGEST_NOTE_MEDIA' | translate}}</p>
+                <br>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">{{'OBJECT_INGEST_FILES' | translate}}</div>
+                <div class="panel-body">
+                    <ul>
+                        <li ng-repeat="f in uploadCtrl.allFiles" style="font:smaller">{{f.name}}</li>
+                    </ul>
+                    <br>
+                </div>
+                <div class="panel-footer" style="text-align: right;">
+                    <button type="button" class="btn btn-default" ngf-select="uploadCtrl.add()" ng-model="uploadCtrl.selectedFiles" ngf-multiple="true" >Add File</button>
+                </div>
+            </div>
+
+            <div style="text-align: right;">
+                <button type="button" class="btn btn-default"
+                        ui-sref="admin.standard-envs-overview">{{'OBJECT_INGEST_CANCEL_BUTTON' | translate}}</button>
+                <button type="submit" class="btn btn-primary">{{'OBJECT_INGEST_SAVE_BUTTON' | translate}}</button>
+            </div>
+        </form>
+    </uib-tab>
+    <uib-tab index="1" heading="From Repository">
+        <form name="fromRepo" ng-submit="uploadCtrl.import()">
+
+            <label>{{'OBJECT_INGEST_CHOOSE_REPO_L' | translate}}</label>
+            <div style="max-width: 450px;">
+                <ui-select ng-model="uploadCtrl.selectedArchive" theme="bootstrap"
+                           title="{{'OBJECT_INGEST_CHOOSE_REPO_PH' | translate}}" required>
+                    <ui-select-match placeholder="{{'OBJECT_INGEST_CHOOSE_REPO_PH' | translate}}">{{$select.selected}}</ui-select-match>
+                    <ui-select-choices repeat="obj in uploadCtrl.repositories | filter: $select.search">
+                        {{obj}}
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+
+            <br>
+
+            <div class="form-group">
+                <input-list list="uploadCtrl.importRequest.objectIDs"
+                            heading="{{'OBJECT_INGEST_REPO_HEADER' | translate}}"
+                            list-empty-note="{{'OBJECT_INGEST_REPO_EMPTY' | translate}}"
+                            input-placeholder="{{'OBJECT_INGEST_REPO_PH' | translate}}"
+                            add-button-text="{{'OBJECT_INGEST_REPO_BUTTON' | translate}}"></input-list>
+            </div>
+
+            <div style="text-align: right;">
+                <button type="button" class="btn btn-default"
+                        ui-sref="admin.standard-envs-overview">{{'OBJECT_INGEST_CANCEL_BUTTON' | translate}}</button>
+                <button type="submit" class="btn btn-primary">{{'OBJECT_INGEST_SAVE_BUTTON' | translate}}</button>
+            </div>
+        </form>
+    </uib-tab>
+</uib-tabset>

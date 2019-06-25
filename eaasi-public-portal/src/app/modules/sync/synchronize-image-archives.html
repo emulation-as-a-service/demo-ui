@@ -1,0 +1,77 @@
+<h2 class="m-t-0">{{'SYNC_ARCHIVES_L' | translate}}</h2>
+
+<wizard hide-indicators="true">
+    <wz-step>
+        <div class="form-group">
+            <label>{{'SYNC_REMOTE_ARCHIVE_TYPE_LBL' | translate}}</label>
+            <select style="max-width: 300px;" class="form-control" theme="bootstrap" ng-model="synchronizeImageArchivesCtrl.envType" required>
+                <option value="base">Environments</option>
+                <option value="object">Object Environments</option>
+            </select>
+            <br>
+            <label>{{'SYNC_REMOTE_ARCHIVE_URI_LBL' | translate}}</label>
+            <input type="text" style="max-width: 500px;" class="form-control" theme="bootstrap"
+                   ng-model="synchronizeImageArchivesCtrl.remoteArchiveURI"
+                   placeholder="{{'SYNC_REMOTE_ARCHIVE_URI_PH' | translate}}" required>
+            <br/>
+            <label ng-if="synchronizeImageArchivesCtrl.envType == 'object'">{{'SYNC_REMOTE_OBJECT_ARCHIVE_URI_LBL' | translate}}</label>
+            <input type="text" style="max-width: 500px;" class="form-control" theme="bootstrap"
+                   ng-if="synchronizeImageArchivesCtrl.envType == 'object'"
+                   ng-model="synchronizeImageArchivesCtrl.remoteObjectArchiveURI"
+                   placeholder="{{'SYNC_REMOTE_OBJECT_ARCHIVE_URI_PH' | translate}}" required>
+        </div>
+
+        <button class="btn btn-default" style="min-width: 300px;" type="button"
+                ng-click="synchronizeImageArchivesCtrl.fetchArchivesFromRemote(synchronizeImageArchivesCtrl.remoteArchiveURI, synchronizeImageArchivesCtrl.envType)">{{'SYNC_SET_URI_BTN' | translate}}</button>
+    </wz-step>
+
+    <wz-step>
+        <table id="standard-envs-overview-table" st-table="displayEnvs" st-safe-src="synchronizeImageArchivesCtrl.envList" class="table">
+            <thead>
+            <tr>
+                <th colspan="2">
+                    <input st-search="" style="max-width: 300px;" class="form-control pull-right" placeholder="{{'CHOOSE_ENV_SEARCH' | translate}}" type="text" /><br>
+                </th>
+            </tr>
+            <tr>
+                <th>{{'SYNC_ENV_NAME_TH' | translate}}</th>
+
+                <th>{{'SYNC_ENV_REMOTE_AVAILABLE_TH' | translate}}</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr ng-repeat="row in displayEnvs">
+                <td>{{row.title}} ({{row.envId}})</td>
+
+                <td><input type="checkbox" ng-model="row.upload" ng-disabled="row.isAvailableRemote"></td>
+            </tr>
+            </tbody>
+
+            <tfoot>
+            <tr>
+                <td style="vertical-align:middle">
+                    <!--
+                    <div ng-if="synchronizeImageArchivesCtrl.isObjectEnvironment" style="vertical-align: middle">
+                        <b>{{'SYNC_ARCHIVES_OPTIONS' | translate }}  </b> <br>
+                        <input  ng-model="synchronizeImageArchivesCtrl.objectImportType" type="radio" value="byRef" >Upload to Object Archive</input>
+                        <input  ng-model="synchronizeImageArchivesCtrl.objectImportType" type="radio" value="embedded">Embed Object</input>
+                    </div>
+                    -->
+                </td>
+                <td>
+                    <div style="text-align: center; margin-top: 10px;">
+                        <button class="btn btn-default" style="min-width: 300px;" type="button" ng-disabled="synchronizeImageArchivesCtrl.isSyncing"
+                                ng-click="synchronizeImageArchivesCtrl.syncArchives(displayEnvs)">
+                            <span class="glyphicon glyphicon-sort"></span>
+                            <span>{{'SYNC_ARCHIVES_BTN' | translate}}</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </wz-step>
+</wizard>
+
+

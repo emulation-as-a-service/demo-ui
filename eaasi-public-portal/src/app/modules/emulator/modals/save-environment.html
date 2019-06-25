@@ -1,0 +1,66 @@
+<div class="modal-header">
+    <h3 class="modal-title">{{'SAVEENV_L' | translate}}</h3>
+</div>
+
+<div class="modal-body">
+    <form id="editEnvForm" name="openSaveEnvironmentDialogCtrl.editEnvForm">
+
+        <div class="form-group"
+             ng-if="openSaveEnvironmentDialogCtrl.type == 'objectEnvironment'
+				|| openSaveEnvironmentDialogCtrl.type == 'saveImport'
+				|| openSaveEnvironmentDialogCtrl.type == 'saveCreatedEnvironment'
+				|| openSaveEnvironmentDialogCtrl.type == 'newEnvironment'">
+            <label>{{'SAVEENV_NAME' | translate}}</label> <input type="text"
+                                                                 class="form-control"
+                                                                 ng-model="openSaveEnvironmentDialogCtrl.envName"
+                                                                 placeholder="{{'SAVEENV_NAME_PH' | translate}}" required>
+        </div>
+
+        <div class="form-group" ng-if="openSaveEnvironmentDialogCtrl.type == 'saveCreatedEnvironment'
+									|| openSaveEnvironmentDialogCtrl.type == 'saveImport'">
+            <label>{{'NEW_CONTAINER_AUTHOR' | translate}}</label>
+            <input type="text" class="form-control" ng-model="openSaveEnvironmentDialogCtrl.author" />
+        </div>
+
+        <div class="form-group">
+            <label>{{'SAVEENV_DESC' | translate}}</label>
+            <text-angular
+                      ng-model="openSaveEnvironmentDialogCtrl.envDescription"
+                      placeholder="{{'SAVEENV_DESC_PH' | translate}}" required></text-angular>
+        </div>
+
+        <div ng-show="openSaveEnvironmentDialogCtrl.type == 'saveCreatedEnvironment'
+        || openSaveEnvironmentDialogCtrl.type == 'saveImport'">
+            <label>
+                <input type="checkbox" ng-model="openSaveEnvironmentDialogCtrl.isRelativeMouse">
+                <span>{{'EDITENV_RELMOUSE' | translate}}</span>
+            </label>
+        </div>
+
+
+
+
+        <div class="form-group" ng-if="openSaveEnvironmentDialogCtrl.type == 'newEnvironment'
+									|| openSaveEnvironmentDialogCtrl.type == 'saveRevision'">
+            <label>{{'SAVEENV_TYPE' | translate}}</label>:
+
+            <input type="radio" ng-model="openSaveEnvironmentDialogCtrl.type" value="saveRevision"> {{'SAVEENV_TYPE_REV' | translate}}
+            <input type="radio" ng-model="openSaveEnvironmentDialogCtrl.type" value="newEnvironment"> {{'SAVEENV_TYPE_NEW' | translate}}
+        </div>
+
+    </form>
+</div>
+
+<div class="modal-footer">
+    <!--  save button -->
+    <button class="btn btn-primary" type="button"
+            ng-click="openSaveEnvironmentDialogCtrl.saveEnvironment()"
+            ng-disabled="!openSaveEnvironmentDialogCtrl.editEnvForm.$valid || openSaveEnvironmentDialogCtrl.isSavingEnvironment">{{'SAVEENV_SAVE'
+        | translate}}</button>
+
+    <!--  cancel button -->
+    <button class="btn btn-default" type="button" ng-click="$close();openSaveEnvironmentDialogCtrl.showEmu()"
+            ng-disabled="openSaveEnvironmentDialogCtrl.isSavingEnvironment">{{'SAVEENV_CANCEL'
+        | translate}}</button>
+
+</div>

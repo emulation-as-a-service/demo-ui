@@ -1,0 +1,105 @@
+<h2 class="m-t-0">{{'EDIT_CONTAINER_L' | translate}}</h2>
+<uib-accordion close-others="false">
+
+    <form id="editContainerForm" name="editContainerCtrl.editContainerForm">
+
+        <p>
+            <label>{{'EDIT_CONTAINER_ID' | translate}}:</label>
+            {{editContainerCtrl.env.envId}}
+        </p>
+
+        <p ng-if="editContainerCtrl.handle">
+            <label>Handle:</label> <span id="osl">{{editContainerCtrl.handle}}</span>
+        </p>
+
+        <div class="form-group">
+            <label>{{'EDIT_CONTAINER_NAME' | translate}}</label>
+            <input type="text"
+                   class="form-control" ng-model="editContainerCtrl.envTitle"
+                   placeholder="{{'EDIT_CONTAINER_NAME' | translate}}" required>
+        </div>
+        <div class="form-group">
+            <label>{{'NEW_CONTAINER_AUTHOR' | translate}}</label>
+            <input type="text"
+                   class="form-control" ng-model="editContainerCtrl.author"
+                   placeholder="{{'NEW_CONTAINER_AUTHOR' | translate}}">
+        </div>
+        <div class="tekst">
+
+        <div uib-accordion-group class="panel-default" is-open="status.openDescription">
+            <uib-accordion-heading>
+                {{'EDITENV_DESC' | translate}}
+                <i class="pull-right glyphicon"
+                   ng-class="{'glyphicon-chevron-down': status.openDescription, 'glyphicon-chevron-right': !status.openDescription}"></i>
+            </uib-accordion-heading>
+
+            <p>
+                <b>{{'EDIT_CONTAINER_HELPTEXT' | translate}}:</b> <br/>
+                <text-angular ng-model="editContainerCtrl.description"></text-angular>
+            </p>
+        </div>
+        </div>
+        <div class="tekst">
+            <div uib-accordion-group class="panel-default" is-open="status.openIO">
+                <uib-accordion-heading>
+                    {{'EDIT_CONTAINER_ACCORDION_INPUT_OUTPUT' | translate}}
+                    <i class="pull-right glyphicon"
+                       ng-class="{'glyphicon-chevron-down': status.openIO, 'glyphicon-chevron-right': !status.openIO}"></i>
+                </uib-accordion-heading>
+
+                <div class="form-group">
+                    <label>{{'EDIT_CONTAINER_INPUT' | translate}}</label>
+                    <input type="text"
+                           class="form-control" ng-model="editContainerCtrl.envInput"
+                           placeholder="{{'EDIT_CONTAINER_INPUT_PH' | translate}}" required>
+                </div>
+
+                <div class="form-group">
+                    <label>{{'EDIT_CONTAINER_OUTPUT' | translate}}</label>
+                    <input type="text"
+                           class="form-control" ng-model="editContainerCtrl.envOutput"
+                           placeholder="{{'EDIT_CONTAINER_OUTPUT_PH' | translate}}" required>
+                </div>
+            </div>
+        </div>
+
+    </form>
+
+    <div class="tekst">
+
+        <div uib-accordion-group class="panel-default" is-open="status.openProcesses">
+            <uib-accordion-heading>
+                Processes and Variables
+                <i class="pull-right glyphicon"
+                   ng-class="{'glyphicon-chevron-down': status.openProcesses, 'glyphicon-chevron-right': !status.openProcesses}"></i>
+            </uib-accordion-heading>
+            <div class="tekst">
+
+                <input-list list="editContainerCtrl.processEnvs"
+                            heading="{{'SW_NEW_CONTAINER_ENVIRONMENT_H' | translate}}"
+                            list-empty-note="{{'SW_NEW_CONTAINER_ENVIRONMENT_NOTE' | translate}}"
+                            input-placeholder="{{'SW_NEW_CONTAINER_ENVIRONMENT_PH' | translate}}"
+                            add-button-text="+">
+                </input-list>
+            </div>
+            <input-list list="editContainerCtrl.processArgs"
+                        heading="{{'SW_NEW_CONTAINER_ARGUMENTS_H' | translate}}"
+                        list-empty-note="{{'SW_NEW_CONTAINER_ARGUMENTS_NOTE' | translate}}"
+                        input-placeholder="{{'SW_NEW_CONTAINER_ARGUMENTS_PH' | translate}}"
+                        add-button-text="+">
+            </input-list>
+        </div>
+    </div>
+    <div style="text-align: right;">
+        <button type="submit" class="btn btn-default"
+                ui-sref="admin.standard-envs-overview({showObjects: false, showContainers: true})">
+            {{'EDIT_CONTAINER_CANCEL' |
+            translate}}
+        </button>
+        <button type="submit" class="btn btn-primary"
+                ng-click="editContainerCtrl.saveEdit()"
+                ng-disabled="!editContainerCtrl.editContainerForm.$valid">{{'EDIT_CONTAINER_SAVE'
+            | translate}}
+        </button>
+    </div>
+</uib-accordion>

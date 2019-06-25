@@ -1,0 +1,264 @@
+<div class="panel panel-default">
+
+    <div class="panel-heading">{{$ctrl.heading}}</div>
+    <div class="panel-body">
+
+        <!-- List of added inputs -->
+        <ul class="list-group">
+            <li class="list-group-item" ng-repeat="elem in $ctrl.list track by $index">
+                <label>Input source</label>
+                <div class="input-group">
+                    <input readonly type="text" class="form-control" ng-model="$ctrl.list[$index].url" size="30">
+                    <span class="input-group-addon">Url</span>
+                </div>
+                <div ng-if="$ctrl.list[$index].name" class="input-group">
+                    <input readonly  type="text" class="form-control" ng-model="$ctrl.list[$index].name" size="30">
+                    <span class="input-group-addon">(File-)Name</span>
+
+                </div>
+                <div class="input-group">
+                <label>Action:</label> {{$ctrl.list[$index].action}}
+                </div>
+                <div class="input-group">
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="$ctrl.list.splice($index, 1)">
+                            Delete input
+                        </button>
+                    </span>
+                </div>
+            </li>
+        </ul>
+
+        <!-- Choose input source dropdown menu -->
+        <div class="dropdown">
+            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+            {{$ctrl.inputSourceButtonText}}<span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a ng-click="$ctrl.onInputSourceSelection($event)" method="upload">Upload Files</a></li>
+                <li><a ng-click="$ctrl.onInputSourceSelection($event)" method="import">Import from URL</a></li>
+                <li class="divider"></li>
+                <li class="dropdown-header">REST Interfaces</li>
+                <li><a ng-click="$ctrl.onInputSourceSelection($event)" method="uniprot">Uniprot</a></li>
+                <li><a ng-click="$ctrl.onInputSourceSelection($event)" method="pride">PRIDE Archive</a></li>
+            </ul>
+        </div>
+
+        <!-- Appropriate section for each input source -->
+        <!-- Upload Files -->
+
+        <div ng-if="$ctrl.showDialogs['upload']" >
+            <form ng-submit="$ctrl.onFileUpload()">
+                <br>
+            <button type="button" class="btn btn-default" ngf-select="$ctrl.onImportFilesChosen($files)" multiple >Select Files</button>
+            <li class="list-group-item" ng-repeat="elem in $ctrl.uploadFiles track by $index">
+                <!-- Display uploaded files together with their upload status, and choose destination in Container -->
+                <div class="input-group">
+                    <input readonly  type="text" class="form-control" ng-model="$ctrl.uploadFiles[$index].filename" size="30">
+                    <span class="input-group-addon">Chosen File</span>
+                </div>
+
+
+
+
+                <div class="input-group">
+                    <select required class="form-control" theme="bootstrap" ng-model="$ctrl.uploadFiles[$index].action">
+                        <option disabled hidden value=""></option>
+                        <option value="copy">copy</option>
+                        <option value="extract">extract</option>
+                    </select>
+                    <span class="input-group-addon">Action</span>
+                </div>
+
+                <label  ng-if="$ctrl.uploadFiles[$index].action == 'copy'">I want custom filename of my copied file:
+                    <input type="checkbox" ng-model="$ctrl.customFileName">
+                    <br>
+                </label>
+
+                <div ng-if="$ctrl.customFileName  == true && $ctrl.uploadFiles[$index].action == 'copy'" class="input-group">
+                    <input ng-required="$ctrl.customFileName == true" type="text" class="form-control" ng-model="$ctrl.uploadFiles[$index].destination" size="30">
+                    <span class="input-group-addon">(File-)Name</span>
+                </div>
+
+                <span class="progress" ng-show="progress >= 0">
+                    <div style="width:{{progress}}%" ng-bind="progress + '%'"></div>
+                </span>
+            </li>
+            <button ng-show="$ctrl.uploadFiles.length > 0" type="submit" class="btn btn-default" >Upload and Add files</button>
+            </form>
+
+        </div>
+
+
+
+
+        <!-- Import from URL -->
+
+
+        <div ng-if="$ctrl.showDialogs['import']" >
+            <div><input type="radio" name="uniprotMode" ng-model="uniprotMode" value="single" ng-change="string"> Single link </div>
+            <div><input type="radio" name="uniprotMode" ng-model="uniprotMode" value="multiple" ng-change="string"> Multiple links </div>
+            <form ng-if="uniprotMode == 'single'" ng-submit="$ctrl.list.push({url : $ctrl.newInputUrl, name : $ctrl.newInputName , action : $ctrl.newAction});
+                             $ctrl.newInputUrl =''; $ctrl.newInputName=''; $ctrl.newAction =''">
+
+                <div class="input-group">
+                    <input required type="url" class="form-control" placeholder="{{$ctrl.inputPlaceholder}}" ng-model="$ctrl.newInputUrl" size="30">
+                    <span class="input-group-addon">Url</span>
+                </div>
+
+                <div class="input-group">
+                    <select required class="form-control" theme="bootstrap" ng-model="$ctrl.newAction" >
+                        <option disabled hidden value=""></option>
+                        <option value="copy">copy</option>
+                        <option value="extract">extract</option>
+                    </select>
+                    <span class="input-group-addon">Action</span>
+                </div>
+
+
+                <label  ng-if="$ctrl.newAction == 'copy'">I want custom filename of my copied file:
+                    <input type="checkbox" ng-model="$ctrl.customFileName">
+                    <br>
+                </label>
+
+                <div  ng-if="$ctrl.customFileName  == true && $ctrl.newAction== 'copy'" class="input-group">
+                    <input  ng-required="$ctrl.customFileName == true" type="text" class="form-control" placeholder="{{$ctrl.inputPlaceholder}}" ng-model="$ctrl.newInputName" size="30">
+                    <span class="input-group-addon">(File-)Name</span>
+                </div>
+
+                <div class="input-group">
+                <span class="input-group-btn">
+                     <button class="btn btn-default" type="submit">
+                         {{$ctrl.addButtonText}}
+                     </button>
+                 </span>
+                </div>
+
+            </form>
+
+            <!--Multiple Links-->
+
+            <form ng-if="uniprotMode == 'multiple'" ng-submit="$ctrl.onImportFromUrl()">
+                <div class="input-group">
+                    <textarea required class="form-control" id="importUrls" placeholder="Newline separated URLs, e.g.
+https://www.uniprot.org/uniprot/P12345.txt
+https://www.uniprot.org/uniprot/P12345.xml
+https://www.uniprot.org/uniprot/P12345.rdf" rows="5" style="width:100%;resize:none" ng-model="$ctrl.importUrls">
+                    </textarea>
+                    <span class="input-group-addon btn">Files</span>
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-btn">
+                                <button type="submit" class="btn btn-default" >
+                                    {{$ctrl.addButtonText}}
+                                </button>
+                            </span>
+                        </div>
+                    </span>
+            </form>
+        </div>
+
+        <!-- Uniprot -->
+        <div ng-if="$ctrl.showDialogs['uniprot']" >
+            <!--<form ng-submit="uniprotMode == 'individual' ? $ctrl.onUniprotUrls() :-->
+             <!--uniprotMode == 'batch' ? $ctrl.onUniprotBatch() :-->
+              <!--uniprotMode == 'query' ? $ctrl.onUniprotQuery() :-->
+               <!--$ctrl.growl.error('uniprot is not supported', {title: 'Error'});">-->
+            <form ng-submit="$ctrl.onUniprot(uniprotMode)">
+            <div><input type="radio" name="uniprotMode" ng-model="uniprotMode" value="batch" ng-change="string"> Batch retrieval of entries</div>
+            <div><input type="radio" name="uniprotMode" ng-model="uniprotMode" value="query" ng-change="string"> Retrieve entries via queries</div>
+
+            <!-- Uniprot batch retrieval -->
+            <div ng-if="uniprotMode == 'batch'">
+
+                <div class="input-group">
+
+                    <input type="file" class="form-control" required ngf-select="$ctrl.onUniprotBatchFileChosen($files)"/>
+
+                    <span class="input-group-addon">Choose file</span>
+                </div>
+
+                <div class="input-group">
+                    <input required type="text" class="form-control" id="containerFileName" placeholder="{{$ctrl.inputPlaceholder}}" ng-model="$ctrl.newInputName" size="30">
+                    <span class="input-group-addon">(File-)Name</span>
+                </div>
+                <div class="input-group">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="submit">
+                                 Retrieve Batch
+                        </button>
+                    </span>
+                </div>
+            </div>
+            <!-- Uniprot queries -->
+            <div ng-if="uniprotMode == 'query'">
+                <div class="input-group">
+                    <input required type="text" class="form-control" placeholder="(e.g. organism:human AND antigen&format=fasta&compress=yes)" ng-model="$ctrl.uniprotQuery" title="If no format is chosen, format=fasta will be added" size="30">
+                    <span class="input-group-addon">Query</span>
+                </div>
+                <div class="input-group">
+                    <input required type="text" class="form-control" placeholder="{{$ctrl.inputPlaceholder}}" ng-model="$ctrl.newInputName" title="Filename or directory relative to the containers input directory" size="30">
+                    <span class="input-group-addon">(File-)Name</span>
+                </div>
+                <div  class="input-group">
+                    <select required class="form-control" theme="bootstrap" ng-model="$ctrl.newAction" >
+                        <option disabled hidden value=""></option>
+                        <option value="copy">copy</option>
+                        <option value="extract">extract</option>
+                    </select>
+                    <span class="input-group-addon">Action</span>
+                </div>
+                <div class="input-group">
+                    <span class="input-group-btn">
+                         <button class="btn btn-default" type="submit">
+                            {{$ctrl.addButtonText}}
+                        </button>
+                    </span>
+                </div>
+            </div>
+
+            </form>
+        </div>
+
+
+
+        <!-- PRIDE Archive -->
+
+        <div ng-if="$ctrl.showDialogs['pride']">
+            <form ng-submit="$ctrl.onPrideListFiles()">
+
+            </br>
+            Enter Project Accession:
+            <div class="input-group">
+                <input required type="text" class="form-control" placeholder="e.g. PXD007621" ng-model="$ctrl.prideAccession" size="30">
+                    <span class="input-group-addon">Accession</span>
+            </div>
+            </br>
+            <div class="input-group">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="submit" >
+                        List Files 
+                    </button>
+                </span>
+            </div>
+            </form>
+            <div>
+                </br>
+                <div ng-repeat="(fileType, files) in $ctrl.prideFiles">
+                    <input type="checkbox" ng-model="$ctrl.prideFiles[fileType].checked" ng-click="$ctrl.onPrideMasterCheckbox($event)" data="{{fileType}}"><label> {{files.list.length}} {{fileType}} Files</label>
+                    <div style="padding:0px 20px 0px 20px;" ng-repeat="elem in files.list track by $index">
+                        <input type="checkbox" ng-model="$ctrl.prideFiles[fileType].list[$index].checked"> {{elem.fileName}}
+                    </div>
+                    </br>
+                </div>
+                <div class="input-group">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" ng-click="$ctrl.onPrideAddFiles()">
+                            Add Files
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

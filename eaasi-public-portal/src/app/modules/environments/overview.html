@@ -1,6 +1,7 @@
 
 <h2 class="m-t-0">{{'CHOOSE_ENV_L' | translate}}</h2>
 
+<!--
 <uib-tabset active="standardEnvsOverviewCtrl.view">
     <uib-tab index="0" ng-click="standardEnvsOverviewCtrl.updateTable(0)" heading="{{'CHOOSE_BASEENV_L' | translate}}">
 
@@ -11,11 +12,14 @@
     </uib-tab>
 </uib-tabset>
 <p></p>
+-->
+<!--
 <uib-tabset ng-if="standardEnvsOverviewCtrl.view === 0 || standardEnvsOverviewCtrl.view === 2" active="standardEnvsOverviewCtrl.viewArchive" type="pills">
     <uib-tab index="0" heading="Private" ng-click="standardEnvsOverviewCtrl.updateTable(standardEnvsOverviewCtrl.view)"></uib-tab>
     <uib-tab index="1" heading="Public" ng-click="standardEnvsOverviewCtrl.updateTable(standardEnvsOverviewCtrl.view)"></uib-tab>
     <uib-tab index="2" heading="Remote" ng-click="standardEnvsOverviewCtrl.updateTable(standardEnvsOverviewCtrl.view)"></uib-tab>
 </uib-tabset>
+-->
 
 <div class="tekstMore"></div>
 <div style="float: right;">
@@ -44,8 +48,12 @@
      class="ag-theme-balham">
 </div>
 
+<!--
 <div id="overviewDeleteButton" hidden class="modal-footer">
     <button type="button" class="btn btn-default" ng-click="standardEnvsOverviewCtrl.deleteSelected()">
         {{'CHOOSE_DELETE_SELECTED' | translate}}
     </button>
 </div>
+
+-->
+

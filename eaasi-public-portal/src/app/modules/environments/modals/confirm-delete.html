@@ -1,0 +1,12 @@
+<div class="modal-header">
+    <h3 class="modal-title">{{'CONFIRM_DELETE_H' | translate}}</h3>
+</div>
+
+<div class="modal-body">
+    <h4>{{'CONFIRM_DELETE_T' | translate}}</h4>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="$close();confirmDeleteDialogCtrl.confirmed(confirmDeleteDialogCtrl.envId);" >{{'CONFIRM_DELETE_OK' | translate}}</button>
+    <button class="btn btn-default" type="button" ng-click="$close()">{{'CONFIRM_DELETE_CANCEL' | translate}}</button>
+</div>

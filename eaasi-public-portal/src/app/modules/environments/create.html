@@ -1,0 +1,72 @@
+<h2 class="m-t-0">{{'SW_NEW_IMAGE_HEADER' | translate}}</h2> <br>
+
+<form name="newImageCtrl.form" ng-submit="">
+    <label>{{'SW_NEW_IMAGE_CHOOSE_SYSTEM' | translate}}</label>
+    <div style="max-width: 450px;">
+        <ui-select ng-model="newImageCtrl.selectedSystem" on-select="newImageCtrl.onSelectSystem($item, $model)" theme="bootstrap"
+                   title="{{'SW_NEW_IMAGE_CHOOSE_SYSTEM_PH' | translate}}" required>
+            <ui-select-match placeholder="{{'SW_NEW_IMAGE_CHOOSE_SYSTEM_PH' | translate}}">{{$select.selected.label}}</ui-select-match>
+            <ui-select-choices repeat="obj in newImageCtrl.systems | filter: $select.search">
+                <span ng-bind-html="obj.label | highlight: $select.search"></span>
+            </ui-select-choices>
+        </ui-select>
+    </div>
+
+    <br>
+
+    <div class="panel panel-default" ng-hide="!newImageCtrl.selectedSystem">
+        <div class="panel-heading">{{'SW_NEW_IMAGE_PROPERTY_HEADER' | translate}}</div>
+        <div class="panel-body">
+            <dl class="m-b-0">
+                <dt ng-repeat-start="property in newImageCtrl.selectedSystem.properties">{{property.name}}</dt>
+                <dd style="margin-bottom: 5px;" ng-repeat-end>{{property.value}}</dd>
+            </dl>
+        </div>
+    </div>
+
+    <br>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">{{'SW_NEW_IMAGE_HD_HEADER' | translate}}</div>
+        <div class="panel-body">
+            <div class="form-group">
+
+                <label>{{'SW_NEW_IMAGE_NEW_HD_LBL' | translate}} {{'SW_NEW_IMAGE_NEW_HD_SIZE_LBL' | translate}}</label>
+                <input type="text" class="form-control" ng-model="newImageCtrl.hdsize" 
+                ng-required ui-mask="?9?9?9?9?9?9?9?9 MB" ui-mask-placeholder ui-mask-placeholder-char="​\u200B"/>
+
+                <br>
+                <label>{{'SW_NEW_IMAGE_NEW_HD_OBJECT_LBL' | translate}}</label>
+                <ui-select ng-model="newImageCtrl.selectedSoftware" theme="bootstrap" title="{{'SW_NEW_IMAGE_CHOOSE_SOFTWARE_PH' | translate}}" ng-required>
+                    <ui-select-match placeholder="{{'SW_NEW_IMAGE_CHOOSE_SOFTWARE_PH' | translate}}">{{$select.selected.label}}</ui-select-match>
+                    <ui-select-choices repeat="obj in newImageCtrl.softwareList | filter: {isOperatingSystem:true}| filter: $select.search">
+                        <span ng-bind-html="obj.label | highlight: $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
+                <br>
+                <br>
+                <label class="tekst">
+                    <input type="checkbox" ng-click="newImageCtrl.changeKvmState()" ng-model-options="{ getterSetter: true }" ng-model="newImageCtrl.checkeKvmState">
+                    <span>{{'SW_NEW_IMAGE_KVM' | translate}}</span>
+                </label>
+                <label>
+                    <input type="checkbox" ng-model="newImageCtrl.hasRom">
+                    <span>{{'SW_NEW_IMAGE_ROM_LBL' | translate}}</span>
+                </label>
+                <input type="text" class="form-control" ng-model="newImageCtrl.rom" ng-disabled="!newImageCtrl.hasRom">
+            </div>
+        </div>
+    </div>
+
+    <label>{{'SW_NEW_IMAGE_NATIVE_CONFIG_LBL' | translate}}</label>
+    <textarea class="form-control" ng-model="newImageCtrl.native_config"></textarea>
+
+    <br>
+
+    <div style="text-align: right;">
+        <button type="button" class="btn btn-default" ui-sref="admin.standard-envs-overview">{{'SW_NEW_IMAGE_CANCEL_BUTTON' | translate}}</button>
+        <button type="button" class="btn btn-primary" ng-click="newImageCtrl.start('create')" ng-disabled="!newImageCtrl.form.$valid">{{'SW_NEW_IMAGE_START_BUTTON' | translate}}</button>
+    </div>
+</form>
+
+<br>

@@ -1,0 +1,33 @@
+<div class="modal-header">
+    <h3 class="modal-title">{{'METADATA_ADD_H' | translate}}</h3>
+</div>
+
+<div class="modal-body">
+    <form id="addEndpoint">
+        <div class="form-group">
+            <label>{{'METADATA_ADD_HOSTNAME' | translate}}</label>
+            <input type="text" ng-model="addEnvironmentCtrl.name" class="form-control">
+        </div>
+        <div class="form-group">
+            <label>{{'METADATA_ADD_HOST' | translate}}</label>
+            <input type="text" ng-model="addEnvironmentCtrl.host"  class="form-control" placeholder="http://localhost:8080/oaipmh/providers/">
+            <button class="btn btn-outline-dark" type="button" ng-click="addEnvironmentCtrl.resolve()" >resolve</button>
+        </div>
+
+        <div class="form-group" ng-show="addEnvironmentCtrl.providers.length > 0">
+            <p>
+                <label>{{'METADATA_PROVIDER_LIST_H' | translate}}:</label>
+            </p>
+            <ul id="providerList">
+                <li ng-repeat="p in addEnvironmentCtrl.providers">{{revision.text}}
+                    <label>{{p}}</label>
+                </li>
+            </ul>
+        </div>
+    </form>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-disabled="!addEnvironmentCtrl.success" type="button" ng-click="$close();addEnvironmentCtrl.confirmed();" >{{'METADATA_OK' | translate}}</button>
+    <button class="btn btn-default" type="button" ng-click="$close()">{{'METADATA_CANCEL' | translate}}</button>
+</div>

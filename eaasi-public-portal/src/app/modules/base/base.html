@@ -1,9 +1,8 @@
-<div class="main-container container">
+<div id="content" class="main-container container">
 
     <div class="row">
-        <div class="col-xs-12"><div id="header"><img height="70" src="img/logo.png" /></div></div>
+        <div class="col-xs-12"><div id="header"><img height="70" style="margin-top: 10px; margin-bottom: 10px;" src="img/logo.png" /></div></div>
     </div>
-
     <div class="row">
         <div class="col-sm-3">
             <div class="sidebar-nav">
@@ -24,24 +23,31 @@
                             <li><a ui-sref="admin.standard-envs-overview({showObjects: false, showContainers: false})" data-ui-sref-opts="{reload: true}" href="">{{'BASE_MENU_ENVS'| translate}}</a></li>
 
                             <li ng-if="baseCtrl.config.features.software"><a ui-sref="admin.sw-overview" href="">{{'BASE_MENU_SW'| translate}}</a></li>
+
+                            <!--
                             <li ng-if="baseCtrl.config.features.objects"><a ui-sref="admin.object-overview" href="">{{'BASE_MENU_OBJECTS'| translate}}</a></li>
                             <li ng-if="baseCtrl.config.features.handle"><a ui-sref="admin.handles" href="">{{'BASE_MENU_HANDLE'| translate}}</a></li>
                             <li ng-if="baseCtrl.config.features.network_sessions"><a ui-sref="admin.networking" href="">Networks</a></li>
+                            -->
 
-                            <hr/>
                             <!--<li><a ui-sref="admin.synchronize-image-archives" href="">{{'BASE_MENU_UPLOAD'| translate}}</a></li>-->
+
+                            <!--
                             <li><a ui-sref="admin.import-image" href="">{{'BASE_MENU_NEW_ENV' | translate }}</a></li>
                             <li><a ui-sref="admin.create-image" href="">{{'BASE_MENU_CREATE_ENV' | translate }}</a></li>
+                            -->
 
+                            <!--
                             <li><a ng-if="baseCtrl.config.features.containers" ui-sref="admin.new-container" href="">{{'BASE_MENU_CONTAINER' | translate }}</a></li>
                             <li><a ng-if="baseCtrl.config.features.oaipmh" ui-sref="admin.metadata">{{'BASE_MENU_MD' | translate }}</a></li>
                             <li><a ng-click="baseCtrl.showSettingsDialog()" href="">{{'BASE_MENU_SHOW_SETTINGS_DLG' | translate}}</a></li>
                             <li><a ng-if="baseCtrl.config.features.advanced" ng-click="baseCtrl.showAdvancedDialog()" href="">{{'BASE_MENU_ADVANCED' | translate}}</a></li>
                             <hr ng-if="baseCtrl.config.features.emulators"/>
+                            -->
                             <li><a ng-if="baseCtrl.config.features.emulators" ui-sref="admin.emulators" href="">{{'BASE_EMULATORS' | translate }}</a></li>
                             <li ng-if="baseCtrl.config.helpUrl"><a href="{{baseCtrl.config.helpUrl}}" target="_blank">{{'BASE_MENU_HELP' | translate}}</a></li>
                             <li ng-if="baseCtrl.authEnabled"><a href="" ng-click="baseCtrl.logout()">Logout</a> </li>
-
+                            -->
                         </ul>
                     </div>
                 </div>
@@ -56,12 +62,21 @@
     </div>
 </div>
 
+
+<!--
 <div id="footer">
     <div class="container">
-        <p class="muted credit">
+        <p class="muted credit" style="color: white;">
             <span ng-if="baseCtrl.userInfo.status == '0'">User: {{baseCtrl.userInfo.userId}} </br></span>
             Build: {{baseCtrl.buildInfo}}</br>
             UI Build: {{baseCtrl.uiCommitHash}}
         </p>
     </div>
 </div>
+-->
+
+<!--
+<div class="footer" style="text-align: right">
+    <p>powered by <img height="40" src="img/openslx-logo.jpg"></p>
+</div>
+-->

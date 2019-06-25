@@ -1,9 +1,18 @@
-<h1 class="m-t-0">{{'SW_OVERVIEW_HEADER' | translate}}</h1>
+<h1 class="m-t-0">{{'OBJECTS_L' | translate}}</h1>
+
+<uib-tabset active="objectOverviewCtrl.viewArchive">
+    <uib-tab ng-repeat="item in objectOverviewCtrl.archives"
+             ng-click="objectOverviewCtrl.updateTable($index, item)"
+             index="$index"
+             heading="{{ objectOverviewCtrl.getArchiveHeader(item) }}">
+
+    </uib-tab>
+</uib-tabset>
 
 <div style="margin-bottom: 15px;" class="ag-theme-balham">
     <div style="text-align: justify; text-align-last: justify">
         <span style="display: inline-block; vertical-align: text-bottom;"> Page Size:
-            <select ng-click="onPageSizeChanged()" ng-model="swOverviewCtrl.pageSize">
+            <select ng-click="onPageSizeChanged()" ng-model="objectOverviewCtrl.pageSize">
                 <option value="5">5</option>
                 <option value="10">10</option>
                 <option value="15">15</option>
@@ -14,16 +23,14 @@
             </span>
 
         <span style="vertical-align: text-bottom; display: inline-block">
-                    <button type="submit" class="btn btn-default"
-                            ui-sref="admin.object-overview"><span style="color: green"
+                    <button ng-if="objectOverviewCtrl.config.features.objectUpload" type="submit" class="btn btn-default"
+                            ui-sref="admin.new-object"><span style="color: green"
                                                             class="glyphicon glyphicon-plus"></span>
-                                                            {{'SW_OVERVIEW_ADD' | translate}}
+                                                            {{'OBJECTS_NEW_OBJECT' | translate}}
                     </button>
             </span>
     </div>
 </div>
-
-
 <div style="text-align: right; margin-bottom: 15px;">
     <input type="text" class="form-control" ng-model="gridOptions.quickFilterText"
            placeholder="{{'CHOOSE_ENV_SEARCH' | translate}}"/>

@@ -1,0 +1,29 @@
+
+
+
+<div align="center" id="header" style="width: 100%" align="center"><img height="75px" src="img/logo.png"> </div>
+<div class="wrapper-signin">
+
+    <form class="form-signin">
+
+        <h2 class="form-signin-heading">Please login</h2>
+
+        <button class="btn btn-lg btn-outline-primary btn-block"
+                type="button"
+                ng-click="loginCtrl.authService.login({
+                  connection: 'google-oauth2',
+                  scope: 'openid profile email'
+            })"><i class="fa fa-google"></i> Sign in with Google</button>
+        <button class="btn btn-lg btn-outline-primary btn-block"
+                type="button" ng-click="loginCtrl.authService.login({
+                  connection: 'twitter',
+                  scope: 'openid profile email'
+           })"><i class="fa fa-twitter"></i> Sign in with Twitter</button>
+        <button class="btn btn-lg btn-outline-primary btn-block"
+                type="button"
+                ng-click="loginCtrl.authService.login({
+                connection: 'Username-Password-Authentication',
+                scope: 'openid profile email'
+       })">Login with other AuthProvider</button>
+    </form>
+</div>

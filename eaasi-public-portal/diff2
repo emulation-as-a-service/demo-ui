@@ -1,0 +1,12 @@
+diff --git a/eaas-frontend-admin/src/app/modules/networking/modals/networkGroupModal.html b/eaas-frontend-admin/src/app/modules/networking/modals/networkGroupModal.html
+index a17cf0d..a3bcba3 100644
+--- a/eaas-frontend-admin/src/app/modules/networking/modals/networkGroupModal.html
++++ b/eaas-frontend-admin/src/app/modules/networking/modals/networkGroupModal.html
+@@ -10,6 +10,7 @@
+     </div>
+ <uib-accordion id="session-accordion" close-others="oneAtATime"> <!-- pay attention to this line -->
+ 
++
+     <div uib-accordion-group class="panel-default" heading="{{getTitle(component.customComponentName)}}" ng-repeat="component in groupComponents">
+         {{getTitle(component.customComponentName)}}
+         <button ng-click="attach(component.componentId)" class="btn btn-default">Attach Viewer</button>

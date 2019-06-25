@@ -1,0 +1,40 @@
+<h2 class="m-t-0">{{"Edit Handle"}}</h2>
+
+<div style="text-align: right;">
+    <button class="btn btn-default" type="button" ui-sref="admin.handles">{{'CHAR_CANCEL' | translate}}</button>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        {{handleOverview.handle}}
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div style="text-align: left; margin-bottom: 15px; word-wrap: break-word">
+                <p>
+                    <b>Handle Value:</b> <br> <a href="{{handleOverview.handleValue}}">{{handleOverview.handleValue}}</a>
+                </p>
+
+                <div style="display: inline-block;">
+                    <button type="submit" id="showHandleValue" class="btn btn-default" ng-click="handleOverview.showHandleValue()">
+                        <span class="glyphicon glyphicon-pencil"></span> {{'CHOOSE_HANDLE_EDIT' | translate}}</button>
+                </div>
+
+                <div style="display: inline-block;">
+                    <button type="submit" id="editHandleValue" class="btn btn-default" ng-click="handleOverview.editHandle()">
+                        <span class="glyphicon glyphicon-floppy-disk"></span> {{'CHOOSE_HANDLE_SHOW' | translate}}</button>
+                </div>
+
+                <div style="display: inline-block;">
+                    <button type="submit" class="btn btn-default"  ng-click="handleOverview.deleteHandle()">
+                        <span class="glyphicon glyphicon-remove"></span> {{'HANDLE_DELETE' | translate}}</button>
+                </div>
+                <br>
+                <input type="text" id="newHandleValue"  placeholder="New handle value " style="width:700px;font-size:12pt;" >
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<br>

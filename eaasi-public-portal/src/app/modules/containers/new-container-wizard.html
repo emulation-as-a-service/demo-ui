@@ -1,0 +1,316 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+</head>
+<body>
+
+
+
+<wizard on-finish="finished()" hide-indicators="true" name="containerImportWizard">
+    <wz-step wz-title="STEP 1" wz-order="1">
+        <h3 class="m-t-0">{{'SW_NEW_CONTAINER_HEADER' | translate}}</h3> <br>
+
+
+        <label>{{'SW_NEW_CONTAINER_CHOOSE_ORIGIN_RUNTIME' | translate}}</label>
+        <div style="max-width: 450px;">
+            <ui-select ng-model="newContainerCtrl.selectedSystem" on-select="newContainerCtrl.onSelectRuntime($item, $model)" theme="bootstrap"
+                       title="{{'SW_NEW_CONTAINER_CHOOSE_ORIGIN_RUNTIME_PH' | translate}}" required>
+                <ui-select-match placeholder="{{'SW_NEW_CONTAINER_CHOOSE_ORIGIN_RUNTIME_PH' | translate}}">{{$select.selected.name}}</ui-select-match>
+                <ui-select-choices ng-click="newContainerCtrl.imageType = '';newContainerCtrl.archiveType = ''" repeat="obj in newContainerCtrl.runtimes | filter: $select.search">
+                    <span ng-bind-html="obj.name | highlight: $select.search"></span>
+                </ui-select-choices>
+            </ui-select>
+        </div>
+
+        <br>
+
+        <div class="panel panel-default" ng-show=newContainerCtrl.runtime==0>
+            <div class="panel-heading">runC</div>
+            <div class="panel-body">
+
+                <p>{{'SW_NEW_CONTAINER_FORMAT_RUNC' | translate}}</p>
+                <p>{{'SW_NEW_CONTAINER_IMAGE_STRUCTURE' | translate}}</p>
+
+                <label>
+                    <input type="radio" ng-model="newContainerCtrl.importMethod" value="url">
+                    <span>{{'SW_NEW_CONTAINER_DOCKER_IMAGE_IMPORT_URL' | translate}}</span>
+                </label>
+
+                <br>
+
+                <label>
+                    <input type="radio" ng-model="newContainerCtrl.importMethod" value="file">
+                    <span>{{'SW_NEW_CONTAINER_DOCKER_IMAGE_IMPORT_FILE' | translate}}</span>
+                </label>
+
+                <div class="tekst">
+                <input type="text" placeholder="{{'SW_NEW_CONTAINER_DOCKER_IMAGE_URL' | translate}}" class="form-control" ng-model="newContainerCtrl.imageUrl" ng-disabled="newContainerCtrl.importMethod != 'url'" ng-required="newContainerCtrl.importMethod == 'url'"/>
+                </div>
+
+                <div class="tekst">
+                <button type="button" class="btn btn-default" ng-show="newContainerCtrl.importMethod == 'file'" ngf-select="newContainerCtrl.onImportFilesChosen($file)" >Select Files</button>
+                </div>
+                <div class="tekst">
+                    <label>{{'SW_NEW_CONTAINER_ARCHIVE_T' | translate}}</label>
+                    <select style="max-width: 300px;" class="form-control" theme="bootstrap"
+                            ng-model="newContainerCtrl.archiveType" required
+                            ng-disabled="newContainerCtrl.importMethod == ''">
+                        <option value="rootfs">RootFS TAR(GZ/BZ2)</option>
+                        <option disabled value="simg">Singularity Image (simg)</option>
+                    </select>
+                </div>
+
+                <!--<br>-->
+                <!--<input type="checkbox" name="isGui" value="gui" ng-model="newContainerCtrl.gui">{{'SW_NEW_CONTAINER_RUNC_GUI' | translate}} <br>-->
+
+
+                <div class="tekst">
+                    <label>{{'SW_NEW_CONTAINER_OPTIONAL_SUBDIRECTORY' | translate}}
+                        <input type="checkbox" ng-disabled="newContainerCtrl.importMethod == ''"
+                               ng-model="newContainerCtrl.isCustomSubdir">
+                    </label>
+
+
+                    <input type="text" ng-hide="!newContainerCtrl.isCustomSubdir"
+                           placeholder="{{'SW_NEW_CONTAINER_OPTIONAL_SUBDIRECTORY_NAME' | translate }}" class="form-control"
+                           ng-model="newContainerCtrl.customSubdir"/>
+                </div>
+
+                <input-list list="newContainerCtrl.env"
+                            heading="{{'SW_NEW_CONTAINER_ENVIRONMENT_H' | translate}}"
+                            list-empty-note="{{'SW_NEW_CONTAINER_ENVIRONMENT_NOTE' | translate}}"
+                            input-placeholder="{{'SW_NEW_CONTAINER_ENVIRONMENT_PH' | translate}}"
+                            add-button-text="+">
+                </input-list>
+                <input-list list="newContainerCtrl.args"
+                            heading="{{'SW_NEW_CONTAINER_ARGUMENTS_H' | translate}}"
+                            list-empty-note="{{'SW_NEW_CONTAINER_ARGUMENTS_NOTE' | translate}}"
+                            input-placeholder="{{'SW_NEW_CONTAINER_ARGUMENTS_PH' | translate}}"
+                            add-button-text="+">
+                </input-list>
+
+                <!--
+                <input-list list="newContainerCtrl.inputs"
+                            heading="{{'SW_NEW_CONTAINER_INPUT_H' | translate}}"
+                            list-empty-note="{{'SW_NEW_CONTAINER_INPUT_NOTE' | translate}}"
+                            input-placeholder="{{'SW_NEW_CONTAINER_INPUT_PH' | translate}}"
+                            add-button-text="+">
+                </input-list>
+                -->
+                <label>{{'SW_NEW_CONTAINER_INPUT' | translate}}</label>
+                <input type="text" placeholder="{{'SW_NEW_CONTAINER_INPUT_PH' | translate}}" class="form-control" ng-model="newContainerCtrl.imageInput"
+                       ng-disabled="newContainerCtrl.importMethod == ''" ng-required="newContainerCtrl.imageType == 'url'"/>
+
+                <label>{{'SW_NEW_CONTAINER_OUTPUT' | translate}}</label>
+                <input type="text" placeholder="{{'SW_NEW_CONTAINER_OUTPUT_PH' | translate}}" class="form-control" ng-model="newContainerCtrl.imageOutput"
+                       ng-disabled="newContainerCtrl.importMethod == ''" ng-required="newContainerCtrl.imageType == 'url'"/>
+            </div>
+        </div>
+        <div class="panel panel-default" ng-show=newContainerCtrl.runtime==1>
+            <div class="panel-heading">Docker</div>
+            <div class="panel-body">
+
+                <h4>Image Format</h4>
+                <p>{{'SW_NEW_CONTAINER_FORMAT_DOCKER' | translate}}</p>
+                <p>{{'SW_NEW_CONTAINER_IMAGE_STRUCTURE' | translate}}</p>
+
+
+                <label>
+                    <input type="radio" ng-model="newContainerCtrl.imageType" value="dockerhub">
+                    <span>{{'SW_NEW_CONTAINER_IMAGE_DOCKERHUB' | translate}}</span>
+                </label>
+                <br>
+                <label>
+                    <input disabled type="radio" ng-model="newContainerCtrl.imageType" value="url">
+                    <span>{{'SW_NEW_CONTAINER_IMAGE_URL' | translate}}</span>
+                </label>
+                <br>
+
+
+                <div ng-hide="newContainerCtrl.imageType != 'url'">
+                    <input type="text" placeholder="{{'SW_NEW_CONTAINER_DOCKER_IMAGE_URL' | translate}}" class="form-control" ng-model="newContainerCtrl.imageUrl" ng-disabled="newContainerCtrl.imageType != 'url'" ng-required="newContainerCtrl.imageType == 'url'"/>
+                    <label>{{'SW_NEW_CONTAINER_COMMAND' | translate}}</label>
+                    <input type="text" placeholder="{{'SW_NEW_CONTAINER_COMMAND_PH' | translate}}" class="form-control" ng-model="newContainerCtrl.imageCommand" ng-disabled="newContainerCtrl.imageType != 'url'" ng-required="newContainerCtrl.imageType == 'url'"/>
+                    <label>{{'SW_NEW_CONTAINER_INPUT' | translate}}</label>
+                    <input type="text" placeholder="{{'SW_NEW_CONTAINER_INPUT_PH' | translate}}" class="form-control" ng-model="newContainerCtrl.imageInput" ng-disabled="newContainerCtrl.imageType != 'url'" ng-required="newContainerCtrl.imageType == 'url'"/>
+                    <label>{{'SW_NEW_CONTAINER_OUTPUT' | translate}}</label>
+                    <input type="text" placeholder="{{'SW_NEW_CONTAINER_OUTPUT_PH' | translate}}" class="form-control" ng-model="newContainerCtrl.imageOutput" ng-disabled="newContainerCtrl.imageType != 'url'" ng-required="newContainerCtrl.imageType == 'url'"/>
+                </div>
+
+                <div ng-hide="newContainerCtrl.imageType != 'dockerhub'">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">{{'SW_NEW_CONTAINER_DOCKER' | translate}}</div>
+                        <div class="panel-body">
+                            <div class="tekst">
+                            Name:
+                            <input type="text" placeholder="{{'SW_NEW_CONTAINER_DOCKER_DOCKERHUB_NAME' | translate}}"
+                                   class="form-control" ng-model="newContainerCtrl.imageUrl"
+                                   ng-required="newContainerCtrl.imageType == 'dockerhub'"/>
+                            </div>
+                            Tag:
+                            <input type="text" placeholder="{{'SW_NEW_CONTAINER_DOCKER_DOCKERHUB_TAG' | translate}}"
+                                   class="form-control" ng-model="newContainerCtrl.tag"
+                                   ng-required="newContainerCtrl.imageType == 'dockerhub'"/>
+                        </div>
+                    </div>
+
+                    <input-list list="newContainerCtrl.env"
+                                heading="{{'SW_NEW_CONTAINER_ENVIRONMENT_H' | translate}}"
+                                list-empty-note="{{'SW_NEW_CONTAINER_ENVIRONMENT_NOTE' | translate}}"
+                                input-placeholder="{{'SW_NEW_CONTAINER_ENVIRONMENT_PH' | translate}}"
+                                add-button-text="+">
+                    </input-list>
+                    <input-list list="newContainerCtrl.args"
+                                heading="{{'SW_NEW_CONTAINER_ARGUMENTS_H' | translate}}"
+                                list-empty-note="{{'SW_NEW_CONTAINER_ARGUMENTS_NOTE' | translate}}"
+                                input-placeholder="{{'SW_NEW_CONTAINER_ARGUMENTS_PH' | translate}}"
+                                add-button-text="+">
+                    </input-list>
+
+                    <label>{{'SW_NEW_CONTAINER_INPUT' | translate}}</label>
+                    <input type="text" placeholder="{{'SW_NEW_CONTAINER_INPUT_PH' | translate}}" class="form-control" ng-model="newContainerCtrl.imageInput" ng-required="newContainerCtrl.imageType == 'dockerhub'"/>
+                    <label>{{'SW_NEW_CONTAINER_OUTPUT' | translate}}</label>
+                    <input type="text" placeholder="{{'SW_NEW_CONTAINER_OUTPUT_PH' | translate}}" class="form-control" ng-model="newContainerCtrl.imageOutput" ng-required="newContainerCtrl.imageType == 'dockerhub'"/>
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="panel panel-default" ng-show=newContainerCtrl.runtime==2>
+            <div class="panel-heading">Singularity</div>
+            <div class="panel-body">
+
+                <p>{{'SW_NEW_CONTAINER_FORMAT_SINGULARITY' | translate}}</p>
+                <p>{{'SW_NEW_CONTAINER_IMAGE_STRUCTURE' | translate}}</p>
+
+
+
+                <label>
+                    <input type="radio" ng-model="newContainerCtrl.importMethod" value="url">
+                    <span>{{'SW_NEW_CONTAINER_DOCKER_IMAGE_IMPORT_URL' | translate}}</span>
+                </label>
+                <br>
+                <label>
+                    <input type="radio" ng-model="newContainerCtrl.importMethod" value="file">
+                    <span>{{'SW_NEW_CONTAINER_DOCKER_IMAGE_IMPORT_FILE' | translate}}</span>
+                </label>
+                <div class="tekst">
+                    <input type="text" placeholder="{{'SW_NEW_CONTAINER_DOCKER_IMAGE_URL' | translate}}"
+                           class="form-control" ng-model="newContainerCtrl.imageUrl"
+                           ng-disabled="newContainerCtrl.importMethod != 'url'"
+                           ng-required="newContainerCtrl.importMethod == 'url'"/>
+                </div>
+                <div class="tekst">
+                    <button type="button" class="btn btn-default" ng-show="newContainerCtrl.importMethod == 'file'"
+                            ngf-select="newContainerCtrl.onImportFilesChosen($file)">Select Files
+                    </button>
+                </div>
+
+                <span class="progress" ng-show="progress >= 0">
+                    <div style="width:{{progress}}%" ng-bind="progress + '%'"></div>
+                </span>
+
+
+                <label>{{'SW_NEW_CONTAINER_ARCHIVE_T' | translate}}</label>
+
+                <select style="max-width: 300px;" class="form-control" theme="bootstrap" ng-model="newContainerCtrl.archiveType" required ng-disabled="newContainerCtrl.importMethod == ''">
+                    <option value="rootfs">RootFS TAR(GZ/BZ2)</option>
+                    <option value="simg">Singularity Image (simg)</option>
+                </select>
+                <br>
+
+                <input-list list="newContainerCtrl.env"
+                            heading="{{'SW_NEW_CONTAINER_ENVIRONMENT_H' | translate}}"
+                            list-empty-note="{{'SW_NEW_CONTAINER_ENVIRONMENT_NOTE' | translate}}"
+                            input-placeholder="{{'SW_NEW_CONTAINER_ENVIRONMENT_PH' | translate}}"
+                            add-button-text="+">
+                </input-list>
+                <input-list list="newContainerCtrl.args"
+                            heading="{{'SW_NEW_CONTAINER_ARGUMENTS_H' | translate}}"
+                            list-empty-note="{{'SW_NEW_CONTAINER_ARGUMENTS_NOTE' | translate}}"
+                            input-placeholder="{{'SW_NEW_CONTAINER_ARGUMENTS_PH' | translate}}"
+                            add-button-text="+">
+                </input-list>
+
+
+                <label>{{'SW_NEW_CONTAINER_INPUT' | translate}}</label>
+                <input type="text" placeholder="{{'SW_NEW_CONTAINER_INPUT_PH' | translate}}" class="form-control" ng-model="newContainerCtrl.imageInput" ng-disabled="newContainerCtrl.importMethod == ''" ng-required="newContainerCtrl.importMethod != ''"/>
+                <label>{{'SW_NEW_CONTAINER_OUTPUT' | translate}}</label>
+                <input type="text" placeholder="{{'SW_NEW_CONTAINER_OUTPUT_PH' | translate}}" class="form-control" ng-model="newContainerCtrl.imageOutput" ng-disabled="newContainerCtrl.importMethod == ''" ng-required="newContainerCtrl.importMethod != ''"/>
+            </div>
+        </div>
+        <br>
+
+        <div style="text-align: right;">
+            <button type="button" ng-if="newContainerCtrl.runtime" class="btn btn-default" ui-sref="admin.standard-envs-overview">{{'SW_NEW_IMAGE_CANCEL_BUTTON' | translate}}</button>
+            <button type="button" ng-if="newContainerCtrl.runtime" class="btn btn-primary"   ng-click="newContainerCtrl.import()">{{'SW_NEW_IMAGE_START_BUTTON' | translate}}</button>
+        </div>
+
+        <br>
+
+    </wz-step>
+    <wz-step wz-title="STEP 2" wz-order="2">
+
+        <div class="modal-header">
+            <h3 class="modal-title">Please provide some information about current container</h3>
+        </div>
+
+        <div class="modal-body">
+
+
+            <br>
+
+            <label>{{'NEW_CONTAINER_TITLE' | translate}}</label>
+            <input type="text" class="form-control" ng-model="newContainerCtrl.title" ng-required="true" />
+            <div style="height:10px;font-size:1px;">&nbsp;</div>
+            <label>{{'NEW_CONTAINER_AUTHOR' | translate}}</label>
+            <input type="text" class="form-control" ng-model="newContainerCtrl.author"/>
+            <div style="height:10px;font-size:1px;">&nbsp;</div>
+            <p>
+                <b>{{'EDIT_CONTAINER_HELPTEXT' | translate}}:</b> <br />
+                <text-angular ng-model="newContainerCtrl.containerDescription" ></text-angular>
+            </p>
+
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn btn-default" type="button" ui-sref="admin.standard-envs-overview({showContainers: true})" data-ui-sref-opts="{reload: true}">Cancel</button>
+            <button class="btn btn-primary" type="button" ng-click="newContainerCtrl.saveImportedContainer()">OK</button>
+        </div>
+    </wz-step>
+
+    <wz-step wz-title="STEP 3" wz-order="3">
+
+        <div class="modal-header">
+            <h3 class="modal-title"> Your landing page link: </h3>
+            <a href="{{newContainerCtrl.landingPage}}?id={{newContainerCtrl.id}}" target="_blank">{{newContainerCtrl.landingPage}}?id={{newContainerCtrl.id}}</a>
+        </div>
+
+        <div id="handleLandingPageContainer" class="modal-body">
+            <div ng-if="newContainerCtrl.handleValue">
+            Your handle value:
+            </div>
+            <div ng-if="!newContainerCtrl.handleValue">
+            Do you want a handle value?
+            </div>
+
+            <div ng-if="newContainerCtrl.handleValue" class="modal-body">
+                <a href="{{newContainerCtrl.handleValue}}" target="_blank">{{newContainerCtrl.handleValue}}</a>
+            </div>
+        </div>
+
+
+
+        <div class="modal-footer">
+            <button class="btn btn-default" ng-hide="hideme" type="button" ng-click="hideme=true;newContainerCtrl.saveHandle()" >Yes</button>
+            <button class="btn btn-primary" type="button" ui-sref="admin.standard-envs-overview({showContainers: true})"  data-ui-sref-opts="{reload: true}">Close</button>
+        </div>
+    </wz-step>
+</wizard>
+
+
+</body>
+</html>

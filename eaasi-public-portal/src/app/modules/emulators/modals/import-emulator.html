@@ -1,0 +1,48 @@
+
+<div class="modal-header">
+    <h3 class="modal-title">Import Emulator</h3>
+</div>
+
+<div class="modal-body">
+
+<div class="panel panel-default"">
+    <div class="panel-body">
+
+        <p>Import emulator from a Docker container registry.</p>
+
+        <div >
+            <div class="panel panel-default">
+                <div class="panel-heading">{{'SW_NEW_CONTAINER_DOCKER' | translate}}</div>
+                <div class="panel-body">
+                    <div class="tekst">
+                        Name:
+                        <input type="text" placeholder="eaas/qemu-eaas"
+                               class="form-control" ng-model="importEmulatorCtrl.imageUrl"/>
+                    </div>
+                    <div class="tekst">
+                    Tag (optional):
+                    <input type="text" placeholder="latest"
+                           class="form-control" ng-model="importEmulatorCtrl.tag"/>
+
+                    </div>
+                    <div class="tekst">
+                    {{'ADVANCED_IMPORT_EMULATOR_ALIAS' | translate}} (optional):
+                        <input type="text" placeholder="latest"
+                               class="form-control" ng-model="importEmulatorCtrl.alias"/>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+    </div>
+</div>
+
+
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="$close()">{{'SETTINGS_DLG_CLOSE_DLG'
+        | translate}}</button>
+    <button type="button" class="btn btn-primary" ng-click="importEmulatorCtrl.doImport()">{{'ADVANCED_IMPORT_EMULATOR' | translate}}</button>
+</div>

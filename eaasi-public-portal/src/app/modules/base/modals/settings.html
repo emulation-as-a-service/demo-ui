@@ -1,0 +1,30 @@
+<div class="modal-header">
+    <h3 class="modal-title">{{'SETTINGS_DLG_TITLE' | translate}}</h3>
+</div>
+
+<div class="modal-body">
+    <button class="btn btn-default btn-lg btn-block" type="button"
+            ng-click="settingsDialogCtrl.importEnvs()">{{'SETTINGS_DLG_IMPORT_ENVS'|
+        translate}}</button>
+    <button class="btn btn-default btn-lg btn-block" type="button"
+            ng-click="settingsDialogCtrl.showSetKeyboardLayoutDialog()">{{'SETTINGS_DLG_SET_KEYBOARD_LAYOUT'|
+        translate}}</button>
+    <!--<button class="btn btn-default btn-lg btn-block" type="button"-->
+            <!--ng-click="settingsDialogCtrl.syncObjects()">{{'SETTINGS_DLG_SYNC_OBJECTS'|-->
+        <!--translate}}</button>-->
+    <button class="btn btn-default btn-lg btn-block" type="button"
+            ng-click="settingsDialogCtrl.syncImages()">{{'SETTINGS_DLG_SYNC_IMAGES'|
+        translate}}</button>
+
+    <!--
+    <a href="{{settingsDialogCtrl.serverLogUrl}}">Server Log</a>
+    <hr>
+    <a href="{{settingsDialogCtrl.usageLogUrl}}">Usage Log</a>
+    -->
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="$close()">{{'SETTINGS_DLG_CLOSE_DLG'
+        | translate}}</button>
+    <button type="button" class="btn btn-primary" ng-show="runtime==2;" ng-click="settingsDialogCtrl.import()">{{'ADVANCED_IMPORT_EMULATOR' | translate}}</button>
+</div>

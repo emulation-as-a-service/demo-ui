@@ -1,0 +1,20 @@
+<div class="modal-header">
+    <h3 class="modal-title">{{'DEFAULTENV_L' | translate}}</h3>
+</div>
+
+<div class="modal-body">
+
+    <b>{{'DEFAULTENV_ID_L' | translate}}</b>: {{setDefaultEnvDialogCtrl.osLabel}}
+
+    <ui-select id="chooseCustomEnvSelect" ng-model="setDefaultEnvDialogCtrl.defaultEnv" theme="bootstrap" title="{{'DEFAULTENV_SEARCH' | translate}}" required>
+        <ui-select-match placeholder="{{'DEFAULTENV_SEARCH' | translate}}">{{$select.selected.title}}</ui-select-match>
+        <ui-select-choices repeat="defaultEnv in setDefaultEnvDialogCtrl.environments | filter: $select.search">
+            <span ng-bind-html="defaultEnv.title | highlight: $select.search"></span>
+        </ui-select-choices>
+    </ui-select>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="setDefaultEnvDialogCtrl.setEnvironment()">{{'DEFAULTENV_SAVE' | translate}}</button>
+    <button class="btn btn-default" type="button" ng-click="$close()">{{'DEFAULTENV_CANCEL' | translate}}</button>
+</div>

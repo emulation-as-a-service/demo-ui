@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="" ng-app="emilAdminUI">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>EaaS Demo UI</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <link rel="icon" href="img/logo.png" />
+        <base href="<%= htmlWebpackPlugin.options.baseUrl %>">
+    </head>
+    <body>
+        <noscript><p class="browserproblem">Sie haben JavaScript in ihrem Browser deaktiviert. Bitte aktivieren sie JavaScript, um diese Seite in vollem Umfang nutzen zu können.</p></noscript>
+        <!--[if lt IE 8]>
+            <p class="browserproblem">Sie benutzen einen veralteten Browser. Bitte wechseln sie auf einen neueren Browser, um diese Seite in vollem Umfang nutzen zu können.</p>
+        <![endif]-->
+        
+        <!-- views will be injected here -->
+        <div ui-view></div>
+        
+        <!-- growl directive -->
+        <div growl></div>
+    </body>
+</html>
