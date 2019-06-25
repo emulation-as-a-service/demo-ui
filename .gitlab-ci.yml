@@ -10,6 +10,7 @@ build:
     paths:
     - eaas-frontend-admin/dist/
     - landing-page/dist/
+    - eaasi-public-portal/dist/
 
 build_multi_user_admin_ui:
   script:
@@ -25,6 +26,7 @@ build_multi_user_admin_ui:
     paths:
     - eaas-frontend-admin/dist/
     - landing-page/dist/
+    - eaasi-public-portal
 
 build-citar:
  stage: build
