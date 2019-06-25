@@ -9,7 +9,7 @@
                 class="btn btn-outline-dark" ng-click="editEnvCtrl.editMode = true;">Edit</button>
 
         <button ng-show="editEnvCtrl.env.archive != 'remote'" class="btn btn-outline-dark"
-                type="button" ui-sref="admin.emulator({envId: editEnvCtrl.env.envId})">{{'CHOOSE_ENV_RUN' | translate}}</button>
+                type="button" ui-sref="admin.emulator({envId: editEnvCtrl.env.envId, objectId: editEnvCtrl.env.objectId, objectArchive: editEnvCtrl.env.objectArchive})">{{'CHOOSE_ENV_RUN' | translate}}</button>
 
         <button ng-show="editEnvCtrl.env.archive != 'remote'" class="btn btn-outline-dark"
                 type="button" ng-click="editEnvCtrl.addSoftware(editEnvCtrl.env.envId)">{{'CHOOSE_ENV_ADDSW' | translate}}</button>

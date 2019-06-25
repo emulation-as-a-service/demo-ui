@@ -20,7 +20,7 @@
     </div>  </td>
     </tr>
     <tr ng-repeat="row in endpoints">
-        <td>{{row}} <button ng-click="metadataCtrl.sync(row)">Synchronize</button></td>
+        <td>{{row}}</td><td> <button ng-click="metadataCtrl.sync(row)">Synchronize</button> <button ng-click="metadataCtrl._delete(row)">Delete</button></td>
     </tr>
     </tbody>
 

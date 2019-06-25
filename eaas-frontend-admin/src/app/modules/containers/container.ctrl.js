@@ -33,7 +33,32 @@ module.exports = ['$rootScope', '$scope', '$sce', '$state','$http', '$stateParam
         var params = {};
 
         vm.downloadLink = function () {
-            window.open(window.eaasClient.getContainerResultUrl());
+            const unloadBackup = eaasClient.deleteOnUnload;
+            eaasClient.deleteOnUnload = false;
+            vm.isContOutDownloading = true;
+
+            let _header = localStorage.getItem('id_token') ? {"Authorization": "Bearer " + localStorage.getItem('id_token')} : {};
+
+            async function f() {
+                const containerOutput = await fetch(window.eaasClient.getContainerResultUrl(), {
+                    headers: _header,
+                });
+                const containerOutputBlob = await containerOutput.blob();
+                // window.open(URL.createObjectURL(containerOutputBlob), '_blank');
+
+                var downloadLink = document.createElement("a");
+                downloadLink.href = URL.createObjectURL(containerOutputBlob);
+                downloadLink.download = "output-data.tar.gz";
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+            };
+            f().then(function () {
+                vm.isContOutDownloading = false;
+                $scope.$apply();
+            });
+
+            eaasClient.deleteOnUnload = unloadBackup;
         };
 
         var confirmStartFn = function (inputs) {

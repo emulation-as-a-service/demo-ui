@@ -21,6 +21,19 @@ module.exports = ['$scope' , '$state', '$stateParams', 'oaiHarvesterList', '$tra
         });
     }
 
+    vm._delete = function(harvester)
+    {
+        console.log("delete " + harvester);
+
+        if (!window.confirm(`Please confirm deleting this harvester config?`))
+            return false;
+
+        $http.delete(localConfig.data.oaipmhServiceBaseUrl + "harvesters/" +  harvester).then(function(response) {
+            growl.success("deleted harvester " + harvester);
+            $state.go('admin.metadata', {}, {reload: true});
+        });
+    }
+
     vm.addEndpoint = function()
     {
         $uibModal.open({
@@ -37,7 +50,7 @@ module.exports = ['$scope' , '$state', '$stateParams', 'oaiHarvesterList', '$tra
                     data.streams = [];
                     _this.providers.forEach(function(p) {
                         // we only support images and environments
-                        if(p === 'images' || p === 'environments' ) {
+                        if(p === 'images' || p === 'environments' || p == 'software' ) {
                             var stream = {};
                             stream.source = {};
                             stream.source.url = _this.host + "/" + p;
