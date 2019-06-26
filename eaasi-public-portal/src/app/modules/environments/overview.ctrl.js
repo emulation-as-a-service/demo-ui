@@ -7,7 +7,7 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'lo
         vm.config = localConfig.data;
 
         vm.landingPage = localConfig.data.landingPage;
-        vm.viewArchive = 0;
+        vm.viewArchive = 1;
 
         vm.updateTable = function(index)
         {
