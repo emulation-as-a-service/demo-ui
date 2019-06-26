@@ -29,7 +29,8 @@ module.exports = ['$scope' , '$state', '$stateParams', 'oaiHarvesterList', '$tra
                  backdrop: 'static',
                  template: require('./modals/wait.html')
             });
-            $http.post(localConfig.data.oaipmhServiceBaseUrl + "harvesters/" +  harvester"?from=" + new Date(from).toISOString()).then(function(response) {
+            var date = new Date(from).toISOString();
+            $http.post(localConfig.data.oaipmhServiceBaseUrl + "harvesters/" +  harvester + "?from=" + date).then(function(response) {
                 modal.close();
             },
             function(data) {
