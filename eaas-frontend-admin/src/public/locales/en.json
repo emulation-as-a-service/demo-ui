@@ -204,7 +204,7 @@
   "EDITENV_DATE_CONTEXT": "Date",
   "EDITENV_RELMOUSE": "Relative Mouse (Pointerlock)",
   "EDITENV_PRINTING" : "Environment can print",
-  "EDITENV_SHUTDOWNBYOS": "Emulator can be shut down by guest OS",
+  "EDITENV_SHUTDOWNBYOS": "Requires clean shutdown",
   "EDITENV_OS_PH" : "Operating System ID",
   "EDITENV_USERSORTTAG" : "User tag",
   "EDITENV_TAG_PH" : "User tag",
