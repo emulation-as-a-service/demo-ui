@@ -55,6 +55,7 @@ emilAdminUIHelpersModule.service('REST_URLS', function () {
 
     this.buildVersionUrl = "Emil/buildInfo";
     this.getUserInfo = "Emil/userInfo";
+    this.exportMetadata = "Emil/exportMetadata";
 
     // Software archive api
     this.getSoftwarePackageDescriptions = "EmilSoftwareData/getSoftwarePackageDescriptions";

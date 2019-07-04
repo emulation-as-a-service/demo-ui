@@ -14,6 +14,7 @@ module.exports = ['$scope' , '$state', '$stateParams', 'oaiHarvesterList', '$tra
         });
         $http.post(localConfig.data.oaipmhServiceBaseUrl + "harvesters/" +  harvester).then(function(response) {
             modal.close();
+            $state.go('admin.standard-envs-overview', {}, {reload: true});
         },
         function(data) {
             modal.close();
@@ -32,6 +33,7 @@ module.exports = ['$scope' , '$state', '$stateParams', 'oaiHarvesterList', '$tra
             var date = new Date(from).toISOString();
             $http.post(localConfig.data.oaipmhServiceBaseUrl + "harvesters/" +  harvester + "?from=" + date).then(function(response) {
                 modal.close();
+                $state.go('admin.standard-envs-overview', {}, {reload: true});
             },
             function(data) {
                 modal.close();

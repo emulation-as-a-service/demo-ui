@@ -586,7 +586,7 @@ function($stateProvider,
             }
         })
         .state('admin.standard-envs-overview', {
-            url: "/standard-envs-overview",
+            url: "/environments",
             params: {
                 showObjects: false,
                 showContainers: false

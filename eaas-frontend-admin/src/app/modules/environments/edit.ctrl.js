@@ -191,7 +191,7 @@ module.exports = ["$http", "$rootScope", "$scope", "$state", "$stateParams", "En
                    } else {
                        growl.error(response.data.message, {title: 'Error ' + response.data.status});
                    }
-                   $state.go('admin.edit-env', {envId: $stateParams.envId, objEnv: vm.isObjectEnv}, {reload: true});
+                   $state.go('admin.edit-env', {envId: response.data.id, objEnv: vm.isObjectEnv}, {reload: true});
                });
            };
 

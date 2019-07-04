@@ -3,6 +3,7 @@ module.exports = ['$rootScope', '$scope', '$window', '$state', '$http', '$uibMod
                         function ($rootScope, $scope, $window, $state, $http, $uibModal, $stateParams, growl, localConfig, Objects,
                         $timeout, $translate, chosenEnv, Environments, helperFunctions, REST_URLS) {
     var vm = this;
+    vm.envId = $stateParams.envId;
     vm.config = localConfig.data;
     vm.type = $stateParams.type;
     vm.emulator = $rootScope.emulator;
@@ -258,7 +259,7 @@ module.exports = ['$rootScope', '$scope', '$window', '$state', '$http', '$uibMod
 
     vm.switchEmulators = function (component)
     {
-        $stateParams.envId = component.env.data.environment;
+        vm.envId = component.env.data.environment;
         var eaasClient = window.eaasClient;
         let loadingElement = $("#emulator-loading-connections");
         $("#emulator-container").hide();
