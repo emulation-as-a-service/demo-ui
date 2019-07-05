@@ -67,12 +67,7 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'lo
                                 "text-align": "center",
                                 border: "1.0px solid #FF0000 !important"
                             }
-                    },
-                    cellRenderer: latestEditorBtnRenderer
-                },
-                {
-                    headerName: "", field: "edit", cellRenderer: BtnRenderer, suppressSorting: true,
-                    suppressMenu: true
+                    }
                 }
             ];
         };

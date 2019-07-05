@@ -10,12 +10,12 @@
                     {{errorCtrl.errorMsg.title}}
                 </div>
                 
-                <pre>{{errorCtrl.errorMsg.message | json}}</pre>
+                <p>Unfortunately an error interrupted the emulation session. Please return to the overview page and start over. If this error reappears please report.</p>
             </div>
         </div>
         
         <div style="text-align: right;">
-            <button type="submit" class="btn btn-primary" ui-sref="admin.dashboard">{{'ERROR_RETURN_BTN' | translate}}</button>
+            <button type="submit" class="btn btn-primary" ui-sref="admin.welcome">{{'ERROR_RETURN_BTN' | translate}}</button>
         </div>
     </div>
 </div>

@@ -1,16 +1,18 @@
-<!--
-<h2 class="m-t-0">{{'EDITENV_L' | translate}}</h2>
--->
+
+<h3 class="m-t-0">Environment Details</h3>
+
 <form id="editEnvForm" name="editEnvCtrl.editEnvForm" ng-submit="editEnvCtrl.saveEdit()">
 
     <div style="text-align: right;">
 
+        <!--
         <button type="button" ng-if="!editEnvCtrl.editMode && editEnvCtrl.env.archive != 'remote'"
                 class="btn btn-outline-dark" ng-click="editEnvCtrl.editMode = true;">Edit</button>
-
+        -->
         <button ng-show="editEnvCtrl.env.archive != 'remote'" class="btn btn-outline-dark"
                 type="button" ui-sref="admin.emulator({envId: editEnvCtrl.env.envId, objectId: editEnvCtrl.env.objectId, objectArchive: editEnvCtrl.env.objectArchive})">{{'CHOOSE_ENV_RUN' | translate}}</button>
 
+        <!--
         <button ng-show="editEnvCtrl.env.archive != 'remote'" class="btn btn-outline-dark"
                 type="button" ng-click="editEnvCtrl.addSoftware(editEnvCtrl.env.envId)">{{'CHOOSE_ENV_ADDSW' | translate}}</button>
         <button class="btn btn-outline-dark" type="button"
@@ -21,11 +23,15 @@
                 ng-click="editEnvCtrl.replicateImage(editEnvCtrl.env.envId, 'import')"
                 ng-if="editEnvCtrl.env.archive == 'remote'">Replicate
         </button>
+        -->
     </div>
     <hr>
+
+    <!--
     <div>
         <label>{{'EDITENV_ID' | translate}}:</label> {{editEnvCtrl.env.envId}}
     </div>
+    -->
 
     <div>
         <label> Name: </label> <span ng-if="!editEnvCtrl.editMode">{{editEnvCtrl.envTitle}}</span>
@@ -41,6 +47,7 @@
         <input type="text" ng-if="editEnvCtrl.editMode" class="form-control" ng-model="editEnvCtrl.author">
     </div>
 
+    <!--
     <div>
         <label>Handle:</label> <span id="osl" ng-if="editEnvCtrl.handle">{{editEnvCtrl.handle}}</span>
        <b> ---  <a
@@ -49,6 +56,7 @@
               style="cursor: pointer;">{{'EDITEN_CREATE_HANDLE' | translate}}</a>
        </b>
     </div>
+    -->
 
     <uib-accordion close-others="false">
         <div uib-accordion-group class="panel-default" is-open="status.openDescr">
@@ -129,13 +137,14 @@
             <br>
         </div>
 
+        <!--
         <div uib-accordion-group class="panel-default" is-open="status.openDrives">
             <uib-accordion-heading>
                 Configured Drives
                 <i class="pull-right glyphicon"
                    ng-class="{'glyphicon-chevron-down': status.openDrives, 'glyphicon-chevron-right': !status.openDrives}"></i>
             </uib-accordion-heading>
-            <!-- Drives go here -->
+
 
             <div style="text-align: right; margin-bottom: 15px;">
                 <div style="display: inline-block;">
@@ -156,7 +165,9 @@
                 </li>
             </ul>
         </div>
+        -->
 
+        <!--
         <div uib-accordion-group class="panel-default" is-open="status.openUI">
             <uib-accordion-heading>
                 UI Options
@@ -197,7 +208,8 @@
                 <label>{{'EDITENV_SHUTDOWNBYOS' | translate}}</label>
             </div>
         </div>
-
+        -->
+        <!--
         <div uib-accordion-group class="panel-default" is-open="status.openNet">
             <uib-accordion-heading>
                 Networking
@@ -261,6 +273,7 @@
                 </p>
             </div>
         </div>
+        -->
     </uib-accordion>
 
     <!--
@@ -301,12 +314,13 @@
                 <ng-bind-html
                     ng-bind-html="revision.text">
                 </ng-bind-html>
+                <!--
                 <a href="#"
                    ng-click="editEnvCtrl.fork(revision.id)"> [ fork ] </a>
 
                 <a ng-if="editEnvCtrl.env.archive === 'default' && revision.archive === 'default'" style="cursor: pointer;"
                    ng-click="editEnvCtrl.revert(editEnvCtrl.env.envId, revision.id)"> [ revert to this version ] </a>
-
+                -->
             </li>
         </ul>
     </div>
@@ -329,16 +343,19 @@
 
 
     <div>
+        <!--
         <span style="text-align: left;">
              <button class="btn btn-danger" type="button" ng-click="editEnvCtrl.deleteEnvironment(editEnvCtrl.env.envId)">Delete Environment</button>
         </span>
+        -->
         <span style="float: right;">
+            <!--
             <button class="btn btn-default" type="button"
                     ui-sref="admin.edit-env({envId: editEnvCtrl.env.envId, objEnv: editEnvCtrl.isObjectEnv})" ui-sref-opts="{reload: true}">
                     Reset</button>
 
             <button type="submit" ng-if="editEnvCtrl.env.archive != 'remote'" class="btn btn-primary">{{'EDITENV_SAVE'| translate}}</button>
-
+             -->
             <button type="button" class="btn btn-primary"
                     ui-sref="admin.standard-envs-overview({showObjects: editEnvCtrl.isObjectEnv})">{{'ERROR_RETURN_BTN' | translate}}</button>
         </span>

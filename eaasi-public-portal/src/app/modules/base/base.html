@@ -1,7 +1,7 @@
 <div id="content" class="main-container container">
 
     <div class="row">
-        <div class="col-xs-12"><div id="header"><img height="70" style="margin-top: 10px; margin-bottom: 10px;" src="img/logo.png" /></div></div>
+        <div class="col-xs-12"><div id="header"><a href="/"><img height="70" style="margin-top: 10px; margin-bottom: 10px;" src="img/logo.png" /></a></div></div>
     </div>
     <div class="row">
         <div class="col-sm-3">
@@ -22,7 +22,9 @@
                             <!-- <li><a ng-click="baseCtrl.open()" href="">{{'BASE_MENU_HELP'| translate}}</a></li>  -->
                             <li><a ui-sref="admin.standard-envs-overview({showObjects: false, showContainers: false})" data-ui-sref-opts="{reload: true}" href="">{{'BASE_MENU_ENVS'| translate}}</a></li>
 
+                            <!--
                             <li ng-if="baseCtrl.config.features.software"><a ui-sref="admin.sw-overview" href="">{{'BASE_MENU_SW'| translate}}</a></li>
+                            -->
 
                             <!--
                             <li ng-if="baseCtrl.config.features.objects"><a ui-sref="admin.object-overview" href="">{{'BASE_MENU_OBJECTS'| translate}}</a></li>
@@ -47,6 +49,8 @@
                             <li><a ng-if="baseCtrl.config.features.emulators" ui-sref="admin.emulators" href="">{{'BASE_EMULATORS' | translate }}</a></li>
                             <li ng-if="baseCtrl.config.helpUrl"><a href="{{baseCtrl.config.helpUrl}}" target="_blank">{{'BASE_MENU_HELP' | translate}}</a></li>
                             <li ng-if="baseCtrl.authEnabled"><a href="" ng-click="baseCtrl.logout()">Logout</a> </li>
+                            <li><a href="">Feedback</a></li>
+                            <li><a href="mailto:eaasi@yale.edu">Contact</a></li>
                         </ul>
                     </div>
                 </div>

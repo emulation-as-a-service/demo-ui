@@ -50,7 +50,7 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'lo
             });
         };
 
-        vm.pageSize = 10;
+        vm.pageSize = "10";
         if($stateParams.showContainers)
              vm.view = 2;
         else if($stateParams.showObjects)
@@ -330,17 +330,17 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'lo
             columnDefs = [
                 {headerName: '', width: 41, checkboxSelection: true, suppressSorting: true,
                     suppressMenu: true},
-                {headerName: "Name", field: "name", width: 400},
-                {headerName: "ID", field: "id", width: 100},
-                {headerName: "Archive", field: "archive", hide: true}
+                {headerName: "Name", field: "name", width: 600},
+                {headerName: "ID", field: "id", width: 100, hide: true}
+
             ];
 
-
-            columnDefs.push({headerName: "Owner", field: "owner", width: 100},);
+            /*
+            columnDefs.push({headerName: "Owner", field: "owner", width: 100, hide: true});
             if (vm.view == 1) {
                 columnDefs.push({headerName: "ObjectID", field: "objectId"});
             }
-
+            */
 
             columnDefs.push({
                 headerName: "Actions", field: "actions", cellRenderer: actionsCellRendererFunc, suppressSorting: true,

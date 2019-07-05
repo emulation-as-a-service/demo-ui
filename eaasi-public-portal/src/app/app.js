@@ -404,7 +404,7 @@ function($stateProvider,
     });
 
     // For any unmatched url
-    $urlRouterProvider.otherwise("/admin/dashboard");
+    $urlRouterProvider.otherwise("/portal/welcome");
 
     // Now set up the states
     $stateProvider
@@ -424,18 +424,10 @@ function($stateProvider,
             }],
             controllerAs: "errorCtrl"
         })
-        .state('login', {
-            url: "/login",
-            templateUrl: "partials/login.html",
-            controller: function(authService) {
-                var vm = this;
-                vm.authService = authService;
-            },
-            controllerAs: "loginCtrl"
-        })
+
         .state('admin', {
             abstract: true,
-            url: "/admin",
+            url: "/portal",
             template: require('./modules/base/base.html'),
             resolve: {
 
@@ -455,32 +447,14 @@ function($stateProvider,
             },
             controller: "BaseController as baseCtrl"
         })
-        .state('admin.dashboard', {
-            url: "/dashboard",
+        .state('admin.welcome', {
+            url: "/welcome",
             resolve: {
-                clusters: function($http, localConfig) {
-                    return $http.get(localConfig.data.dashboardClusterAPIBaseURL, {
-                        headers: {
-                            'X-Admin-Access-Token': localConfig.data.dashboardAccessToken,
-                            'Cache-Control': 'no-cache'
-                        }
-                    });
-                },
-                allClusterDetails: function ($q, $http, localConfig, clusters) {
-                    return $q.all(clusters.data.map(function (cluster) {
-                        return $http.get(localConfig.data.dashboardClusterAPIBaseURL + cluster, {
-                                headers: {
-                                    'X-Admin-Access-Token': localConfig.data.dashboardAccessToken,
-                                    'Cache-Control': 'no-cache'
-                            }
-                        })
-                    }));
-                }
+
             },
             views: {
                 'wizard': {
-                    template: require('./modules/dashboard/dashboard.html'),
-                    controller: "DashboardController as dashboardCtrl"
+                    template: require('./modules/portal/welcome.html')
                 }
             }
         })
@@ -586,7 +560,7 @@ function($stateProvider,
             }
         })
         .state('admin.standard-envs-overview', {
-            url: "/standard-envs-overview",
+            url: "/environments",
             params: {
                 showObjects: false,
                 showContainers: false
@@ -615,7 +589,7 @@ function($stateProvider,
             }
         })
         .state('admin.edit-env', {
-            url: "/edit-env",
+            url: "/environment-details",
             params: {
                 envId: null,
                 objEnv: false
