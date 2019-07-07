@@ -5,7 +5,7 @@
 <div class="modal-body">
     <ui-select id="chooseCustomEnvSelect" ng-model="addEnvDialogCtrl.newEnv" theme="bootstrap" title="{{'ADDENV_SEARCH' | translate}}" required>
         <ui-select-match placeholder="{{'ADDENV_SEARCH' | translate}}">{{$select.selected.title}}</ui-select-match>
-        <ui-select-choices repeat="env in addEnvDialogCtrl.environments | filter: $select.search">
+        <ui-select-choices repeat="env in addEnvDialogCtrl.environments | filter: $select.search | filter: { archive: '!remote'}">
             <span ng-bind-html="env.title | highlight: $select.search"></span>
         </ui-select-choices>
     </ui-select>
