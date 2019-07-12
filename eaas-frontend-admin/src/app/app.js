@@ -42,8 +42,6 @@ import "ag-grid-community/dist/styles/ag-theme-fresh.css";
 
 import networkingTemplate from './modules/environments/templates/edit-networking-template.html';
 
-
-
 agGrid.initialiseAgGridWithAngular1(angular);
 
 /*
@@ -99,6 +97,7 @@ import 'angular-wizard/dist/angular-wizard.css';
 import '../../../eaas-client/guacamole/guacamole.css';
 import '../../../eaas-client/eaas-client.css';
 import './app.css';
+
 
 export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize', 'ngAnimate', 'ngCookies', 'ngResource', 'ui.router', 'ui.bootstrap',
                                    'ui.mask', 'ui.select', 'angular-growl', 'smart-table', 'ng-sortable', 'pascalprecht.translate',
