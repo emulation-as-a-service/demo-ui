@@ -1,21 +1,34 @@
 
 <h2 class="m-t-0">{{'CHOOSE_ENV_L' | translate}}</h2>
+<div class="separator-wrapper">
 
-<uib-tabset active="standardEnvsOverviewCtrl.view">
-    <uib-tab index="0" ng-click="standardEnvsOverviewCtrl.updateTable(0)" heading="{{'CHOOSE_BASEENV_L' | translate}}">
+        <uib-tabset active="standardEnvsOverviewCtrl.view">
+            <uib-tab index="0" ng-click="standardEnvsOverviewCtrl.updateTable(0)"
+                     heading="{{'CHOOSE_BASEENV_L' | translate}}">
 
-    </uib-tab>
-    <uib-tab index="1" heading="{{'CHOOSE_OBJENV_L' | translate}}" ng-click="standardEnvsOverviewCtrl.updateTable(1)" ng-if="standardEnvsOverviewCtrl.config.features.objectEnvironments" >
-    </uib-tab>
+            </uib-tab>
+            <uib-tab index="1" heading="{{'CHOOSE_OBJENV_L' | translate}}"
+                     ng-click="standardEnvsOverviewCtrl.updateTable(1)"
+                     ng-if="standardEnvsOverviewCtrl.config.features.objectEnvironments">
+            </uib-tab>
 
-    <uib-tab index="2" ng-click="standardEnvsOverviewCtrl.updateTable(2)" heading="Containers" ng-if="standardEnvsOverviewCtrl.config.features.containers">
-    </uib-tab>
+            <uib-tab index="2" ng-click="standardEnvsOverviewCtrl.updateTable(2)" heading="Containers"
+                     ng-if="standardEnvsOverviewCtrl.config.features.containers">
+            </uib-tab>
 
-    <uib-tab index="3" ng-click="standardEnvsOverviewCtrl.updateTable(3)" heading="Container Runtimes">
-    </uib-tab>
+            <uib-tab index="3" ng-click="standardEnvsOverviewCtrl.updateTable(3)" heading="Container Runtimes"
+                     ng-if="standardEnvsOverviewCtrl.config.features.containers">
+            </uib-tab>
 
-</uib-tabset>
-<p></p>
+            <uib-tab index="4" ng-click="standardEnvsOverviewCtrl.updateTable(4)" heading="Networks"
+                     ng-if="standardEnvsOverviewCtrl.config.features.network">
+            </uib-tab>
+        </uib-tabset>
+        <p></p>
+    <div class="separator-right" ng-if="standardEnvsOverviewCtrl.view == 4">
+        <hero-detail></hero-detail>
+    </div>
+</div>
 <uib-tabset ng-if="standardEnvsOverviewCtrl.view != 1" active="standardEnvsOverviewCtrl.viewArchive" type="pills">
     <uib-tab index="0" heading="Private" ng-click="standardEnvsOverviewCtrl.updateTable(standardEnvsOverviewCtrl.view)"></uib-tab>
     <uib-tab index="1" heading="Public" ng-click="standardEnvsOverviewCtrl.updateTable(standardEnvsOverviewCtrl.view)"></uib-tab>

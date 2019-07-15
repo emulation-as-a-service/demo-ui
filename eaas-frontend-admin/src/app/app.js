@@ -39,6 +39,11 @@ import "ag-grid-community/dist/styles/ag-theme-blue.css";
 import "ag-grid-community/dist/styles/ag-theme-bootstrap.css";
 import "ag-grid-community/dist/styles/ag-theme-material.css";
 import "ag-grid-community/dist/styles/ag-theme-fresh.css";
+import { HeroDetailComponent } from '../app2/components/network-environments/network-env.component.ts';
+
+/* . . . */
+
+import { downgradeComponent } from '@angular/upgrade/static';
 
 import networkingTemplate from './modules/environments/templates/edit-networking-template.html';
 
@@ -99,6 +104,8 @@ import '../../../eaas-client/eaas-client.css';
 import './app.css';
 
 
+
+
 export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize', 'ngAnimate', 'ngCookies', 'ngResource', 'ui.router', 'ui.bootstrap',
                                    'ui.mask', 'ui.select', 'angular-growl', 'smart-table', 'ng-sortable', 'pascalprecht.translate',
                                    'textAngular', 'mgo-angular-wizard', 'ui.bootstrap.datetimepicker', 'chart.js', 'emilAdminUI.helpers',
@@ -112,7 +119,10 @@ export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize'
         ret.data = JSON.parse(xhr.responseText);
         return ret;
     })())
-
+    .directive(
+        'heroDetail',
+        downgradeComponent({component: HeroDetailComponent})
+    )
     .component('inputList', {
         templateUrl: 'partials/components/inputList.html',
         bindings: {

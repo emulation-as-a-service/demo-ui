@@ -22,6 +22,8 @@
   "CHOOSE_ENV_RUN_MODIFIED" : "Run modified",
   "CHOOSE_ACTION" : "Choose action",
   "CHOOSE_DELETE_SELECTED" : "Delete selected",
+  "ADD_NETWORK_ENVIRONMENT": "Create Network",
+
 
   "ERROR_RETURN_BTN" : "Back to overview",
 

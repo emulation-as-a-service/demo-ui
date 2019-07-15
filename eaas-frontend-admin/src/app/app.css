@@ -468,6 +468,17 @@ button:focus#printerbutton    {
     color: whitesmoke;
 }
 
+.separator-wrapper{
+ !important overflow: hidden
+}
+
+.separator-left {
+    float:left;
+}
+.separator-right{
+    float: right
+}
+
 pre#json-renderer {
     border: 1px solid #aaa;
     padding: 0.5em 1.5em;

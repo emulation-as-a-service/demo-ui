@@ -21,6 +21,8 @@
   "CHOOSE_ENV_RUN_MODIFIED" : "[Start modifiziert]",
   "CHOOSE_ACTION" : "Aktion wählen",
   "CHOOSE_DELETE_SELECTED" : "Auswahl löschen",
+  "ADD_NETWORK_ENVIRONMENT": "Netzwerk erstellen",
+
 
   "ERROR_RETURN_BTN" : "Zurück zur Übersicht",
 
