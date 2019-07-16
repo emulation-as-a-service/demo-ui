@@ -44,6 +44,17 @@ module.exports = ['$rootScope', '$scope', '$window', '$state', '$http', '$uibMod
         });
     }
 
+    $rootScope.$on('emulatorStart', function(event, args) {
+        window.eaasClient.eventSource.addEventListener('session-will-expire', function(e) {
+            var obj = JSON.parse(e.data);
+            growl.warning(obj.message);
+        });
+
+        window.eaasClient.eventSource.addEventListener('session-expired', function(e) {
+            var obj = JSON.parse(e.data);
+            growl.error(obj.message);
+        });
+    });
 
     $scope.screenshot = function () {
         vm.screenshotModal = $uibModal.open({
