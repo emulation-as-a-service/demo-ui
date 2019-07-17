@@ -47,12 +47,12 @@ module.exports = ['$rootScope', '$scope', '$window', '$state', '$http', '$uibMod
     $rootScope.$on('emulatorStart', function(event, args) {
         window.eaasClient.eventSource.addEventListener('session-will-expire', function(e) {
             var obj = JSON.parse(e.data);
-            growl.warning(obj.message);
+            growl.warning(obj.message, {ttl: 15000});
         });
 
         window.eaasClient.eventSource.addEventListener('session-expired', function(e) {
             var obj = JSON.parse(e.data);
-            growl.error(obj.message);
+            growl.error(obj.message, {ttl: 2 * 60000});
         });
     });
 
