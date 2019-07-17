@@ -53,6 +53,13 @@ module.exports = ['$rootScope', '$scope', '$window', '$state', '$http', '$uibMod
         window.eaasClient.eventSource.addEventListener('session-expired', function(e) {
             var obj = JSON.parse(e.data);
             growl.error(obj.message, {ttl: 2 * 60000});
+
+            // Disable certain callback
+            window.eaasClient.onError = null;
+            window.onbeforeunload = null;
+
+            // Redirect to home-page
+            $state.go('admin.standard-envs-overview', {}, {reload: true});
         });
     });
 
