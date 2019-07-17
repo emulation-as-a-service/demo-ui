@@ -52,7 +52,7 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$http', '$sce', '$state'
 
             let params = {};
             if (chosenEnv) {
-                if (chosenEnv.connectEnvs)
+                if (true || chosenEnv.connectEnvs)
                     params.enableNetwork = true;
                     
                 if (chosenEnv.localServerMode) {
