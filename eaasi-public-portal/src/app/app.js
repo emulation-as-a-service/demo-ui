@@ -197,7 +197,6 @@ export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize'
         localStorage.setItem('id_token', localConfig.data.id_token);
     }
 
-
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
         if (!$rootScope.chk.transitionEnable) {
             event.preventDefault();
@@ -331,8 +330,8 @@ function($stateProvider,
     });
 
     // automatically choose best language for user
-    $translateProvider.determinePreferredLanguage();
-    // $translateProvider.preferredLanguage('en');
+    // $translateProvider.determinePreferredLanguage();
+    $translateProvider.preferredLanguage('en');
 
     var httpResponseErrorModal = null;
 
