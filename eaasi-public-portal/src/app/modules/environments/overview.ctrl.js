@@ -330,7 +330,7 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'lo
             columnDefs = [
                 {headerName: '', width: 41, checkboxSelection: true, suppressSorting: true,
                     suppressMenu: true},
-                {headerName: "Name", field: "name", width: 600},
+                {headerName: "Name", field: "name", width: 600, sort: "asc"},
                 {headerName: "ID", field: "id", width: 100, hide: true}
 
             ];
