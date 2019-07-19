@@ -1,6 +1,5 @@
 
 <h2 class="m-t-0">{{'CHOOSE_ENV_L' | translate}}</h2>
-<div class="separator-wrapper">
 
         <uib-tabset active="standardEnvsOverviewCtrl.view">
             <uib-tab index="0" ng-click="standardEnvsOverviewCtrl.updateTable(0)"
@@ -24,11 +23,16 @@
                      ng-if="standardEnvsOverviewCtrl.config.features.network">
             </uib-tab>
         </uib-tabset>
-        <p></p>
-    <div class="separator-right" ng-if="standardEnvsOverviewCtrl.view == 4">
-        <hero-detail></hero-detail>
-    </div>
+<p></p>
+<div class="separator-right" ng-if="standardEnvsOverviewCtrl.view == 4">
+    <button class="btn btn-default" ng-if="standardEnvsOverviewCtrl.view == 4"
+            ui-sref="admin.create-network-environment({environments: standardEnvsOverviewCtrl.envs})">
+        {{ 'ADD_NETWORK_ENVIRONMENT' | translate }}
+    </button>
 </div>
+
+
+
 <uib-tabset ng-if="standardEnvsOverviewCtrl.view != 1" active="standardEnvsOverviewCtrl.viewArchive" type="pills">
     <uib-tab index="0" heading="Private" ng-click="standardEnvsOverviewCtrl.updateTable(standardEnvsOverviewCtrl.view)"></uib-tab>
     <uib-tab index="1" heading="Public" ng-click="standardEnvsOverviewCtrl.updateTable(standardEnvsOverviewCtrl.view)"></uib-tab>

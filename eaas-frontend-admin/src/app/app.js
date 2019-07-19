@@ -39,7 +39,7 @@ import "ag-grid-community/dist/styles/ag-theme-blue.css";
 import "ag-grid-community/dist/styles/ag-theme-bootstrap.css";
 import "ag-grid-community/dist/styles/ag-theme-material.css";
 import "ag-grid-community/dist/styles/ag-theme-fresh.css";
-import { HeroDetailComponent } from '../app2/components/network-environments/network-env.component.ts';
+import { AddNetworkComponent } from '../app2/components/network-environments/Network-env.component.ts';
 
 /* . . . */
 
@@ -101,7 +101,7 @@ import 'font-awesome/css/font-awesome.css';
 import 'angular-wizard/dist/angular-wizard.css';
 import '../../../eaas-client/guacamole/guacamole.css';
 import '../../../eaas-client/eaas-client.css';
-import './app.css';
+import './app.scss';
 
 
 
@@ -120,8 +120,8 @@ export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize'
         return ret;
     })())
     .directive(
-        'heroDetail',
-        downgradeComponent({component: HeroDetailComponent})
+        'addNetworkEnvironment',
+        downgradeComponent({component: AddNetworkComponent})
     )
     .component('inputList', {
         templateUrl: 'partials/components/inputList.html',
@@ -814,7 +814,22 @@ function($stateProvider,
                     controller: "EmulatorsController as emusCtrl"
                 }
             }
-        })
+        }).state('admin.create-network-environment', {
+        url: "/create-network-environment",
+        params: {environments: null},
+        views: {
+            'wizard': {
+                template: '<add-Network-Environment' +
+                          '  [environments] = environments>' +
+                          '</add-Network-Environment>',
+                controller: ["$scope", "$state", '$stateParams', function ($scope,$state, $stateParams) {
+                    if ($stateParams.environments === null)
+                        $state.go("admin.standard-envs-overview", {}, {reload: true});
+                    $scope.environments = $stateParams.environments.filter(env => env.networkEnabled === true);
+                }]
+            }
+        }
+    })
         .state('admin.emulators_details', {
             url: "/emulators",
             params: {entries: null, emuName: null},

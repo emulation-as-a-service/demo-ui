@@ -6,6 +6,7 @@
   "CHOOSE_BASEENV_L" : "Virtual machines",
   "CHOOSE_OBJENV_L" : "Objektumgebungen",
   "CHOOSE_ENV_SEARCH" : "Eintippen zum Suchen...",
+  "CHOOSE_ENV_SEARCH_NETWORK" : "Umgebungen mit Netzwerk",
   "CHOOSE_ENV_PROPOSAL" : "[Umgebung konfigurieren]",
   "CHOOSE_ENV_EDIT" : "[Beschreibung bearbeiten]",
   "CHOOSE_HANDLE_EDIT" : "Handle URL bearbeiten",
@@ -22,6 +23,9 @@
   "CHOOSE_ACTION" : "Aktion wählen",
   "CHOOSE_DELETE_SELECTED" : "Auswahl löschen",
   "ADD_NETWORK_ENVIRONMENT": "Netzwerk erstellen",
+  "ADD_NETWORK_ENVIRONMENT_LABEL": "Umgebung bezeichnung",
+  "ADD_NETWORK_ENVIRONMENT_MAC_ADDRESS": "MAC-Adresse",
+
 
 
   "ERROR_RETURN_BTN" : "Zurück zur Übersicht",

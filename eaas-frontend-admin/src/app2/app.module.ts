@@ -1,18 +1,28 @@
 import * as angular from 'angular';
 import 'zone.js';
 import 'babel-polyfill';
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import 'hammerjs';
+
+
+import {NgModule} from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
 import {downgradeComponent, UpgradeModule} from '@angular/upgrade/static';
 import {platformBrowserDynamic} from "@angular/platform-browser-dynamic";
-import { setAngularJSGlobal } from '@angular/upgrade/static';
+import {setAngularJSGlobal} from '@angular/upgrade/static';
 
 import '../app/app.js';
-import {HeroDetailComponent} from "./components/network-environments/network-env.component.ts";
-import {FormsModule} from "@angular/forms";
+import {AddNetworkComponent} from "./components/network-environments/Network-env.component.ts";
+import {MaterialModule} from './material-module.ts';
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MultiTranslateHttpLoader} from "ngx-translate-multi-http-loader";
 import {HttpClient, HttpClientModule} from "@angular/common/http";
-import {TranslateLoader, TranslateModule} from "@ngx-translate/core";
+import {TranslateLoader, TranslateModule, TranslateService} from "@ngx-translate/core";
+import {MatButtonModule, MatCheckboxModule} from '@angular/material';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {NetworkDialogComponent} from "./components/network-environments/modal/NetworkDialog.ts";
+
+
+
 
 export function HttpLoaderFactory(http: HttpClient) {
     return new MultiTranslateHttpLoader(http, [
@@ -25,7 +35,12 @@ export function HttpLoaderFactory(http: HttpClient) {
         BrowserModule,
         UpgradeModule,
         FormsModule,
+        ReactiveFormsModule,
         HttpClientModule,
+        MatButtonModule,
+        MatCheckboxModule,
+        MaterialModule,
+        BrowserAnimationsModule,
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,
@@ -34,18 +49,45 @@ export function HttpLoaderFactory(http: HttpClient) {
             }
         })],
     declarations: [
-        HeroDetailComponent
+        AddNetworkComponent,
+        NetworkDialogComponent
     ],
     entryComponents: [
-        HeroDetailComponent
+        AddNetworkComponent,
+        NetworkDialogComponent
+    ],
+    providers: [
+        {
+            provide: '$state',
+            useFactory: ($injector: any) => $injector.get('$state'),
+            deps: ['$injector']
+        },
+        {
+            provide: 'REST_URLS',
+            useFactory: ($injector: any) => $injector.get('REST_URLS'),
+            deps: ['$injector']
+        },
+        {
+            provide: 'localConfig',
+            useFactory: ($injector: any) => $injector.get('localConfig'),
+            deps: ['$injector']
+        }
     ]
 })
 export class AppModule {
-    constructor(private upgrade: UpgradeModule) { }
+    constructor(private upgrade: UpgradeModule, public translate: TranslateService) {
+        translate.addLangs(['en', 'de']);
+        translate.setDefaultLang('en');
+
+        const browserLang = translate.getBrowserLang();
+        translate.use(browserLang.match(/en|de/) ? browserLang : 'en');
+    }
+
     ngDoBootstrap() {
-        this.upgrade.bootstrap(document.body, ['emilAdminUI'], { });
+        this.upgrade.bootstrap(document.body, ['emilAdminUI'], {});
     }
 }
+
 setAngularJSGlobal(angular);
 
 platformBrowserDynamic().bootstrapModule(AppModule);

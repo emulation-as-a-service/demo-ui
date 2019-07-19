@@ -6,6 +6,7 @@
   "CHOOSE_BASEENV_L" : "Virtual machines",
   "CHOOSE_OBJENV_L" : "Object Environments",
   "CHOOSE_ENV_SEARCH" : "Search...",
+  "CHOOSE_ENV_SEARCH_NETWORK" : "Environments with network",
   "CHOOSE_ENV_PROPOSAL" : "Run Environment",
   "CHOOSE_ENV_EDIT" : "Details",
   "CHOOSE_HANDLE_EDIT" : "Edit handle value",
@@ -23,6 +24,8 @@
   "CHOOSE_ACTION" : "Choose action",
   "CHOOSE_DELETE_SELECTED" : "Delete selected",
   "ADD_NETWORK_ENVIRONMENT": "Create Network",
+  "ADD_NETWORK_ENVIRONMENT_LABEL": "Environment Label",
+  "ADD_NETWORK_ENVIRONMENT_MAC_ADDRESS": "Mac Address",
 
 
   "ERROR_RETURN_BTN" : "Back to overview",

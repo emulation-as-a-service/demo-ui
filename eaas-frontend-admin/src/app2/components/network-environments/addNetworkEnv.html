@@ -1,0 +1,108 @@
+<h2 class="m-t-0">Create new network</h2>
+
+<div class="borderAround tekst">
+    <mat-divider></mat-divider>
+</div>
+
+<mat-form-field class="full-width">
+    <input matInput placeholder="Network Environment Label">
+</mat-form-field>
+
+<h4>Add Environment</h4>
+<mat-form-field style="display:inline-block;margin-right:15px; width:40%;">
+    <mat-label>{{"CHOOSE_ENV_SEARCH_NETWORK" | translate}}</mat-label>
+    <mat-select [(value)]="selectedEnv">
+        <mat-option *ngFor="let env of environments" [value]="env">
+            {{env.title}}
+        </mat-option>
+    </mat-select>
+</mat-form-field>
+
+<div style="display:inline-block;margin-right:15px;">
+    <mat-form-field>
+        <input matInput [(ngModel)]="envLabel" placeholder="{{'ADD_NETWORK_ENVIRONMENT_LABEL' | translate}}">
+    </mat-form-field>
+</div>
+
+<div style="display:inline-block">
+    <button (click)="addEnv()" [disabled]="!(envLabel && selectedEnv)" mat-raised-button color="primary">
+        {{ 'ADDENV_L' | translate }}
+    </button>
+</div>
+
+<br>
+<div *ngIf="chosenEnvs.length > 0">
+    <h4 class="centered-content">Chosen environments</h4>
+    <table mat-table [dataSource]="chosenEnvs" class="mat-elevation-z8 full-width">
+
+        <ng-container matColumnDef="environment">
+            <th mat-header-cell *matHeaderCellDef>Environment</th>
+            <td mat-cell *matCellDef="let element"> {{element.selectedEnv.title}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="label">
+            <th mat-header-cell *matHeaderCellDef>Label</th>
+            <td mat-cell *matCellDef="let element"> {{element.label}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef> Action </th>
+            <td mat-cell *matCellDef="let element">
+                <button (click)="openEditDialog(element)" style="margin-right:5px;" mat-raised-button >Edit</button>
+                <button (click)="deleteEnv(element)" mat-raised-button color="warn">delete</button>
+            </td>
+
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+    </table>
+</div>
+<br>
+
+
+<div class="borderAround tekst">
+    <mat-divider></mat-divider>
+</div>
+<mat-checkbox [disabled]=true class="example-section" color="primary">Emulate DHCP (Coming soon)
+</mat-checkbox>
+<mat-checkbox class="example-section" [(ngModel)]="enableInternet"
+              color="primary">{{'EDITENV_ENABLE_INTERNET' | translate}}</mat-checkbox>
+
+<mat-checkbox *ngIf="enableInternet" [disabled]=true class="paddingLeft example-section"
+              [(ngModel)]="archivedInternet"
+              color="primary">Archived Internet (Optional) (Coming soon)
+</mat-checkbox>
+
+<mat-checkbox class="example-section" [(ngModel)]="allowExternalConnections"
+              color="primary">{{'Allow external connections' | translate}}</mat-checkbox>
+
+
+<div class="paddingLeft" *ngIf="allowExternalConnections">
+    <mat-checkbox class="example-section" [(ngModel)]="isDHCPenabled"
+                  color="primary">{{'EDITENV_ENABLE_DHCP' | translate}} (internal)</mat-checkbox>
+    <mat-checkbox class="example-section" [(ngModel)]="serverMode"
+                  color="primary">{{'EDITENV_ENABLE_SERVERMODE' | translate}}</mat-checkbox>
+    <div class="paddingLeft" *ngIf="serverMode">
+        <mat-checkbox class="example-section" [(ngModel)]="enableSocks"
+                      color="primary">{{'EDITENV_ENABLE_SOCKS' | translate}}</mat-checkbox>
+        <mat-form-field *ngIf="!enableSocks" class="full-width">
+            <input matInput [(ngModel)]="serverIp" placeholder="{{'EDITENV_SERVER_IP' | translate}}">
+        </mat-form-field>
+        <mat-form-field *ngIf="!enableSocks" class="full-width">
+            <input matInput [(ngModel)]="serverPort" placeholder="{{'EDITENV_SERVER_PORT' | translate}}">
+        </mat-form-field>
+        <mat-form-field class="full-width">
+            <input matInput [(ngModel)]="gwPrivateIp" placeholder="{{'EDITENV_GW_PRIVATE_IP' | translate}}">
+        </mat-form-field>
+    </div>
+</div>
+<br>
+<br>
+<div mat-dialog-actions align="end">
+    <button mat-raised-button style="margin-right:5px;" color="primary"
+            (click)="save()">{{"ADD_NETWORK_ENVIRONMENT" | translate}}</button>
+    <button mat-stroked-button mat-dialog-close>{{"ADDENV_CANCEL" | translate}}</button>
+</div>
+
