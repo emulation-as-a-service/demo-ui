@@ -30,6 +30,7 @@ import 'sortablejs/ng-sortable';
 import 'ng-file-upload';
 import '../../node_modules/jquery.json-viewer/json-viewer/jquery.json-viewer.js';
 import '../../node_modules/jquery.json-viewer/json-viewer/jquery.json-viewer.css';
+import { saveAs } from 'file-saver';
 
 import * as agGrid from 'ag-grid-community';
 import "ag-grid-community/dist/styles/ag-grid.css";
