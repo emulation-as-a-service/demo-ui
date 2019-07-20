@@ -38,9 +38,12 @@ module.exports = ['$rootScope', '$scope', '$window', '$state', '$http', '$uibMod
 
     if(vm.enablePrinting) {
         $rootScope.$on('emulatorStart', function(event, args) {
-            window.eaasClient.eventSource.addEventListener('PrintJobObserver', function(e) {
-                vm.printJobsAvailable = true;
-                growl.info($translate.instant('ACTIONS_PRINT_READY'));
+            window.eaasClient.eventSource.addEventListener('print-job', function(e) {
+                var obj = JSON.parse(e.data);
+                if(obj && obj.status === 'done') {
+                    vm.printJobsAvailable = true;
+                    growl.info($translate.instant('ACTIONS_PRINT_READY'));
+                }
             });
         });
     }
