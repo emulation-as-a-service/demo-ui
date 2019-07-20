@@ -6,7 +6,6 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$http', '$sce', '$state'
         window.$rootScope = $rootScope;
         $rootScope.emulator.state = '';
         $rootScope.emulator.detached = false;
-        console.log(window.isCollapsed, window.isCollapsed);
         vm.runEmulator = function(selectedEnvs, attachId) {
 
             let type = "machine";
@@ -72,7 +71,7 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$http', '$sce', '$state'
                 }
                 params.xpraEncoding = chosenEnv.xpraEncoding;
             }
-            console.log(params);
+            // console.log(params);
 
             var envs = [];
             for (let i = 0; i < selectedEnvs.length; i++) {
@@ -100,7 +99,7 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$http', '$sce', '$state'
 
             if ($stateParams.type == 'saveUserSession') {
                 data.lockEnvironment = true;
-                console.log("locking user session");
+                // console.log("locking user session");
             }
 
             function createData (envId, archive, type, objectArchive, objectId, userId, softwareId, keyboardLayout, keyboardModel) {
@@ -192,7 +191,7 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$http', '$sce', '$state'
             vm.runEmulator([]);
         }
         else if (!chosenEnv.connectEnvs) {
-            console.log("chosenEnv.connectEnvs " + chosenEnv.connectEnvs);
+            // console.log("chosenEnv.connectEnvs " + chosenEnv.connectEnvs);
             vm.runEmulator([]);
         }
         else {
@@ -234,7 +233,7 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$http', '$sce', '$state'
                         }
 
                         $scope.connectToExistentComponent = function () {
-                            console.log("$scope.attachComponentId", $scope.attachComponentId);
+                            // console.log("$scope.attachComponentId", $scope.attachComponentId);
                             jQuery.when(
                                 $uibModalInstance.close(),
                                 jQuery.Deferred(function (deferred) {
@@ -249,7 +248,7 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$http', '$sce', '$state'
                         };
 
                         $scope.OnClickSelect = function (item) {
-                            console.log("got item! " + item.envId);
+                            // console.log("got item! " + item.envId);
                             $scope.selected.push(item)
                         };
 
