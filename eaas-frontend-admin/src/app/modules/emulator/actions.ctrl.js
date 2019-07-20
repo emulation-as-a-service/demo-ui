@@ -70,18 +70,20 @@ module.exports = ['$rootScope', '$scope', '$window', '$state', '$http', '$uibMod
         let _header = localStorage.getItem('id_token') ? {"Authorization" : "Bearer " + localStorage.getItem('id_token')} : {};
 
         async function createScreenshot() {
-            const pic = await fetch(window.eaasClient.getScreenshotUrl(), {
-                headers: _header,
-            });
 
-            const picBlob = await pic.blob();
+           var canvas = document.getElementsByTagName("canvas")[0];
+           canvas.toBlob(function(blob) {
+               saveAs(blob, "pretty image.png");
+           });
 
-            var downloadLink = document.createElement("a");
-            downloadLink.href = URL.createObjectURL(picBlob);
-            downloadLink.download = "screenshot.png";
-            document.body.appendChild(downloadLink);
-            downloadLink.click();
-            document.body.removeChild(downloadLink);
+//            const picBlob = await pic.blob();
+//
+//            var downloadLink = document.createElement("a");
+//            downloadLink.href = URL.createObjectURL(picBlob);
+//            downloadLink.download = "screenshot.png";
+//            document.body.appendChild(downloadLink);
+//            downloadLink.click();
+//            document.body.removeChild(downloadLink);
         };
         createScreenshot().then(function () {
             vm.screenshotModal.close();
