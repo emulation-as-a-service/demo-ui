@@ -57,7 +57,7 @@
   "BASE_MENU_SW" : "Software",
   "BASE_MENU_SHOW_SETTINGS_DLG": "Settings",
   "BASE_MENU_ADVANED_DATABASE_CONTENT": "Show database content",
-  "BASE_MENU_ADVANED_SETTINGS_DLG_EMIL_ENV": "Emil Environments",
+  "BASE_MENU_ADVANED_SETTINGS_DLG_EMIL_ENV": "Environments",
   "BASE_MENU_ADVANED_SETTINGS_DLG_OBJECT_ENV": "Object Environments",
   "BASE_MENU_ADVANED_SETTINGS_DLG_CONTAINER_ENV": "Container Environments",
   "BASE_MENU_ADVANCED": "Advanced / Debug",
@@ -317,7 +317,7 @@
   "USER_SESSION_DEL" : "Delete session",
   "USER_SESSIONS_TH" : "Saved sessions",
 
-  "PRINT_H" : "EMiL print jobs",
+  "PRINT_H" : "Print jobs",
   "PRINT_DONE" : "Close",
   "PRINT_NO_JOBS" : "No printer jobs found",
 
