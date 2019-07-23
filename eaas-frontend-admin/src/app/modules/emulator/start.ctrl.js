@@ -1,3 +1,5 @@
+import {Client, hideCursor, showCursor, requestPointerLock} from '../../../../../eaas-client/eaas-client.js';
+
 module.exports = ['$rootScope', '$uibModal', '$scope', '$http', '$sce', '$state', '$stateParams', '$cookies', '$translate', 'localConfig', 'growl', 'Environments', 'REST_URLS', 'chosenEnv',
                                   function ($rootScope, $uibModal, $scope, $http, $sce,   $state, $stateParams, $cookies, $translate, localConfig, growl, Environments, REST_URLS, chosenEnv) {
         var vm = this;
@@ -14,7 +16,7 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$http', '$sce', '$state'
         vm.runEmulator = function(selectedEnvs, attachId) {
 
             let type = "machine";
-            window.eaasClient = new EaasClient.Client(localConfig.data.eaasBackendURL, $("#emulator-container")[0]);
+            window.eaasClient = new Client(localConfig.data.eaasBackendURL, $("#emulator-container")[0]);
 
             eaasClient.onError = function (message) {
                 $state.go('error', {errorMsg: {title: "Emulation Error", message: message.error}});

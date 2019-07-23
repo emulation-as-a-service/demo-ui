@@ -5,7 +5,7 @@ module.exports = ['$rootScope', '$scope', '$sce', '$state','$http', '$stateParam
 
         $("#container-stopped").hide();
 
-        window.eaasClient = new EaasClient.Client(localConfig.data.eaasBackendURL, $("#emulator-container")[0]);
+        window.eaasClient = new Client(localConfig.data.eaasBackendURL, $("#emulator-container")[0]);
         eaasClient.onError = function (message) {
             window.onbeforeunload = null;
             $state.go('error', {errorMsg: {title: "Error", message: message.error}});

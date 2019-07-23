@@ -51,7 +51,9 @@ agGrid.initialiseAgGridWithAngular1(angular);
  */
 
 
+
 var $ = require('jquery');
+
 window.$ = window.jQuery = $; // publish jQuery into window scope for emulator libs
 window.Popper = require('popper.js').default;
 require('bootstrap');
@@ -74,9 +76,7 @@ Object.defineProperty(window, "EMULATORS_LIST", {
 
 import guacamolejs from 'raw-loader!../../../eaas-client/guacamole/guacamole.js';
 appendScript(guacamolejs);
-
-import eaasclientjs from 'raw-loader!../../../eaas-client/eaas-client.js';
-appendScript(eaasclientjs);
+import {Client, hideCursor, showCursor, requestPointerLock} from '../../../eaas-client/eaas-client.js';
 
 /*
  * Import application specific modules
