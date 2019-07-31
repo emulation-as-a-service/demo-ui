@@ -8,7 +8,7 @@ module.exports = ['$http', '$scope', '$state', '$stateParams', 'runtimeList', 'g
 
         // initialize default values of the form
         container.imageSize = 1024;
-        container.imageType = 'size';
+        container.imageType = '';
         container.importMethod = '';
 
 
@@ -35,17 +35,12 @@ module.exports = ['$http', '$scope', '$state', '$stateParams', 'runtimeList', 'g
                 return false;
             }
 
-            if (container.runtime !== "2" && container.args.length === 0) {
+            if (container.runtime !== "2" && container.runtime !== "1" && container.args.length === 0) {
                 growl.error("process is required");
                 return false;
             }
 
-            if (!container.archiveType && !container.imageType == "dockerhub") {
-                growl.error("container type is required");
-                return false;
-            }
-
-            if(container.args.length == 0 && container.imageType == "dockerhub"){
+            if (container.tag === "" && container.runtime == 1) {
                 growl.error("container tag is required");
                 return false;
             }
@@ -176,10 +171,6 @@ module.exports = ['$http', '$scope', '$state', '$stateParams', 'runtimeList', 'g
             var convertedArgs = [];
             var escapeEl = document.createElement('textarea');
 
-            if (container.imageType === "dockerhub"){
-                container.archiveType = "dockerhub";
-            }
-
             if (container.runtime === "2" && container.args.length === 0) {
                 container.args.push("/bin/sh", "-c", '. /environment; exec "$0" "$@"', "/singularity");
             }
@@ -197,6 +188,20 @@ module.exports = ['$http', '$scope', '$state', '$stateParams', 'runtimeList', 'g
                 convertedArgs.push(unescape(container.args[_a]));
             }
 
+            switch (container.runtime) {
+                case "0":
+                    container.imageType = "rootfs";
+                    break;
+                case "1":
+                    container.imageType = "dockerhub";
+                    break;
+                case "2":
+                    container.imageType = "simg";
+            }
+
+            console.log("container.importType", container.imageType);
+
+
             $http.post(localConfig.data.eaasBackendURL + REST_URLS.importContainerUrl,
                 {
                     urlString: container.imageUrl,
@@ -207,7 +212,7 @@ module.exports = ['$http', '$scope', '$state', '$stateParams', 'runtimeList', 'g
                     processEnvs: container.env,
                     inputFolder: container.imageInput,
                     outputFolder: container.imageOutput,
-                    imageType: container.archiveType,
+                    imageType: container.imageType,
                     title: container.title,
                     description: container.containerDescription,
                     author: container.author,

@@ -28,6 +28,8 @@ import 'bootstrap-ui-datetime-picker';
 import 'sortablejs';
 import 'sortablejs/ng-sortable';
 import 'ng-file-upload';
+import { saveAs } from 'file-saver';
+
 import '../../node_modules/jquery.json-viewer/json-viewer/jquery.json-viewer.js';
 import '../../node_modules/jquery.json-viewer/json-viewer/jquery.json-viewer.css';
 
@@ -39,10 +41,10 @@ import "ag-grid-community/dist/styles/ag-theme-blue.css";
 import "ag-grid-community/dist/styles/ag-theme-bootstrap.css";
 import "ag-grid-community/dist/styles/ag-theme-material.css";
 import "ag-grid-community/dist/styles/ag-theme-fresh.css";
+/**
+ * angular 8.1 modules
+ */
 import { AddNetworkComponent } from '../app2/components/network-environments/Network-env.component.ts';
-
-/* . . . */
-
 import { downgradeComponent } from '@angular/upgrade/static';
 
 import networkingTemplate from './modules/environments/templates/edit-networking-template.html';
@@ -681,7 +683,7 @@ function($stateProvider,
                     if(!$stateParams.isDetached && $stateParams.type != "saveImport" && $stateParams.type != 'saveCreatedEnvironment')
                         return  Environments.get({envId: $stateParams.envId}).$promise;
                     else
-                        return {};
+                        return null;
                 }
             },
             params: {

@@ -17,7 +17,6 @@ export class AddNetworkComponent {
     serverMode: boolean;
     serverIp: string;
     serverPort: string;
-    gwPrivateIp: string;
     gwPrivateMask: string;
     enableSocks: boolean;
     isDHCPenabled: boolean;
@@ -62,7 +61,7 @@ export class AddNetworkComponent {
 openEditDialog() {
     const environmentsWithNetworking = this.environments.filter(env => env.networkEnabled === true);
     const dialogRef = this.dialog.open(NetworkDialogComponent, {
-        width: '40%',
+        width: '30%',
         data: { environments: environmentsWithNetworking },
     });
     dialogRef.updatePosition({top: '20%'});

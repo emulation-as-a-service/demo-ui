@@ -37,7 +37,7 @@ module.exports = ['$state', '$scope', '$stateParams', 'Objects', 'localConfig', 
         return [
             {headerName: "ID", field: "id"},
             {
-                headerName: "title", field: "title"
+                headerName: "title", field: "title", sort: "asc"
             },
             {
                 headerName: "description", field: "description", cellRenderer: descriptiponRenderer, suppressSorting: true,

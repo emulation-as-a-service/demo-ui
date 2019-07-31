@@ -1,3 +1,5 @@
+import {stopClient} from "./utils/stop-client";
+
 module.exports = ['$rootScope', '$scope', '$window', '$state', '$http', '$uibModal', '$stateParams', 'growl', 'localConfig', 'Objects',
                         '$timeout', '$translate', 'chosenEnv', 'Environments', 'helperFunctions', 'REST_URLS',
                         function ($rootScope, $scope, $window, $state, $http, $uibModal, $stateParams, growl, localConfig, Objects,
@@ -23,8 +25,7 @@ module.exports = ['$rootScope', '$scope', '$window', '$state', '$http', '$uibMod
         });
     }
 
-    if(chosenEnv.nativeConfig)
-        vm.isKVM = chosenEnv.nativeConfig.includes('-enable-kvm');
+
     else
         vm.isKVM = false;
 
@@ -32,47 +33,29 @@ module.exports = ['$rootScope', '$scope', '$window', '$state', '$http', '$uibMod
     {
         vm.enablePrinting = chosenEnv.enablePrinting;
         vm.shutdownByOs = chosenEnv.shutdownByOs;
+        if(chosenEnv.nativeConfig)
+                vm.isKVM = chosenEnv.nativeConfig.includes('-enable-kvm');
     }
     else
         vm.enablePrinting = false;
 
     if(vm.enablePrinting) {
         $rootScope.$on('emulatorStart', function(event, args) {
-            window.eaasClient.eventSource.addEventListener('PrintJobObserver', function(e) {
-                vm.printJobsAvailable = true;
-                growl.info($translate.instant('ACTIONS_PRINT_READY'));
+            window.eaasClient.eventSource.addEventListener('print-job', function(e) {
+                var obj = JSON.parse(e.data);
+                if(obj && obj.status === 'done') {
+                    vm.printJobsAvailable = true;
+                    growl.info($translate.instant('ACTIONS_PRINT_READY'));
+                }
             });
         });
     }
 
-
     $scope.screenshot = function () {
-        vm.screenshotModal = $uibModal.open({
-            backdrop: 'static',
-            animation: true,
-            templateUrl: 'partials/wait-with-eclipse-spinner.html'
-        });
-        console.log("Trying to do");
-        let _header = localStorage.getItem('id_token') ? {"Authorization" : "Bearer " + localStorage.getItem('id_token')} : {};
-
-        async function createScreenshot() {
-            const pic = await fetch(window.eaasClient.getScreenshotUrl(), {
-                headers: _header,
-            });
-
-            const picBlob = await pic.blob();
-
-            var downloadLink = document.createElement("a");
-            downloadLink.href = URL.createObjectURL(picBlob);
-            downloadLink.download = "screenshot.png";
-            document.body.appendChild(downloadLink);
-            downloadLink.click();
-            document.body.removeChild(downloadLink);
-        };
-        createScreenshot().then(function () {
-            vm.screenshotModal.close();
-            console.log("screenshot is done!")
-        });
+       var canvas = document.getElementsByTagName("canvas")[0];
+       canvas.toBlob(function(blob) {
+           saveAs(blob, "screenshot.png");
+       });
     };
 
 
@@ -119,6 +102,7 @@ module.exports = ['$rootScope', '$scope', '$window', '$state', '$http', '$uibMod
 
     vm.close = function () {
         window.onbeforeunload = null;
+        window.eaasClient.disconnect();
         $state.go('admin.standard-envs-overview', {}, {reload: true});
     };
 
@@ -129,8 +113,7 @@ module.exports = ['$rootScope', '$scope', '$window', '$state', '$http', '$uibMod
             controller: ['$scope', function($scope) {
                 this.confirmed = function()
                 {
-                    window.onbeforeunload = null;
-                    window.eaasClient.release();
+                    stopClient($uibModal, false, window.eaasClient);
                     $('#emulator-stopped-container').show();
 
                     if($stateParams.isTestEnv)
@@ -326,7 +309,7 @@ module.exports = ['$rootScope', '$scope', '$window', '$state', '$http', '$uibMod
             template: require('../../../../../landing-page/src/app/modules/client/landing-page/modals/network.html'),
             resolve: {
                 currentEnv: function () {
-                    return chosenEnv;
+                    return chosenEnv ? chosenEnv : $rootScope.chosenEnv;
                 },
                 localConfig: function () {
                     return localConfig;
@@ -338,8 +321,8 @@ module.exports = ['$rootScope', '$scope', '$window', '$state', '$http', '$uibMod
 
     vm.openDetachDialog = function() {
         $('#emulator-container').hide();
-        $uibModal.open({
-            animation: true,
+        let modal = $uibModal.open({
+            animation: false,
             template: require('../../../../../landing-page/src/app/modules/client/landing-page/modals/detach.html'),
             resolve: {
                 currentEnv: function () {
@@ -351,14 +334,16 @@ module.exports = ['$rootScope', '$scope', '$window', '$state', '$http', '$uibMod
             },
             controller: "DetachModalController as detachModalCtrl"
         });
+
+        modal.closed.then(() => $('#emulator-container').show());
     };
 
     vm.openSaveEnvironmentDialog = function() {
         $('#emulator-container').hide();
         var saveDialog = function()
         {
-            $uibModal.open({
-                animation: true,
+            let modal = $uibModal.open({
+                animation: false,
                 template: require('./modals/save-environment.html'),
                 controller: ["$scope", function($scope) {
                     this.type = $stateParams.type;
@@ -426,10 +411,11 @@ module.exports = ['$rootScope', '$scope', '$window', '$state', '$http', '$uibMod
                 }],
                 controllerAs: "openSaveEnvironmentDialogCtrl"
             });
+            modal.closed.then(() => $('#emulator-container').show());
         };
 
-        $uibModal.open({
-            animation: true,
+        let modal = $uibModal.open({
+            animation: false,
             template: require('./modals/confirm-snapshot.html'),
             controller: ["$scope", function($scope) {
                 this.confirmed = function()
@@ -442,6 +428,8 @@ module.exports = ['$rootScope', '$scope', '$window', '$state', '$http', '$uibMod
             }],
             controllerAs: "confirmSnapshotDialogCtrl"
         });
+        modal.closed.then(() => $('#emulator-container').show());
+
 
     }
     /*

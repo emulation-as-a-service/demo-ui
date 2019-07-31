@@ -1,15 +1,15 @@
 module.exports = ['$state', '$http', '$scope', '$uibModal', 'currentEnv' , 'localConfig', 'growl', '$timeout', '$uibModalStack', 'REST_URLS', 'helperFunctions',
-    function ($state, $http, $scope, $uibModal, curentEnv , localConfig, growl, $timeout, $uibModalStack, REST_URLS, helperFunctions) {
+    function ($state, $http, $scope, $uibModal, currentEnv , localConfig, growl, $timeout, $uibModalStack, REST_URLS, helperFunctions) {
 
         var modalCtrl = this;
 
-        this.network = curentEnv.network;
-        this.env = curentEnv;
+        this.network = currentEnv.network;
+        this.env = currentEnv;
 
         if (eaasClient.networkTcpInfo) {
             var url = new URL(eaasClient.networkTcpInfo.replace(/^info/, 'http'));
             var pathArray = url.pathname.split('/');
-            modalCtrl.hostname = url.hostname;
+            modalCtrl.hostname = url.hostname.replace("https", "http");
             modalCtrl.port = pathArray[2];
             modalCtrl.network = "//" + modalCtrl.hostname + ":" + modalCtrl.port;
         }
@@ -27,7 +27,7 @@ module.exports = ['$state', '$http', '$scope', '$uibModal', 'currentEnv' , 'loca
         }
 
         let helptext = replaceMulti(replaceMulti(this.env.networking.helpText, '$$host$$', this.hostname), '$$port$$', this.port);
-        this.localServerMode = curentEnv.networking.localServerMode;
+        this.localServerMode = currentEnv.networking.localServerMode;
         console.log(this.localServerMode);
         this.networkHelp = helptext;
         this.detachTime;

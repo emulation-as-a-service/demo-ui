@@ -11,7 +11,7 @@ module.exports = ['softwareList', '$scope', '$stateParams', function (softwareLi
     vm.initColumnDefs = function () {
         return [
             {headerName: "ID", field: "id"},
-            {headerName: "Label", field: "label"},
+            {headerName: "Label", field: "label", sort: "asc"},
             {headerName: "Operating System", field: "isOperatingSystem"},
             {headerName: "", field: "edit", cellRenderer: editBtnRenderer, suppressSorting: true,
                 suppressMenu: true}

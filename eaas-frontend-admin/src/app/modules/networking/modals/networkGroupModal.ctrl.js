@@ -10,7 +10,7 @@ module.exports = ['$state', '$rootScope' ,'$http', '$scope', '$uibModalInstance'
 
         groupComponents.forEach(function(element){
             if(element.type === "machine")
-            $scope.groupComponents.push(element);
+                $scope.groupComponents.push(element);
             if(element.type === "nodetcp"){
                 $scope.networkInfo = element.networkData.networkUrls;
                 console.log($scope.networkInfo)

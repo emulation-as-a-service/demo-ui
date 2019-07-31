@@ -18,7 +18,7 @@
             <ui-select ng-model="newContainerCtrl.selectedSystem" on-select="newContainerCtrl.onSelectRuntime($item, $model)" theme="bootstrap"
                        title="{{'SW_NEW_CONTAINER_CHOOSE_ORIGIN_RUNTIME_PH' | translate}}" required>
                 <ui-select-match placeholder="{{'SW_NEW_CONTAINER_CHOOSE_ORIGIN_RUNTIME_PH' | translate}}">{{$select.selected.name}}</ui-select-match>
-                <ui-select-choices ng-click="newContainerCtrl.imageType = '';newContainerCtrl.archiveType = ''" repeat="obj in newContainerCtrl.runtimes | filter: $select.search">
+                <ui-select-choices ng-click="newContainerCtrl.imageType = '';" repeat="obj in newContainerCtrl.runtimes | filter: $select.search">
                     <span ng-bind-html="obj.name | highlight: $select.search"></span>
                 </ui-select-choices>
             </ui-select>
@@ -51,15 +51,6 @@
 
                 <div class="tekst">
                 <button type="button" class="btn btn-default" ng-show="newContainerCtrl.importMethod == 'file'" ngf-select="newContainerCtrl.onImportFilesChosen($file)" >Select Files</button>
-                </div>
-                <div class="tekst">
-                    <label>{{'SW_NEW_CONTAINER_ARCHIVE_T' | translate}}</label>
-                    <select style="max-width: 300px;" class="form-control" theme="bootstrap"
-                            ng-model="newContainerCtrl.archiveType" required
-                            ng-disabled="newContainerCtrl.importMethod == ''">
-                        <option value="rootfs">RootFS TAR(GZ/BZ2)</option>
-                        <option disabled value="simg">Singularity Image (simg)</option>
-                    </select>
                 </div>
 
                 <!--<br>-->
@@ -116,18 +107,7 @@
                 <p>{{'SW_NEW_CONTAINER_FORMAT_DOCKER' | translate}}</p>
                 <p>{{'SW_NEW_CONTAINER_IMAGE_STRUCTURE' | translate}}</p>
 
-
-                <label>
-                    <input type="radio" ng-model="newContainerCtrl.imageType" value="dockerhub">
-                    <span>{{'SW_NEW_CONTAINER_IMAGE_DOCKERHUB' | translate}}</span>
-                </label>
                 <br>
-                <label>
-                    <input disabled type="radio" ng-model="newContainerCtrl.imageType" value="url">
-                    <span>{{'SW_NEW_CONTAINER_IMAGE_URL' | translate}}</span>
-                </label>
-                <br>
-
 
                 <div ng-hide="newContainerCtrl.imageType != 'url'">
                     <input type="text" placeholder="{{'SW_NEW_CONTAINER_DOCKER_IMAGE_URL' | translate}}" class="form-control" ng-model="newContainerCtrl.imageUrl" ng-disabled="newContainerCtrl.imageType != 'url'" ng-required="newContainerCtrl.imageType == 'url'"/>
@@ -139,7 +119,7 @@
                     <input type="text" placeholder="{{'SW_NEW_CONTAINER_OUTPUT_PH' | translate}}" class="form-control" ng-model="newContainerCtrl.imageOutput" ng-disabled="newContainerCtrl.imageType != 'url'" ng-required="newContainerCtrl.imageType == 'url'"/>
                 </div>
 
-                <div ng-hide="newContainerCtrl.imageType != 'dockerhub'">
+                <div>
                     <div class="panel panel-default">
                         <div class="panel-heading">{{'SW_NEW_CONTAINER_DOCKER' | translate}}</div>
                         <div class="panel-body">
@@ -155,20 +135,6 @@
                                    ng-required="newContainerCtrl.imageType == 'dockerhub'"/>
                         </div>
                     </div>
-
-                    <input-list list="newContainerCtrl.env"
-                                heading="{{'SW_NEW_CONTAINER_ENVIRONMENT_H' | translate}}"
-                                list-empty-note="{{'SW_NEW_CONTAINER_ENVIRONMENT_NOTE' | translate}}"
-                                input-placeholder="{{'SW_NEW_CONTAINER_ENVIRONMENT_PH' | translate}}"
-                                add-button-text="+">
-                    </input-list>
-                    <input-list list="newContainerCtrl.args"
-                                heading="{{'SW_NEW_CONTAINER_ARGUMENTS_H' | translate}}"
-                                list-empty-note="{{'SW_NEW_CONTAINER_ARGUMENTS_NOTE' | translate}}"
-                                input-placeholder="{{'SW_NEW_CONTAINER_ARGUMENTS_PH' | translate}}"
-                                add-button-text="+">
-                    </input-list>
-
                     <label>{{'SW_NEW_CONTAINER_INPUT' | translate}}</label>
                     <input type="text" placeholder="{{'SW_NEW_CONTAINER_INPUT_PH' | translate}}" class="form-control" ng-model="newContainerCtrl.imageInput" ng-required="newContainerCtrl.imageType == 'dockerhub'"/>
                     <label>{{'SW_NEW_CONTAINER_OUTPUT' | translate}}</label>
@@ -216,10 +182,6 @@
 
                 <label>{{'SW_NEW_CONTAINER_ARCHIVE_T' | translate}}</label>
 
-                <select style="max-width: 300px;" class="form-control" theme="bootstrap" ng-model="newContainerCtrl.archiveType" required ng-disabled="newContainerCtrl.importMethod == ''">
-                    <option value="rootfs">RootFS TAR(GZ/BZ2)</option>
-                    <option value="simg">Singularity Image (simg)</option>
-                </select>
                 <br>
 
                 <input-list list="newContainerCtrl.env"

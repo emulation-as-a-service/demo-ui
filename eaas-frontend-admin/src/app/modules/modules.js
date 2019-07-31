@@ -29,6 +29,7 @@ emilUIModule.controller('UserSessionsListController', require('./environments/se
 // emulator
 emilUIModule.controller('EmulatorStartController', require('./emulator/start.ctrl.js'));
 emilUIModule.controller('EmulatorActionsController', require('./emulator/actions.ctrl.js'));
+emilUIModule.controller('EmulatorConnectedEnvsController', require('./emulator/modals/connected-envs.ctrl.js'));
 
 // handle
 emilUIModule.controller('HandleOverviewController', require('./handle/overview.ctrl.js'));

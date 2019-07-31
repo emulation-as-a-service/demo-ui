@@ -131,7 +131,8 @@ module.exports = ['$state', '$sce', '$http', '$stateParams', '$translate', '$uib
                 }
                 vm.proxy = "";
 
-                $('#containerOutputDownloadBtn').click(function () {
+
+                vm.getOutput = function () {
                     const unloadBackup = eaasClient.deleteOnUnload;
                     eaasClient.deleteOnUnload = false;
                     vm.isContOutDownloading = true;
@@ -158,7 +159,7 @@ module.exports = ['$state', '$sce', '$http', '$stateParams', '$translate', '$uib
                     });
 
                     eaasClient.deleteOnUnload = unloadBackup;
-                });
+                };
 
                 vm.sendCtrlAltDel = function () {
                     window.eaasClient.sendCtrlAltDel();
@@ -195,7 +196,7 @@ module.exports = ['$state', '$sce', '$http', '$stateParams', '$translate', '$uib
                             jQuery(deferred.resolve);
                         })).done(function () {
 
-                        vm.downloadLink();
+                        vm.getOutput();
                     });
                     $("#emulator-downloadable-attachment-link").hide();
                 };

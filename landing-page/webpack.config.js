@@ -173,7 +173,12 @@ module.exports = function makeWebpackConfig() {
     // Reference: https://github.com/webpack/extract-text-webpack-plugin
     // Extract css files
     // Disabled when in test mode or not in build mode
-    new ExtractTextPlugin({filename: 'css/[name].css', disable: !isProd, allChunks: true})
+    new ExtractTextPlugin({filename: 'css/[name].css', disable: !isProd, allChunks: true}),
+    new CopyWebpackPlugin([{
+      from: '../eaas-client/xpra', to: 'xpra'
+    }, {
+      from: '../eaas-client/webemulator', to: 'webemulator'
+    }])
   );
 
   // Add build specific plugins
