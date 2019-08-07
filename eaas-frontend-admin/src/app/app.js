@@ -41,11 +41,7 @@ import "ag-grid-community/dist/styles/ag-theme-blue.css";
 import "ag-grid-community/dist/styles/ag-theme-bootstrap.css";
 import "ag-grid-community/dist/styles/ag-theme-material.css";
 import "ag-grid-community/dist/styles/ag-theme-fresh.css";
-/**
- * angular 8.1 modules
- */
-import { AddNetworkComponent } from '../app2/components/network-environments/Network-env.component.ts';
-import { downgradeComponent } from '@angular/upgrade/static';
+
 
 import networkingTemplate from './modules/environments/templates/edit-networking-template.html';
 
@@ -105,6 +101,13 @@ import '../../../eaas-client/guacamole/guacamole.css';
 import '../../../eaas-client/eaas-client.css';
 import './app.scss';
 
+/**
+ * angular 8 modules
+ */
+import {downgradeComponent} from '@angular/upgrade/static';
+import {AddNetworkComponent} from '../app2/components/network-environments/add/add-network-env.component.ts';
+import {EditNetworkComponent} from "../app2/components/network-environments/edit/edit-network-env.component.ts";
+
 
 
 
@@ -124,6 +127,10 @@ export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize'
     .directive(
         'addNetworkEnvironment',
         downgradeComponent({component: AddNetworkComponent})
+    )
+    .directive(
+        'editNetworkEnvironment',
+        downgradeComponent({component: EditNetworkComponent})
     )
     .component('inputList', {
         templateUrl: 'partials/components/inputList.html',
@@ -294,6 +301,10 @@ export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize'
 
 .factory('Environments', function($http, $resource, localConfig) {
    return $resource(localConfig.data.eaasBackendURL + 'EmilEnvironmentData/:envId');
+})
+
+.factory('EmilNetworkEnvironments', function($http, $resource, localConfig) {
+   return $resource(localConfig.data.eaasBackendURL + 'network-environments/:envId');
 })
 
 .config(['$stateProvider',
@@ -615,7 +626,8 @@ function($stateProvider,
             url: "/environments",
             params: {
                 showObjects: false,
-                showContainers: false
+                showContainers: false,
+                showNetworkEnvs: false
             },
             resolve : {
 
@@ -816,22 +828,42 @@ function($stateProvider,
                     controller: "EmulatorsController as emusCtrl"
                 }
             }
-        }).state('admin.create-network-environment', {
-        url: "/create-network-environment",
-        params: {environments: null},
-        views: {
-            'wizard': {
-                template: '<add-Network-Environment' +
-                          '  [environments] = environments>' +
-                          '</add-Network-Environment>',
-                controller: ["$scope", "$state", '$stateParams', function ($scope,$state, $stateParams) {
-                    if ($stateParams.environments === null)
-                        $state.go("admin.standard-envs-overview", {}, {reload: true});
-                    $scope.environments = $stateParams.environments.filter(env => env.networkEnabled === true);
-                }]
+        })
+        .state('admin.create-network-environment', {
+            url: "/create-network-environment",
+            resolve: {
+                environments: (Environments) => {
+                    return Environments.query().$promise;
+                }
+            },
+            views: {
+                'wizard': {
+                    template: '<add-Network-Environment' +
+                        '  [environments] = environments>' +
+                        '</add-Network-Environment>',
+                    controller: ["$scope", "$state", '$stateParams', '$translate', 'environments', 'growl', function ($scope, $state, $stateParams, $translate, environments, growl) {
+                        $scope.environments = environments.filter(env => env.networkEnabled === true);
+                        if ($scope.environments.length === 0) {
+                            growl.error($translate.instant('NO_ENVIRONMENTS_WITH_NETWORK'));
+                            $state.go("admin.standard-envs-overview", {}, {reload: true});
+                        }
+                    }]
+                }
             }
-        }
-    })
+        })
+        .state('admin.edit-network-environment', {
+            url: "/create-network-environment",
+            params: {environment: null},
+            views: {
+                'wizard': {
+                    template: '<edit-Network-Environment [environment] = environment></edit-Network-Environment>',
+                    controller: ["$scope", "$state", '$stateParams', '$translate', 'growl', function ($scope, $state, $stateParams, $translate, growl) {
+                        $scope.environment = $stateParams.environment;
+                        console.log("$stateParams.envId ", $stateParams.environment);
+                    }]
+                }
+            }
+        })
         .state('admin.emulators_details', {
             url: "/emulators",
             params: {entries: null, emuName: null},

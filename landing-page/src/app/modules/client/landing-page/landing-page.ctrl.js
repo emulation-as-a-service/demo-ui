@@ -195,7 +195,6 @@ module.exports = ['$state', '$sce', '$http', '$stateParams', '$translate', '$uib
                         jQuery.Deferred(function (deferred) {
                             jQuery(deferred.resolve);
                         })).done(function () {
-
                         vm.getOutput();
                     });
                     $("#emulator-downloadable-attachment-link").hide();

@@ -4,14 +4,16 @@ import 'babel-polyfill';
 import 'hammerjs';
 
 
-import {NgModule} from '@angular/core';
+import {Injectable, NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {downgradeComponent, UpgradeModule} from '@angular/upgrade/static';
 import {platformBrowserDynamic} from "@angular/platform-browser-dynamic";
 import {setAngularJSGlobal} from '@angular/upgrade/static';
 
 import '../app/app.js';
-import {AddNetworkComponent} from "./components/network-environments/Network-env.component.ts";
+import {AddNetworkComponent} from "./components/network-environments/add/add-network-env.component.ts";
+import {EditNetworkComponent} from "./components/network-environments/edit/edit-network-env.component.ts";
+
 import {MaterialModule} from './material-module.ts';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MultiTranslateHttpLoader} from "ngx-translate-multi-http-loader";
@@ -19,9 +21,8 @@ import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {TranslateLoader, TranslateModule, TranslateService} from "@ngx-translate/core";
 import {MatButtonModule, MatCheckboxModule} from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {NetworkDialogComponent} from "./components/network-environments/modal/NetworkDialog.ts";
-
-
+import {NetworkDialogComponent} from "./components/network-environments/modal/edit-network-elements-modal.ts";
+import {NetworkEnvironmentView} from "./components/network-environments/views/network-environment-view.component.ts";
 
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -50,11 +51,14 @@ export function HttpLoaderFactory(http: HttpClient) {
         })],
     declarations: [
         AddNetworkComponent,
-        NetworkDialogComponent
+        NetworkDialogComponent,
+        EditNetworkComponent,
+        NetworkEnvironmentView
     ],
     entryComponents: [
         AddNetworkComponent,
-        NetworkDialogComponent
+        NetworkDialogComponent,
+        EditNetworkComponent
     ],
     providers: [
         {
@@ -71,9 +75,15 @@ export function HttpLoaderFactory(http: HttpClient) {
             provide: 'localConfig',
             useFactory: ($injector: any) => $injector.get('localConfig'),
             deps: ['$injector']
+        },
+        {
+            provide: 'growl',
+            useFactory: ($injector: any) => $injector.get('growl'),
+            deps: ['$injector']
         }
     ]
 })
+
 export class AppModule {
     constructor(private upgrade: UpgradeModule, public translate: TranslateService) {
         translate.addLangs(['en', 'de']);

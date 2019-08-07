@@ -23,6 +23,7 @@
   "CHOOSE_ACTION" : "Aktion wählen",
   "CHOOSE_DELETE_SELECTED" : "Auswahl löschen",
   "ADD_NETWORK_ENVIRONMENT": "Netzwerk erstellen",
+  "NO_ENVIRONMENTS_WITH_NETWORK": "Es gibt keine Umgebungen mit aktiviertem Netzwerk!",
   "ADD_NETWORK_ENVIRONMENT_LABEL": "Umgebung bezeichnung",
   "ADD_NETWORK_ENVIRONMENT_MAC_ADDRESS": "MAC-Adresse",
 
@@ -255,7 +256,7 @@
   "EMU_POINTER_LOCK_AVAILABLE" : "Klicken sie auf den Emulator für die Maussteuerung.",
   "EMU_LINK": "Direktlink zu dieser Umgebung",
   "NETWORKING_STOPPING_COMPONENT": "Emulator beenden",
-  "EMU_STOPPING_TITLE": "We are stopping the environment! Depending on session's complexity and occupied resources, this might take some (little) time",
+  "EMU_STOPPING_TITLE": "Umgebung wird beendet",
 
   "ADDSW_TITLE" : "Software hinzufügen",
   "ADDSW_DIALOG_LIST" : "Verfügbare Softwarepakete",

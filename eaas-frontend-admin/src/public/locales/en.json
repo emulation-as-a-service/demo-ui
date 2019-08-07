@@ -24,6 +24,7 @@
   "CHOOSE_ACTION" : "Choose action",
   "CHOOSE_DELETE_SELECTED" : "Delete selected",
   "ADD_NETWORK_ENVIRONMENT": "Create Network",
+  "NO_ENVIRONMENTS_WITH_NETWORK": "There are no environments with enabled network!",
   "ADD_NETWORK_ENVIRONMENT_LABEL": "Environment Label",
   "ADD_NETWORK_ENVIRONMENT_MAC_ADDRESS": "Mac Address",
 
@@ -227,7 +228,7 @@
   "EDITENV_CANCONNECTENVS": "Can be connected with other environments (Experimental)",
   "EDITENV_ENABLE_INTERNET" : "Enable Internet access",
   "EDITENV_ENABLE_SERVERMODE" : "Enable server mode",
-  "EDITENV_ENABLE_SOCKS" : "use SOCKS5",
+  "EDITENV_ENABLE_SOCKS" : "Use SOCKS5",
   "EDITENV_ENABLE_DHCP" : "Enable DHCP",
   "EDITENV_ENABLE_LOCAL_MODE" : "Enable Local Mode",
   "EDITENV_SERVER_IP" : "Internal server IP",

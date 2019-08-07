@@ -23,12 +23,12 @@ emilAdminUIHelpersModule.service('REST_URLS', function () {
     this.getDatabaseContent = "EmilEnvironmentData/getDatabaseContent?type={0}&className={1}";
     this.detachSessionUrl = "sessions";
     this.getEnvironmentTemplates = "EmilEnvironmentData/getEnvironmentTemplates";
-    this.getPatches = "EmilEnvironmentData/getPatches";;
+    this.getPatches = "EmilEnvironmentData/getPatches";
     this.createImageUrl = "EmilEnvironmentData/createImage?size={0}";
     this.prepareEnvironmentUrl = "EmilEnvironmentData/prepareEnvironment";
     this.importImageUrl = "EmilEnvironmentData/importImage";
     this.createEnvironmentUrl = "EmilEnvironmentData/createEnvironment";
-    this.createNetworkEnvironmentUrl = "EmilEnvironmentData/createNetworkEnvironment";
+    this.createNetworkEnvironmentUrl = "network-environments";
 
     this.commitUrl = "EmilEnvironmentData/commit";
     this.forkRevisionUrl = "EmilEnvironmentData/forkRevision";

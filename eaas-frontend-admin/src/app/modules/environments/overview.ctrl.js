@@ -1,65 +1,92 @@
-module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'localConfig', 'growl', '$translate', 'Environments',
+module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'localConfig', 'growl', '$translate', 'Environments', 'EmilNetworkEnvironments',
     '$uibModal', 'softwareList', 'helperFunctions', 'userInfo', 'REST_URLS',
     function ($rootScope, $http, $state, $scope, $stateParams,
-              localConfig, growl, $translate, Environments, $uibModal, softwareList, helperFunctions, userInfo, REST_URLS) {
+              localConfig, growl, $translate, Environments, EmilNetworkEnvironments, $uibModal, softwareList, helperFunctions, userInfo, REST_URLS) {
         var vm = this;
 
         vm.config = localConfig.data;
         vm.landingPage = localConfig.data.landingPage;
         vm.viewArchive = 0;
 
+        function updateTableData(rowData){
+            vm.rowCount = rowData.length;
+            vm.gridOptions.api.setRowData(rowData);
+            vm.gridOptions.api.setColumnDefs(vm.initColumnDefs());
+            vm.gridOptions.api.sizeColumnsToFit();
+        }
+
         vm.updateTable = function(index)
         {
             vm.gridOptions.api.setRowData(null);
-            
-            vm.envs = Environments.query().$promise.then(function(response) {
-                var rowData = [];
-                vm.view = index;
-                vm.rowCount = 0;
-                vm.envs = response;
-                if (vm.view == 0 || vm.view == 3)
-                    vm.envs.forEach(function (element) {
-                        if (element.isLinuxRuntime) {
-                            if (vm.view === 0)
+            vm.view = index;
+            let rowData = [];
+            if(vm.view != 4) {
+                vm.envs = Environments.query().$promise.then(function (response) {
+                    vm.rowCount = 0;
+                    vm.envs = response;
+                    if (vm.view == 0 || vm.view == 3)
+                        vm.envs.forEach(function (element) {
+                            if (element.isLinuxRuntime) {
+                                if (vm.view === 0)
+                                    return;
+                            } else {
+                                if (vm.view === 3)
+                                    return;
+                            }
+                            if (element.envType != 'base')
                                 return;
-                        } else {
-                            if (vm.view === 3)
+                            if ((element.archive == 'default' && vm.viewArchive === 0) ||
+                                ((element.archive == "public" || element.archive == 'emulators') && vm.viewArchive === 1) ||
+                                (element.archive == "remote" && vm.viewArchive === 2))
+                                rowData.push({
+                                    name: element.title,
+                                    id: element.envId,
+                                    archive: element.archive,
+                                    owner: (element.owner) ? element.owner : "shared"
+                                });
+                        });
+                    else if (vm.view == 1) {
+                        vm.envs.forEach(function (element) {
+                            if (element.envType != 'object')
                                 return;
+                            rowData.push({
+                                name: element.title,
+                                id: element.envId,
+                                owner: (element.owner) ? element.owner : "shared",
+                                objectId: element.objectId
+                            })
+                        })
+                    } else if (vm.view == 2) {
+                        vm.envs.forEach(function (element) {
+                            if (element.envType != 'container')
+                                return;
+                            if ((element.archive == 'default' && vm.viewArchive === 0) ||
+                                ((element.archive == "public" || element.archive == 'container') && vm.viewArchive === 1) ||
+                                (element.archive == "remote" && vm.viewArchive === 2))
+                                rowData.push({
+                                    name: element.title,
+                                    id: element.envId,
+                                    owner: (element.owner) ? element.owner : "shared",
+                                    objectId: element.objectId
+                                })
+                        })
+                    }
+                    updateTableData(rowData);
+                });
+            } else {
+                vm.envs = EmilNetworkEnvironments.query().$promise.then(function (response) {
+                    vm.viewArchive = 1;
+                    vm.envs = response;
+                    vm.envs.forEach((element) => {
+                            rowData.push({
+                                name: element.title,
+                                id: element.envId,
+                            })
                         }
-                        if(element.envType != 'base')
-                            return;
-                        if((element.archive == 'default' && vm.viewArchive === 0) ||
-                            ((element.archive == "public" || element.archive == 'emulators') && vm.viewArchive === 1) ||
-                            (element.archive == "remote" && vm.viewArchive === 2))
-                                rowData.push({name: element.title, id: element.envId, archive: element.archive, owner: (element.owner) ? element.owner : "shared"});
-                    });
-                else if (vm.view == 1) {
-                    vm.envs.forEach(function (element) {
-                        if(element.envType != 'object')
-                            return;
-                        rowData.push({name: element.title, id: element.envId, owner: (element.owner) ? element.owner : "shared", objectId : element.objectId})
-                    })
-                } else if (vm.view == 2) {
-                    vm.envs.forEach(function (element) {
-                        if(element.envType != 'container')
-                            return;
-                        if((element.archive == 'default' && vm.viewArchive === 0) ||
-                            ((element.archive == "public" || element.archive == 'container') && vm.viewArchive === 1) ||
-                            (element.archive == "remote" && vm.viewArchive === 2))
-                        rowData.push({name: element.title, id: element.envId, owner: (element.owner) ? element.owner : "shared", objectId : element.objectId})
-                    })
-                } else if (vm.view == 4) {
-                    vm.envs.forEach(function (element) {
-                        if(element.envType != 'network-environment')
-                            return;
-                        rowData.push({name: element.title, id: element.envId, owner: (element.owner) ? element.owner : "shared"})
-                    })
-                }
-                vm.rowCount = rowData.length;
-                vm.gridOptions.api.setRowData(rowData);
-                vm.gridOptions.api.setColumnDefs(vm.initColumnDefs());
-                vm.gridOptions.api.sizeColumnsToFit();
-            });
+                    );
+                    updateTableData(rowData);
+                });
+            }
         };
 
         vm.pageSize = "10";
@@ -234,6 +261,7 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'lo
             params.$scope.switchAction = switchAction;
             params.$scope.selected = $scope.selected;
             params.$scope.landingPage = vm.landingPage;
+            params.$scope.view = vm.view;
             params.$scope.changeClass = function (id) {
                 if (($("#dropdowm" + id).is(":visible"))) {
                     return "dropbtn2";
@@ -255,7 +283,7 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'lo
                   
                   <li role="menuitem"><a class="dropdown-content" ng-click="switchAction(data.id, \'edit\')">{{\'CHOOSE_ENV_EDIT\'| translate}}</a></li>
                   <li role="menuitem"><a ng-if="data.archive == 'default'" class="dropdown-content" ng-click="switchAction(data.id, \'deleteEnvironment\')">{{\'CHOOSE_ENV_DEL\'| translate}}</a></li>
-                  <li ng-if="data.archive != 'remote'" role="menuitem"><a class="dropdown-content" ng-click="switchAction(data.id, \'addSoftware\')">{{\'CHOOSE_ENV_ADDSW\'| translate}}</a></li>
+                  <li ng-if="data.archive != 'remote'" ng-hide="view == 4" role="menuitem"><a class="dropdown-content" ng-click="switchAction(data.id, \'addSoftware\')">{{\'CHOOSE_ENV_ADDSW\'| translate}}</a></li>
                   <li class="divider">
 
                   <li role="menuitem"><a ng-if="landingPage" target="_blank" class="dropdown-content"
@@ -316,6 +344,14 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'lo
                 $state.go('admin.edit-env', {envId: id});
            else if (vm.view == 2)
                 $state.go('admin.edit-container', {envId: id});
+           else if (vm.view == 4){
+                const env = vm.envs.filter((env) => {
+                    if (env.envId === id) {
+                        return env;
+                    }
+                });
+                $state.go('admin.edit-network-environment', {environment: env});
+            }
         };
 
         vm.openLandingPage = function (id) {
@@ -340,15 +376,15 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'lo
                     suppressMenu: true},
                 {headerName: "Name", field: "name", width: 400, sort: "asc" },
                 {headerName: "ID", field: "id", width: 100},
-                {headerName: "Archive", field: "archive", hide: true}
             ];
 
-
-            columnDefs.push({headerName: "Owner", field: "owner", width: 100},);
+            if (vm.view !== 4){
+                columnDefs.push({headerName: "Archive", field: "archive", hide: true});
+                columnDefs.push({headerName: "Owner", field: "owner", width: 100},);
+            }
             if (vm.view == 1) {
                 columnDefs.push({headerName: "ObjectID", field: "objectId"});
             }
-
 
             columnDefs.push({
                 headerName: "Actions", field: "actions", cellRenderer: actionsCellRendererFunc, suppressSorting: true,
