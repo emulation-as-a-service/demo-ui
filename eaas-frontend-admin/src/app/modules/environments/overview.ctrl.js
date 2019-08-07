@@ -345,12 +345,12 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'lo
            else if (vm.view == 2)
                 $state.go('admin.edit-container', {envId: id});
            else if (vm.view == 4){
-                const env = vm.envs.filter((env) => {
+                const env = vm.envs.find((env) => {
                     if (env.envId === id) {
                         return env;
                     }
                 });
-                $state.go('admin.edit-network-environment', {environment: env});
+                $state.go('admin.edit-network-environment', {selectedNetworkEnvironment: env});
             }
         };
 

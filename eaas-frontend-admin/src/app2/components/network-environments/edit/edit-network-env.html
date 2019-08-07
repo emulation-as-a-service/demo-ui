@@ -1,3 +1,19 @@
-<add-network-environment>
+<h2 class="m-t-0" (click)="show()">Edit Network Environment </h2>
 
-</add-network-environment>
+<div class="borderAround tekst">
+    <mat-divider></mat-divider>
+</div>
+
+<network-environment-view
+    [environments] = "environments"
+    [enableInternet] = "selectedNetworkEnvironment.networking.enableInternet"
+    [serverMode] = "selectedNetworkEnvironment.networking.serverMode"
+    [serverIp] = "selectedNetworkEnvironment.networking.serverIp"
+    [serverPort] = "selectedNetworkEnvironment.networking.serverPort"
+    [enableSocks] = "selectedNetworkEnvironment.networking.enableSocks"
+    [isDHCPenabled] = "selectedNetworkEnvironment.networking.isDHCPenabled"
+    [isArchivedInternetEnabled] = "selectedNetworkEnvironment.networking.isArchivedInternetEnabled"
+    [allowExternalConnections] = "selectedNetworkEnvironment.networking.allowExternalConnections"
+    [chosenEnvs] = "selectedNetworkEnvironment.emilEnvironments"
+    [networkEnvironmentTitle] = "selectedNetworkEnvironment.title">
+</network-environment-view>

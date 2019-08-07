@@ -2,8 +2,6 @@ import {AfterViewInit, Component, Inject, Input} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {HttpClient} from "@angular/common/http";
 import {ViewChild} from '@angular/core';
-import {MatTable} from '@angular/material';
-import {NetworkDialogComponent} from "../modal/edit-network-elements-modal.ts";
 import * as uuid from "uuid";
 import {NgForm} from '@angular/forms';
 import {NetworkEnvironmentView}  from "../views/network-environment-view.component.ts";
@@ -18,9 +16,6 @@ export class AddNetworkComponent implements AfterViewInit {
     @Input() environments: any;
     @ViewChild(NetworkEnvironmentView, {static: false})
     private networkEnvironmentView: NetworkEnvironmentView;
-    chosenEnvs: any[] = [];
-    form: NgForm = new NgForm([],[]);
-
 
     constructor(public dialog: MatDialog,
                 private http: HttpClient,
@@ -31,13 +26,11 @@ export class AddNetworkComponent implements AfterViewInit {
     }
 
     ngAfterViewInit() {
-        this.chosenEnvs = this.networkEnvironmentView.chosenEnvs;
         // Override submitForm
         this.networkEnvironmentView.submitForm = (f: NgForm) => {
             if (f.valid) {
-
                 // You will get form value if your form is valid
-                this.http.put(`${this.localConfig.data.eaasBackendURL}${this.REST_URLS.createNetworkEnvironmentUrl}`, {
+                this.http.put(`${this.localConfig.data.eaasBackendURL}${this.REST_URLS.networkEnvironmentUrl}`, {
                     networking: {
                         enableInternet: this.networkEnvironmentView.enableInternet,
                         serverMode: this.networkEnvironmentView.serverMode,
@@ -45,6 +38,7 @@ export class AddNetworkComponent implements AfterViewInit {
                         enableSocks: this.networkEnvironmentView.enableSocks,
                         serverPort: this.networkEnvironmentView.serverPort,
                         serverIp: this.networkEnvironmentView.serverIp,
+                        allowExternalConnections: this.networkEnvironmentView.allowExternalConnections,
                         isDHCPenabled: this.networkEnvironmentView.isDHCPenabled,
                         isArchivedInternetEnabled: this.networkEnvironmentView.isArchivedInternetEnabled
                     },

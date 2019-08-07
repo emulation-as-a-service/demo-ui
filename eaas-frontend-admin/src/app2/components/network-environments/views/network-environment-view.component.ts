@@ -24,13 +24,16 @@ export class NetworkEnvironmentView {
     @Input() isDHCPenabled: boolean;
     @Input() allowExternalConnections: boolean;
     @Input() isArchivedInternetEnabled: boolean;
+    @Input() networkEnvironmentTitle: string;
+    @Input() chosenEnvs: any[] = [];
+
+
     selectedEnv: any;
     envLabel: any;
-    chosenEnvs: any[] = [];
     displayedColumns: string[] = ['environment', 'label', "actions"];
     @ViewChild(MatTable, <any>{}) table: MatTable<any>;
     localServerMode: boolean;
-    networkEnvironmentTitle: string;
+
 
     constructor(public dialog: MatDialog,
                 private http: HttpClient,

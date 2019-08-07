@@ -852,14 +852,26 @@ function($stateProvider,
             }
         })
         .state('admin.edit-network-environment', {
-            url: "/create-network-environment",
-            params: {environment: null},
+            url: "/edit-network-environment",
+            params: {selectedNetworkEnvironment: null},
+            resolve: {
+                environments: (Environments) => {
+                    return Environments.query().$promise;
+                }
+            },
             views: {
                 'wizard': {
-                    template: '<edit-Network-Environment [environment] = environment></edit-Network-Environment>',
-                    controller: ["$scope", "$state", '$stateParams', '$translate', 'growl', function ($scope, $state, $stateParams, $translate, growl) {
-                        $scope.environment = $stateParams.environment;
-                        console.log("$stateParams.envId ", $stateParams.environment);
+                    template: '<edit-Network-Environment ' +
+                        '[environments] = environments '+
+                        '[selected-Network-Environment] = selectedNetworkEnvironment>' +
+                        '</edit-Network-Environment>',
+                    controller: ["$scope", "$state", '$stateParams', '$translate', 'environments', 'growl', function ($scope, $state, $stateParams, $translate, environments, growl) {
+                        $scope.environments = environments.filter(env => env.networkEnabled === true);
+                        if ($scope.environments.length === 0) {
+                            growl.error($translate.instant('NO_ENVIRONMENTS_WITH_NETWORK'));
+                            $state.go("admin.standard-envs-overview", {}, {reload: true});
+                        }
+                        $scope.selectedNetworkEnvironment = $stateParams.selectedNetworkEnvironment;
                     }]
                 }
             }

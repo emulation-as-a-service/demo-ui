@@ -28,7 +28,7 @@ emilAdminUIHelpersModule.service('REST_URLS', function () {
     this.prepareEnvironmentUrl = "EmilEnvironmentData/prepareEnvironment";
     this.importImageUrl = "EmilEnvironmentData/importImage";
     this.createEnvironmentUrl = "EmilEnvironmentData/createEnvironment";
-    this.createNetworkEnvironmentUrl = "network-environments";
+    this.networkEnvironmentUrl = "network-environments";
 
     this.commitUrl = "EmilEnvironmentData/commit";
     this.forkRevisionUrl = "EmilEnvironmentData/forkRevision";
