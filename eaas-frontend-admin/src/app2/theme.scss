@@ -1,0 +1,19 @@
+@import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
+@import '~@angular/material/_theming.scss';
+@include mat-core();
+$alternate-primary: mat-palette($mat-blue, 700);
+$alternate-accent:  mat-palette($mat-yellow, 400);
+$alternate-theme: mat-light-theme($alternate-primary, $alternate-accent);
+@include angular-material-theme($alternate-theme);
+.example-section {
+  display: flex;
+  align-content: center;
+  align-items: center;
+  height: 9%;
+}
+.paddingLeft {
+  padding-left: 3em
+}
+.borderAround {
+  border-bottom: 2px solid
+}

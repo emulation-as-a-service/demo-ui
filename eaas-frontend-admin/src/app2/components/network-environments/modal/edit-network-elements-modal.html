@@ -1,0 +1,16 @@
+<form method="post"  #f="ngForm" (ngSubmit)="editEnv(f)" name="edit-env-form" id="edit-env-form">
+
+<mat-dialog-content class="mat-typography">
+    <mat-form-field class="full-width">
+        <input name="evnLabel" [(ngModel)]="label" required matInput #evnLabel="ngModel" placeholder="{{'ADD_NETWORK_ENVIRONMENT_LABEL' | translate}}">
+        <mat-error>Label is required</mat-error>
+    </mat-form-field>
+    <mat-form-field class="full-width">
+        <input matInput [(ngModel)]="macAddress" [ngModelOptions]="{standalone: true}"  placeholder="{{'ADD_NETWORK_ENVIRONMENT_MAC_ADDRESS' | translate}}">
+    </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button type="submit" value="submit" >Ok</button>
+    <button mat-button [mat-dialog-close]>{{'ADDENV_CANCEL' | translate}}</button>
+</mat-dialog-actions>
+</form>

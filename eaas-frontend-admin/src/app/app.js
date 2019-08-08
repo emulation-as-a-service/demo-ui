@@ -42,6 +42,7 @@ import "ag-grid-community/dist/styles/ag-theme-bootstrap.css";
 import "ag-grid-community/dist/styles/ag-theme-material.css";
 import "ag-grid-community/dist/styles/ag-theme-fresh.css";
 
+
 import networkingTemplate from './modules/environments/templates/edit-networking-template.html';
 
 agGrid.initialiseAgGridWithAngular1(angular);
@@ -98,7 +99,17 @@ import 'font-awesome/css/font-awesome.css';
 import 'angular-wizard/dist/angular-wizard.css';
 import '../../../eaas-client/guacamole/guacamole.css';
 import '../../../eaas-client/eaas-client.css';
-import './app.css';
+import './app.scss';
+
+/**
+ * angular 8 modules
+ */
+import {downgradeComponent} from '@angular/upgrade/static';
+import {AddNetworkComponent} from '../app2/components/network-environments/add/add-network-env.component.ts';
+import {EditNetworkComponent} from "../app2/components/network-environments/edit/edit-network-env.component.ts";
+
+
+
 
 export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize', 'ngAnimate', 'ngCookies', 'ngResource', 'ui.router', 'ui.bootstrap',
                                    'ui.mask', 'ui.select', 'angular-growl', 'smart-table', 'ng-sortable', 'pascalprecht.translate',
@@ -113,7 +124,14 @@ export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize'
         ret.data = JSON.parse(xhr.responseText);
         return ret;
     })())
-
+    .directive(
+        'addNetworkEnvironment',
+        downgradeComponent({component: AddNetworkComponent})
+    )
+    .directive(
+        'editNetworkEnvironment',
+        downgradeComponent({component: EditNetworkComponent})
+    )
     .component('inputList', {
         templateUrl: 'partials/components/inputList.html',
         bindings: {
@@ -283,6 +301,10 @@ export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize'
 
 .factory('Environments', function($http, $resource, localConfig) {
    return $resource(localConfig.data.eaasBackendURL + 'EmilEnvironmentData/:envId');
+})
+
+.factory('EmilNetworkEnvironments', function($http, $resource, localConfig) {
+   return $resource(localConfig.data.eaasBackendURL + 'network-environments/:envId');
 })
 
 .config(['$stateProvider',
@@ -604,7 +626,8 @@ function($stateProvider,
             url: "/environments",
             params: {
                 showObjects: false,
-                showContainers: false
+                showContainers: false,
+                showNetworkEnvs: false
             },
             resolve : {
 
@@ -806,6 +829,53 @@ function($stateProvider,
                 'wizard': {
                     template: require('./modules/emulators/overview.html'),
                     controller: "EmulatorsController as emusCtrl"
+                }
+            }
+        })
+        .state('admin.create-network-environment', {
+            url: "/create-network-environment",
+            resolve: {
+                environments: (Environments) => {
+                    return Environments.query().$promise;
+                }
+            },
+            views: {
+                'wizard': {
+                    template: '<add-Network-Environment' +
+                        '  [environments] = environments>' +
+                        '</add-Network-Environment>',
+                    controller: ["$scope", "$state", '$stateParams', '$translate', 'environments', 'growl', function ($scope, $state, $stateParams, $translate, environments, growl) {
+                        $scope.environments = environments.filter(env => env.networkEnabled === true);
+                        if ($scope.environments.length === 0) {
+                            growl.error($translate.instant('NO_ENVIRONMENTS_WITH_NETWORK'));
+                            $state.go("admin.standard-envs-overview", {}, {reload: true});
+                        }
+                    }]
+                }
+            }
+        })
+        .state('admin.edit-network-environment', {
+            url: "/edit-network-environment",
+            params: {selectedNetworkEnvironment: null},
+            resolve: {
+                environments: (Environments) => {
+                    return Environments.query().$promise;
+                }
+            },
+            views: {
+                'wizard': {
+                    template: '<edit-Network-Environment ' +
+                        '[environments] = environments '+
+                        '[selected-Network-Environment] = selectedNetworkEnvironment>' +
+                        '</edit-Network-Environment>',
+                    controller: ["$scope", "$state", '$stateParams', '$translate', 'environments', 'growl', function ($scope, $state, $stateParams, $translate, environments, growl) {
+                        $scope.environments = environments.filter(env => env.networkEnabled === true);
+                        if ($scope.environments.length === 0) {
+                            growl.error($translate.instant('NO_ENVIRONMENTS_WITH_NETWORK'));
+                            $state.go("admin.standard-envs-overview", {}, {reload: true});
+                        }
+                        $scope.selectedNetworkEnvironment = $stateParams.selectedNetworkEnvironment;
+                    }]
                 }
             }
         })

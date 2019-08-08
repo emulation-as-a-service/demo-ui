@@ -1,3 +1,5 @@
+import {stopClient} from "./utils/stop-client";
+
 module.exports = ['$rootScope', '$scope', '$state', '$http', '$uibModal', '$stateParams', 'growl', 'localConfig', 'Objects',
     '$timeout', '$translate', 'chosenEnv', 'Environments', 'REST_URLS', 'eaasClient',
     function ($rootScope, $scope, $state, $http, $uibModal, $stateParams, growl, localConfig, Objects,
@@ -104,8 +106,8 @@ module.exports = ['$rootScope', '$scope', '$state', '$http', '$uibModal', '$stat
                 template: require('./modals/confirm-stop.html'),
                 controller: ['$scope', function ($scope) {
                     this.confirmed = function () {
-                        window.onbeforeunload = null;
-                        eaasClient.release();
+                       
+                        stopClient($uibModal, false, eaasClient);
                         $('#emulator-stopped-container').show();
 
                         if ($stateParams.isTestEnv) {
@@ -185,7 +187,6 @@ module.exports = ['$rootScope', '$scope', '$state', '$http', '$uibModal', '$stat
 
                         postObj.driveId = eaasClient.driveId;
                         postObj.label = newMediumLabel;
-
                         var changeSuccsessFunc = function (data, status) {
                             growl.success($translate.instant('JS_MEDIA_CHANGETO') + newMediumLabel);
                             vm.currentMediumLabel = newMediumLabel;
@@ -305,8 +306,8 @@ module.exports = ['$rootScope', '$scope', '$state', '$http', '$uibModal', '$stat
 
         vm.openDetachDialog = function () {
             $('#emulator-container').hide();
-            $uibModal.open({
-                animation: true,
+            let modal = $uibModal.open({
+                animation: false,
                 template: require('../../../../../landing-page/src/app/modules/client/landing-page/modals/detach.html'),
                 resolve: {
                     currentEnv: function () {
@@ -319,13 +320,14 @@ module.exports = ['$rootScope', '$scope', '$state', '$http', '$uibModal', '$stat
                 },
                 controller: "DetachModalController as detachModalCtrl"
             });
+            modal.closed.then(() => $('#emulator-container').show());
         };
 
         vm.openSaveEnvironmentDialog = function () {
             $('#emulator-container').hide();
             var saveDialog = function () {
-                $uibModal.open({
-                    animation: true,
+                let modal = $uibModal.open({
+                    animation: false,
                     template: require('./modals/save-environment.html'),
                     controller: ["$scope", function ($scope) {
                         this.type = $stateParams.type;
@@ -393,10 +395,12 @@ module.exports = ['$rootScope', '$scope', '$state', '$http', '$uibModal', '$stat
                     }],
                     controllerAs: "openSaveEnvironmentDialogCtrl"
                 });
+                modal.closed.then(() => $('#emulator-container').show());
+
             };
 
-            $uibModal.open({
-                animation: true,
+            let modal = $uibModal.open({
+                animation: false,
                 template: require('./modals/confirm-snapshot.html'),
                 controller: ["$scope", function ($scope) {
                     this.confirmed = function () {
@@ -408,7 +412,7 @@ module.exports = ['$rootScope', '$scope', '$state', '$http', '$uibModal', '$stat
                 }],
                 controllerAs: "confirmSnapshotDialogCtrl"
             });
-
+            modal.closed.then(() => $('#emulator-container').show());
         }
         /*
         var closeEmulatorOnTabLeaveTimer = null;

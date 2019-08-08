@@ -9,6 +9,7 @@
 
 <div class="modal-body">
     <p ng-hide="networkModalCtrl.localServerMode">As soon as emulator boots, you would be able to connect with following address:</p>
+    <a href="{{networkModalCtrl.network}}" target="_blank">{{networkModalCtrl.hostname}}:{{networkModalCtrl.port}}</a>
 
     <p ng-hide="!networkModalCtrl.localServerMode">Please note!<br> for local connection you would need: <br> <b>1)</b> Download and run following software
         <br> <a href="https://gitlab.com/emulation-as-a-service/eaas-proxy/-/jobs/artifacts/master/raw/eaas-proxy/eaas-proxy.app.zip?job=build" ng-show="networkModalCtrl.localServerMode" target="eaas-proxy"> MAC</a>
@@ -16,7 +17,7 @@
         <br> <a href="https://gitlab.com/emulation-as-a-service/eaas-proxy/-/jobs/artifacts/master/raw/eaas-proxy/eaas-proxy?job=build" ng-show="networkModalCtrl.localServerMode" target="eaas-proxy"> Linux </a>
     </p>
     <p ng-hide="!networkModalCtrl.localServerMode"> <b>2)</b> Select a port and initialize a local connection </p>
-    <a href="{{networkModalCtrl.network}}" ng-hide="networkModalCtrl.localServerMode" target="_blank">{{networkModalCtrl.hostname}}:{{networkModalCtrl.port}}</a>
+
     <p ng-if="networkModalCtrl.env.networking.enableSocks" ng-hide="networkModalCtrl.localServerMode"><br> Please note!<br> Socks connection could be accessible with following commands (Linux): <br>
         <i>export ALL_PROXY="socks5://{{networkModalCtrl.hostname}}:{{networkModalCtrl.port}}"<br>
            <div ng-if="networkModalCtrl.env.networking.enableSocks && networkModalCtrl.env.networking.serverIp && networkModalCtrl.env.networking.serverPort"> curl "{{networkModalCtrl.env.networking.serverIp}}:{{networkModalCtrl.env.networking.serverPort}}" </div> </i></p>

@@ -49,7 +49,8 @@ module.exports = function makeWebpackConfig() {
    * Reference: http://webpack.github.io/docs/configuration.html#entry
    */
   config.entry = {
-    app: './src/app/app.js'
+      polyfills: './src/app2/polyfills.js',
+    app: './src/app2/app.module.ts'
   };
 
   /**
@@ -124,6 +125,19 @@ module.exports = function makeWebpackConfig() {
         ],
       })
     }, {
+        test: /\.scss$/,
+        use: [
+            {
+                loader: 'style-loader'
+            },
+            {
+                loader: 'css-loader'
+            },
+            {
+                loader: 'sass-loader'
+            }
+        ]
+    }, {
       // ASSET LOADER
       // Reference: https://github.com/webpack/file-loader
       // Copy png, jpg, jpeg, gif, svg, woff, woff2, ttf, eot files to output
@@ -141,7 +155,9 @@ module.exports = function makeWebpackConfig() {
       // Allow loading html through js
       test: /\.html$/,
       loader: 'raw-loader'
-    }]
+    },
+    { test: /\.tsx?$/,exclude: /\.node_modules/, loader: "ts-loader" }]
+
   };
 
   /**

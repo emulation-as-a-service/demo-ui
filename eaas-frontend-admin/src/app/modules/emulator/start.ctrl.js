@@ -1,7 +1,10 @@
+
 import { Client, hideCursor, showCursor, requestPointerLock } from '../../../../../eaas-client/eaas-client.js';
+import {stopClient} from "./utils/stop-client";
 
 module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams', '$cookies', '$translate', 'localConfig', 'growl', 'Environments', 'chosenEnv', 'eaasClient',
     function ($rootScope, $uibModal, $scope, $state, $stateParams, $cookies, $translate, localConfig, growl, Environments, chosenEnv, eaasClient) {
+
         var vm = this;
 
         window.$rootScope = $rootScope;
@@ -193,6 +196,10 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams',
                     eaasClient.release();
                     window.onbeforeunload = null;
                 }
+            });
+
+            $scope.$on('$destroy', function (event) {
+                stopClient($uibModal, $stateParams.isStarted, window.eaasClient);
             });
 
             try {
