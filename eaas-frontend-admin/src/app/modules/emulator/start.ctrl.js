@@ -20,10 +20,6 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams',
 
             let type = "machine";
 
-            eaasClient.onError = function (message) {
-                
-            };
-
             window.onbeforeunload = function (e) {
                 var dialogText = $translate.instant('MESSAGE_QUIT');
                 e.returnValue = dialogText;
@@ -199,21 +195,23 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams',
             });
 
             $scope.$on('$destroy', function (event) {
-                stopClient($uibModal, $stateParams.isStarted, window.eaasClient);
+                stopClient($uibModal, $stateParams.isStarted, eaasClient);
             });
 
             try {
                 if ($stateParams.componentId && $stateParams.session) {
                     if (!$stateParams.session.network)
                         throw new Error("reattch requires a network session");
+
                     eaasClient.load($stateParams.session.sessionId, $stateParams.session.components, $stateParams.session.network);
                     let componentSession = eaasClient.getSession($stateParams.componentId);
                     await eaasClient.connect($("#emulator-container")[0], componentSession);
                     $rootScope.emulator.detached = true;
-
                 } else {
+                    
                     await eaasClient.start(envs, params, attachId);
                     await eaasClient.connect($("#emulator-container")[0]);
+                    
                     $rootScope.idsData = eaasClient.envsComponentsData;
                     $rootScope.idsData.forEach(function (idData) {
                         // console.log("!!! idData", idData);

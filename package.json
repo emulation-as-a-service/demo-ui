@@ -1,0 +1,23 @@
+{
+  "name": "demo-ui",
+  "version": "1.0.0",
+  "description": "0) Create config.json from config.json.template",
+  "main": "index.js",
+  "dependencies": {
+    "babel-plugin-angularjs-annotate": "^0.10.0",
+    "jquery": "^3.4.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/openslx/demo-ui.git"
+  },
+  "author": "",
+  "bugs": {
+    "url": "https://gitlab.com/openslx/demo-ui/issues"
+  },
+  "homepage": "https://gitlab.com/openslx/demo-ui#readme"
+}
