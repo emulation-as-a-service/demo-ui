@@ -45,7 +45,7 @@ export class NetworkEnvironmentView {
 
     private addEnv() {
         this.selectedEnv.label = this.envLabel;
-        this.selectedEnv.envId = uuid.v4();
+        this.selectedEnv.uiID = uuid.v4();
         let obh = Object.assign({}, this.selectedEnv);
         this.chosenEnvs.push(obh);
         this.selectedEnv = {};

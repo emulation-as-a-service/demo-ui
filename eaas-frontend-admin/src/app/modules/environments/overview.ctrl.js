@@ -194,38 +194,48 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'lo
             }
 
             if (confirmationResult) {
-                $http.post(localConfig.data.eaasBackendURL + REST_URLS.deleteEnvironmentUrl, {
-                    envId: envId,
-                    deleteMetaData: true,
-                    deleteImage: true,
-                    force: false
-                }).then(function(response) {
-                    if (response.data.status === "0") {
-                        // remove env locally
-                        vm.envs = vm.envs.filter(function(env) {
-                            return env.envId !== envId;
-                        });
-                        $rootScope.chk.transitionEnable = true;
-                        growl.success($translate.instant('JS_DELENV_SUCCESS'));
-                        $state.go('admin.standard-envs-overview', {}, {reload: true});
-                    }
-                    else if (response.data.status === "2") {
+                let promise = null;
 
-                        $uibModal.open({
-                            animation: true,
-                            template: require ('./modals/confirm-delete.html'),
-                            controller: ["$scope", function($scope) {
-                                this.envId = envId;
-                                this.confirmed = confirmDeleteFn;
-                            }],
-                            controllerAs: "confirmDeleteDialogCtrl"
-                        });
-                    } else {
-                        $rootScope.chk.transitionEnable = true;
-                        growl.error(response.data.message, {title: 'Error ' + response.data.status});
-                        $state.go('admin.standard-envs-overview', {}, {reload: true});
-                    }
-                });
+                if (vm.view === 4) {
+                    console.log("envId", envId);
+                    promise = EmilNetworkEnvironments.delete({envId: envId}).$promise;
+                } else {
+                    promise = $http.post(localConfig.data.eaasBackendURL + REST_URLS.deleteEnvironmentUrl, {
+                        envId: envId,
+                        deleteMetaData: true,
+                        deleteImage: true,
+                        force: false
+                    });
+                }
+                promise.then( (response) => {
+                    console.log(response.data);
+
+                    if (response.data.status === "0" || response.data.status === 0) {
+                    // remove env locally
+                    vm.envs = vm.envs.filter(function (env) {
+                        return env.envId !== envId;
+                    });
+                    $rootScope.chk.transitionEnable = true;
+                    growl.success($translate.instant('JS_DELENV_SUCCESS'));
+                    $state.go('admin.standard-envs-overview', {}, {reload: true});
+                } else if (response.data.status === "2") {
+
+                    $uibModal.open({
+                        animation: true,
+                        template: require('./modals/confirm-delete.html'),
+                        controller: ["$scope", function ($scope) {
+                            this.envId = envId;
+                            this.confirmed = confirmDeleteFn;
+                        }],
+                        controllerAs: "confirmDeleteDialogCtrl"
+                    });
+                } else {
+                    $rootScope.chk.transitionEnable = true;
+                    growl.error(response.data.message, {title: 'Error ' + response.data.status});
+                    $state.go('admin.standard-envs-overview', {}, {reload: true});
+                }
+                ;
+            })
             } else {
                 $rootScope.chk.transitionEnable = true;
                 $state.go('admin.standard-envs-overview', {showContainers: false,
@@ -282,7 +292,7 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'lo
                   </li>
                   
                   <li role="menuitem"><a class="dropdown-content" ng-click="switchAction(data.id, \'edit\')">{{\'CHOOSE_ENV_EDIT\'| translate}}</a></li>
-                  <li role="menuitem"><a ng-if="data.archive == 'default'" class="dropdown-content" ng-click="switchAction(data.id, \'deleteEnvironment\')">{{\'CHOOSE_ENV_DEL\'| translate}}</a></li>
+                  <li role="menuitem"><a ng-if="data.archive == 'default' || view == 4" class="dropdown-content" ng-click="switchAction(data.id, \'deleteEnvironment\')">{{\'CHOOSE_ENV_DEL\'| translate}}</a></li>
                   <li ng-if="data.archive != 'remote'" ng-hide="view == 4" role="menuitem"><a class="dropdown-content" ng-click="switchAction(data.id, \'addSoftware\')">{{\'CHOOSE_ENV_ADDSW\'| translate}}</a></li>
                   <li class="divider">
 
@@ -334,7 +344,7 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'lo
             }
             if (typeof env.envId == "undefined")
                 $state.go('error', {errorMsg: {title: "Error ", message: "given envId: " + id + " is not found!"}});
-            $state.go('admin.emulator', {envId: env.envId, objectId: env.objectId, objectArchive: env.objectArchive}, {reload: true});
+            $state.go('admin.emulator', {envId: env.envId, objectId: env.objectId, objectArchive: env.objectArchive, isNetworkEnvironment: vm.view === 4}, {reload: true});
         };
 
         vm.edit = function (id) {

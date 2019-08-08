@@ -58,9 +58,4 @@ export class EditNetworkComponent implements AfterViewInit {
             }
         };
     }
-
-    show() {
-        console.log("selected env", this.selectedNetworkEnvironment);
-        console.log("environments ", this.environments);
-    }
 }

@@ -6,8 +6,6 @@ import * as uuid from "uuid";
 import {NgForm} from '@angular/forms';
 import {NetworkEnvironmentView}  from "../views/network-environment-view.component.ts";
 
-
-
 @Component({
     selector: 'add-network-environment',
     template: require('./add-network-env.html'),
@@ -58,13 +56,5 @@ export class AddNetworkComponent implements AfterViewInit {
                 f.form.controls['evnLabel'].markAsTouched();
             }
         };
-    }
-
-
-
-    showStuff() {
-        console.log( this.networkEnvironmentView.chosenEnvs);
-
-        console.log(this.networkEnvironmentView.enableInternet)
     }
 }

@@ -17,8 +17,18 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams',
             chosenEnv.networking = $stateParams.containerRuntime.networking;
         }
         vm.runEmulator = async (selectedEnvs, attachId) => {
-
+            // !HACK make Network Environment a proper component!
+            // currently, last element always will be visualized
+            if ($stateParams.isNetworkEnvironment) {
+                for (let i = 0; i < chosenEnv.emilEnvironments.length; i++) {
+                    let env = await Environments.get({envId: chosenEnv.emilEnvironments[i].envId}).$promise;
+                    selectedEnvs.push(env);
+                }
+            }
+            chosenEnv = selectedEnvs.pop();
+            console.log("chosenEnv", chosenEnv);
             let type = "machine";
+            await chosenEnv;
 
             window.onbeforeunload = function (e) {
                 var dialogText = $translate.instant('MESSAGE_QUIT');
@@ -140,7 +150,8 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams',
             }
 
             var archive = (chosenEnv) ? chosenEnv.archive : "default";
-            let data = createData($stateParams.envId,
+            console.log("chosenEnv.envId",chosenEnv.envId);
+            let data = createData(chosenEnv.envId,
                 archive,
                 type,
                 $stateParams.objectArchive,

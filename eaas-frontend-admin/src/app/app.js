@@ -691,9 +691,13 @@ function($stateProvider,
         .state('admin.emulator', {
             url: "/emulator",
             resolve: {
-                chosenEnv: function($stateParams, Environments) {
-                    if(!$stateParams.isDetached && $stateParams.type != "saveImport" && $stateParams.type != 'saveCreatedEnvironment')
-                        return  Environments.get({envId: $stateParams.envId}).$promise;
+                chosenEnv: function($stateParams, Environments, EmilNetworkEnvironments) {
+                    if($stateParams.isNetworkEnvironment){
+                        console.log("$stateParams.isNetworkEnvironment!!!!");
+                        return EmilNetworkEnvironments.get({envId: $stateParams.envId}).$promise;
+                    }
+                    else if(!$stateParams.isDetached && $stateParams.type != "saveImport" && $stateParams.type != 'saveCreatedEnvironment')
+                        return Environments.get({envId: $stateParams.envId}).$promise;
                     else
                         return null;
                 },
@@ -701,6 +705,7 @@ function($stateProvider,
             },
             params: {
                 envId: null,
+                isNetworkEnvironment: null,
                 type: 'saveRevision',
                 softwareId: null,
                 isUserSession: false,
