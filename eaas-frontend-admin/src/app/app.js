@@ -673,7 +673,8 @@ function($stateProvider,
                         return  Environments.get({envId: $stateParams.envId}).$promise;
                     else
                         return null;
-                }
+                },
+                eaasClient: (localConfig) => new Client(localConfig.data.eaasBackendURL)
             },
             params: {
                 envId: null,
@@ -688,6 +689,8 @@ function($stateProvider,
                 isDetached: false,
                 networkInfo: null,
                 containerRuntime: null,
+                componentId: null,
+                session: null,
             },
             views: {
                 'wizard': {

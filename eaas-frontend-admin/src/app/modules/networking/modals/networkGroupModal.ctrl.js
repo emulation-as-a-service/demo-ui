@@ -1,26 +1,24 @@
-module.exports = ['$state', '$rootScope' ,'$http', '$scope', '$uibModalInstance', 'growl', 'groupId','groupName', 'groupComponents', 'environments', 'localConfig', 'REST_URLS', 'helperFunctions',
-    function ($state, $rootScope, $http, $scope, $uibModalInstance, growl,  groupId, groupName, groupComponents, environments, localConfig, REST_URLS, helperFunctions) {
-        console.log("groupEnvs", groupComponents);
+module.exports = ['$state', '$rootScope' ,'$http', '$scope', '$uibModalInstance', 'growl', 'groupId','groupName', 'session', 'Environments', 'localConfig', 'REST_URLS', 'helperFunctions',
+    function ($state, $rootScope, $http, $scope, $uibModalInstance, growl,  groupId, groupName, session, Environments, localConfig, REST_URLS, helperFunctions) {
+        console.log("session", session);
         $scope.groupId = groupId;
         $scope.groupComponents = [];
         $scope.networkInfo = null;
         $scope.groupName = groupName;
+        $scope.session = session;
 
-        var modalCtrl = this;
+        $scope.session.sessionId = groupId;
 
-        groupComponents.forEach(function(element){
-            if(element.type === "machine")
-            $scope.groupComponents.push(element);
+        session.components.forEach(function(element){
+            if(element.type === "machine" && element.environmentId) {
+                element.metadata =  Environments.get({envId: element.environmentId});
+                $scope.groupComponents.push(element);
+            }
             if(element.type === "nodetcp"){
                 $scope.networkInfo = element.networkData.networkUrls;
                 console.log($scope.networkInfo)
             }
         });
-
-        $scope.getTitle = function(id)
-        {
-                return environments.find(element => element.envId === id).title;
-        };
 
         $scope.stopEmulator = function(id){
             $("#loding-modal").attr("hidden", false);
@@ -40,8 +38,8 @@ module.exports = ['$state', '$rootScope' ,'$http', '$scope', '$uibModalInstance'
             })
         };
         
-        $scope.attach = function(id){
+        $scope.attach = function(session, componentId, environmentId){
             $uibModalInstance.close();
-            $state.go('admin.emulator', {envId: id, isStarted: true, isDetached: true, networkInfo: $scope.networkInfo}, {reload: true});
+            $state.go('admin.emulator', {envId: environmentId, componentId: componentId, session: session}, {reload: true});
         }
     }];

@@ -2,18 +2,15 @@
     <h3 class="modal-title">Group: {{groupName}}</h3>
 </div>
 
-
 <div class="modal-body" >
     <div hidden id="loding-modal" style="text-align: center">
         <h4>{{'NETWORKING_STOPPING_COMPONENT' | translate}}</h4>
         <img id="emulator-loading-connections-spinner" height="144" width="144" src="img/Double-Ring-1s-200px.gif" />
     </div>
 <uib-accordion id="session-accordion" close-others="oneAtATime"> <!-- pay attention to this line -->
-
-
-    <div uib-accordion-group class="panel-default" heading="{{getTitle(component.customComponentName)}}" ng-repeat="component in groupComponents">
-        {{getTitle(component.customComponentName)}}
-        <button ng-click="attach(component.componentId)" class="btn btn-default">Attach Viewer</button>
+    <div uib-accordion-group class="panel-default" heading="{{component.metadata.title}}" ng-repeat="component in groupComponents">
+        {{component.metadata.title}}
+        <button ng-click="attach(session, component.componentId, component.environmentId)" class="btn btn-default">Attach Viewer</button>
         <button ng-click="stopEmulator(component.componentId)" class="btn btn-danger">Power Off</button>
     </div>
 

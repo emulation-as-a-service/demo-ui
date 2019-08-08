@@ -10,7 +10,7 @@ module.exports = ['$state', '$scope', '$stateParams', '$uibModal', 'groupdIds', 
     });
 
     function updateGroupId() {
-        var updatedGroupID = $http.get(localConfig.data.eaasBackendURL + REST_URLS.getGroupIds).then(function (response) {
+        var updatedGroupID = $http.get(localConfig.data.eaasBackendURL + "/sessions").then(function (response) {
             $scope.groupdIds = response.data;
 
             if ($scope.gridOptions.api != null) {
@@ -59,7 +59,7 @@ module.exports = ['$state', '$scope', '$stateParams', '$uibModal', 'groupdIds', 
     }
 
     function openNetworkGroupModal(id) {
-        $http.get(localConfig.data.eaasBackendURL + "networks/" + id).then(function (response) {
+        $http.get(localConfig.data.eaasBackendURL + "sessions/" + id).then((response) => {
             $uibModal.open({
                 animation: true,
                 template: require('./modals/networkGroupModal.html'),
@@ -73,11 +73,9 @@ module.exports = ['$state', '$scope', '$stateParams', '$uibModal', 'groupdIds', 
                     localConfig: function () {
                         return localConfig;
                     },
-                    groupComponents: function () {
+                    session: function () {
                         return response.data;
-                    },
-
-                    environments : (Environments) => Environments.query().$promise
+                    }
                 },
                 controller: "NetworkGroupManagerCtrl as networkModalCtrl"
             });
