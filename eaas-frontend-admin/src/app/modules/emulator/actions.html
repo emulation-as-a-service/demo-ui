@@ -80,7 +80,7 @@
         </button>
 
         <button class="btn btn-default"
-                ng-if="!actionsCtrl.emulator.detached && chosenEnv.networking.connectEnvs"
+                ng-if="!actionsCtrl.emulator.detached && (chosenEnv.networking.connectEnvs || actionsCtrl.isNetworkEnvironment)"
                 ng-disabled="actionsCtrl.emulator.state !== 'STARTED'"
                 ng-click="actionsCtrl.openDetachDialog()" >
             Detach Network

@@ -23,6 +23,7 @@ import {MatButtonModule, MatCheckboxModule} from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {NetworkDialogComponent} from "./components/network-environments/modal/edit-network-elements-modal.ts";
 import {NetworkEnvironmentView} from "./components/network-environments/views/network-environment-view.component.ts";
+import {StartedNetworkOverview} from "./components/network-environments/run/started-network-overview.component.ts";
 
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -53,12 +54,14 @@ export function HttpLoaderFactory(http: HttpClient) {
         AddNetworkComponent,
         NetworkDialogComponent,
         EditNetworkComponent,
-        NetworkEnvironmentView
+        NetworkEnvironmentView,
+        StartedNetworkOverview
     ],
     entryComponents: [
         AddNetworkComponent,
         NetworkDialogComponent,
-        EditNetworkComponent
+        EditNetworkComponent,
+        StartedNetworkOverview
     ],
     providers: [
         {

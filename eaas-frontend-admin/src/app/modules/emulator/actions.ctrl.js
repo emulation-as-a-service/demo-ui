@@ -5,6 +5,7 @@ module.exports = ['$rootScope', '$scope', '$state', '$http', '$uibModal', '$stat
     function ($rootScope, $scope, $state, $http, $uibModal, $stateParams, growl, localConfig, Objects,
         $timeout, $translate, chosenEnv, Environments, REST_URLS, eaasClient) {
         var vm = this;
+        vm.isNetworkEnvironment = $stateParams.isNetworkEnvironment;
         vm.envId = $stateParams.envId;
         vm.config = localConfig.data;
         vm.type = $stateParams.type;

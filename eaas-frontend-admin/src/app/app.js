@@ -107,6 +107,7 @@ import './app.scss';
 import {downgradeComponent} from '@angular/upgrade/static';
 import {AddNetworkComponent} from '../app2/components/network-environments/add/add-network-env.component.ts';
 import {EditNetworkComponent} from "../app2/components/network-environments/edit/edit-network-env.component.ts";
+import {StartedNetworkOverview} from "../app2/components/network-environments/run/started-network-overview.component.ts";
 
 
 
@@ -127,6 +128,10 @@ export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize'
     .directive(
         'addNetworkEnvironment',
         downgradeComponent({component: AddNetworkComponent})
+    )
+    .directive(
+        'startedNetworkEnvironmentOverview',
+        downgradeComponent({component: StartedNetworkOverview})
     )
     .directive(
         'editNetworkEnvironment',
@@ -693,7 +698,6 @@ function($stateProvider,
             resolve: {
                 chosenEnv: function($stateParams, Environments, EmilNetworkEnvironments) {
                     if($stateParams.isNetworkEnvironment){
-                        console.log("$stateParams.isNetworkEnvironment!!!!");
                         return EmilNetworkEnvironments.get({envId: $stateParams.envId}).$promise;
                     }
                     else if(!$stateParams.isDetached && $stateParams.type != "saveImport" && $stateParams.type != 'saveCreatedEnvironment')

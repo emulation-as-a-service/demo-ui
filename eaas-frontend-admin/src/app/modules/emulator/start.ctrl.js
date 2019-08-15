@@ -1,11 +1,11 @@
-
-import { Client, hideCursor, showCursor, requestPointerLock } from '../../../../../eaas-client/eaas-client.js';
 import {stopClient} from "./utils/stop-client";
+import {NetworkSession} from "../../../../../eaas-client/eaas-client";
 
 module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams', '$cookies', '$translate', 'localConfig', 'growl', 'Environments', 'chosenEnv', 'eaasClient',
     function ($rootScope, $uibModal, $scope, $state, $stateParams, $cookies, $translate, localConfig, growl, Environments, chosenEnv, eaasClient) {
 
         var vm = this;
+        vm.eaasClient = eaasClient;
 
         window.$rootScope = $rootScope;
         $rootScope.emulator.state = '';
@@ -17,16 +17,6 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams',
             chosenEnv.networking = $stateParams.containerRuntime.networking;
         }
         vm.runEmulator = async (selectedEnvs, attachId) => {
-            // !HACK make Network Environment a proper component!
-            // currently, last element always will be visualized
-            if ($stateParams.isNetworkEnvironment) {
-                for (let i = 0; i < chosenEnv.emilEnvironments.length; i++) {
-                    let env = await Environments.get({envId: chosenEnv.emilEnvironments[i].envId}).$promise;
-                    selectedEnvs.push(env);
-                }
-            }
-            chosenEnv = selectedEnvs.pop();
-            console.log("chosenEnv", chosenEnv);
             let type = "machine";
             await chosenEnv;
 
@@ -219,8 +209,38 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams',
                     await eaasClient.connect($("#emulator-container")[0], componentSession);
                     $rootScope.emulator.detached = true;
                 } else {
-                    
-                    await eaasClient.start(envs, params, attachId);
+                    if ($stateParams.isNetworkEnvironment) {
+                        vm.networkSessionEnvironments = [];
+                        let sessions = [];
+                        // !FIXME
+                        // make Network Environment a proper component and run it from backend!
+                        // currently, last element always will be visualized
+
+                        for (const networkElement of chosenEnv.emilEnvironments) {
+                            let env = await Environments.get({envId: networkElement.envId}).$promise;
+                            data = createData(env.envId,
+                                env.archive,
+                                "machine",
+                                env.objectArchive,
+                                env.objectId,
+                                env.userId,
+                                env.softwareId);
+                            data.userNetworkLabel = networkElement.label;
+                            let componentSession = await eaasClient.start([{data, visualize: true}], {});
+                            vm.networkSessionEnvironments.push({
+                                "envId": env.envId,
+                                "title": env.title,
+                                "label": networkElement.label,
+                                "componentId": componentSession.componentId
+                            });
+                            sessions.push(componentSession);
+                        }
+                        eaasClient.network = new NetworkSession(eaasClient.API_URL, eaasClient.idToken);
+                        eaasClient.sessions = sessions;
+                        await eaasClient.network.startNetwork(sessions, chosenEnv.networking);
+                    } else {
+                        await eaasClient.start(envs, params, attachId);
+                    }
                     await eaasClient.connect($("#emulator-container")[0]);
                     
                     $rootScope.idsData = eaasClient.envsComponentsData;
