@@ -1,5 +1,7 @@
 #!/bin/sh
 
+npm install
+
 cd landing-page
 npm install
 npm run build
