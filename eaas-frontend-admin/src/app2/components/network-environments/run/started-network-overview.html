@@ -15,10 +15,10 @@
     <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef> Action </th>
         <td mat-cell *matCellDef="let element">
-            <button (click)="connect(element)" [disabled]="eaasClient.activeView.componentId===element.componentId" style="margin-right:5px;" mat-raised-button >
-                {{eaasClient.activeView.componentId===element.componentId ? "active" : "connect"}}
+            <button (click)="connect(element)" [disabled]="eaasClient.activeView && eaasClient.activeView.componentId===element.componentId" style="margin-right:5px;" mat-raised-button >
+                {{eaasClient.activeView && eaasClient.activeView.componentId===element.componentId ? "active" : "connect"}}
             </button>
-            <button *ngIf="eaasClient.activeView.componentId!==element.componentId" (click)="delete(element)" mat-raised-button color="warn">delete</button>
+            <button *ngIf="eaasClient.activeView && eaasClient.activeView.componentId!==element.componentId" (click)="delete(element)" mat-raised-button color="warn">delete</button>
         </td>
 
     </ng-container>
