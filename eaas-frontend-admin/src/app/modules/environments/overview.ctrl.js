@@ -382,7 +382,7 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'lo
         vm.initColumnDefs = function () {
             var columnDefs = [];
             columnDefs = [
-                {headerName: '', width: 41, checkboxSelection: true, suppressSorting: true,
+                {headerName: '', width: 35, checkboxSelection: true, suppressSorting: true,
                     suppressMenu: true},
                 {headerName: "Name", field: "name", width: 400, sort: "asc" },
                 {headerName: "ID", field: "id", width: 100},
