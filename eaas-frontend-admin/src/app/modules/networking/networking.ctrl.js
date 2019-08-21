@@ -43,44 +43,24 @@ module.exports = ['$state', '$scope', '$stateParams', '$uibModal', 'groupdIds', 
             {headerName: "ID", field: "id"},
             {headerName: "Name", field: "name"},
             {
-                headerName: "", field: "edit", cellRenderer: editBtnRenderer, suppressSorting: true,
+                headerName: "", field: "edit", cellRenderer: connectBtnRenderer, suppressSorting: true,
                 suppressMenu: true
             }
         ];
     };
 
-    function editBtnRenderer(params) {
-        params.$scope.openNetworkGroupModal = openNetworkGroupModal;
+    function connectBtnRenderer(params) {
+        params.$scope.connect = connect;
 
         params.$scope.selected = $scope.selected;
-        return `<button ng-click="openNetworkGroupModal(data.id)" id="single-button" type="button" class="dropbtn">
-                  details
+        return `<button ng-click="connect(data.id)" id="single-button" type="button" class="dropbtn">
+                  connect
                 </button>`;
     }
 
-    function openNetworkGroupModal(id) {
+    function connect(id) {
         $http.get(localConfig.data.eaasBackendURL + "sessions/" + id).then((response) => {
-            $uibModal.open({
-                animation: true,
-                template: require('./modals/networkGroupModal.html'),
-                resolve: {
-                    groupId: function () {
-                        return id;
-                    },
-                    groupName: function() {
-                        return $scope.groupdIds.find(element => element.id === id).name;
-                    },
-                    localConfig: function () {
-                        return localConfig;
-                    },
-                    session: function () {
-                        return response.data;
-                    }
-                },
-                controller: "NetworkGroupManagerCtrl as networkModalCtrl"
-            });
-
-
+            $state.go('admin.emulator', {envId: response.data.components[0].environmentId, componentId: response.data.components[0].componentId, session: response.data}, {reload: true});
         })
     }
 

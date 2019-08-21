@@ -196,7 +196,7 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams',
             });
 
             $scope.$on('$destroy', function (event) {
-                stopClient($uibModal, $stateParams.isStarted, eaasClient);
+                stopClient($uibModal, $rootScope.emulator.detached, eaasClient);
             });
 
             try {
@@ -204,6 +204,19 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams',
                     if (!$stateParams.session.network)
                         throw new Error("reattch requires a network session");
 
+                    vm.networkSessionEnvironments = [];
+                    for (const component of $stateParams.session.components) {
+                        console.log(component);
+                        if (component.type === type)
+                            Environments.get({envId: component.environmentId}).$promise.then((envMetaData) => {
+                                vm.networkSessionEnvironments.push({
+                                    "envId": component.environmentId,
+                                    "title": envMetaData.title,
+                                    "label": $stateParams.session.network.components.find(el => el.componentId === component.componentId).networkLabel,
+                                    "componentId": component.componentId
+                                });
+                            });
+                    }
                     eaasClient.load($stateParams.session.sessionId, $stateParams.session.components, $stateParams.session.network);
                     let componentSession = eaasClient.getSession($stateParams.componentId);
                     await eaasClient.connect($("#emulator-container")[0], componentSession);
@@ -225,7 +238,7 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams',
                                 env.objectId,
                                 env.userId,
                                 env.softwareId);
-                            data.userNetworkLabel = networkElement.label;
+                            // data.userNetworkLabel = networkElement.label;
                             let componentSession = await eaasClient.start([{data, visualize: true}], {});
                             vm.networkSessionEnvironments.push({
                                 "envId": env.envId,
@@ -233,6 +246,8 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams',
                                 "label": networkElement.label,
                                 "componentId": componentSession.componentId
                             });
+                            componentSession.networkLabel = networkElement.label;
+                            componentSession.hwAddress = networkElement.macAddress;
                             sessions.push(componentSession);
                         }
                         eaasClient.network = new NetworkSession(eaasClient.API_URL, eaasClient.idToken);
@@ -245,7 +260,6 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams',
                     
                     $rootScope.idsData = eaasClient.envsComponentsData;
                     $rootScope.idsData.forEach(function (idData) {
-                        // console.log("!!! idData", idData);
                         if (idData.env) {
                             Environments.get({ envId: idData.env.data.environment }).$promise.then(function (response) {
                                 idData.title = response.title;

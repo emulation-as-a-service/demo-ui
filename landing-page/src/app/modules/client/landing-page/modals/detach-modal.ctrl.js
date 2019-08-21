@@ -1,5 +1,5 @@
-module.exports = ['$state', '$http', '$scope', '$uibModal', 'currentEnv' , 'eaasClient', 
-    function ($state, $http, $scope, $uibModal, curentEnv , eaasClient) {
+module.exports = ['$state', '$http', '$scope', '$rootScope', '$uibModal', 'currentEnv' , 'eaasClient',
+    function ($state, $http, $scope, $rootScope, $uibModal, curentEnv , eaasClient) {
 
         this.network = curentEnv.network;
         this.env = curentEnv;
@@ -19,6 +19,8 @@ module.exports = ['$state', '$http', '$scope', '$uibModal', 'currentEnv' , 'eaas
         this.sessionName;
         this.componentName = eaasClient.componentId;
         this.detach = function () {
+            if ($rootScope.emulator)
+                $rootScope.emulator.detached = true;
             eaasClient.detach(this.sessionName, this.detachTime, this.componentName);
             $state.go('admin.networking', {});
         };
