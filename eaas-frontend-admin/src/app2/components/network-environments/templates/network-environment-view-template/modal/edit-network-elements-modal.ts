@@ -38,7 +38,6 @@ export class NetworkDialogComponent {
             ports: new FormArray([])
         });
         if (this.data.env.serverPorts != undefined) {
-            console.log("this.data.env.serverPorts!!!!!", this.data.env.serverPorts);
             this.data.env.serverPorts.forEach((port) => {
                 this.addPort(port)
             })
@@ -46,14 +45,13 @@ export class NetworkDialogComponent {
     }
 
     editEnv(f: NgForm) {
-        if (f.valid) {
+        if (f.valid && this.portForm.valid) {
             let ports = this.portForm.get('ports') as FormArray;
             const portNumbers =[]
             ports.value.forEach(port => {
                 if (port.portNumber != "")
                     portNumbers.push(port.portNumber);
             });
-            console.log("!!!portNumbers ", portNumbers)
             this.dialogRef.close({
                 env: this.data.env,
                 macAddress: this.macAddress,
