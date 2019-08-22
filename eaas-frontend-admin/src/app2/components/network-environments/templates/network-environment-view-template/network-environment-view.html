@@ -6,7 +6,6 @@
     </mat-form-field>
 </form>
 
-
 <!--Networking Checkboxes sections-->
 <mat-checkbox [disabled]=true class="example-section" color="primary">Emulate DHCP (Coming soon)
 </mat-checkbox>
@@ -33,12 +32,6 @@
                       color="primary">{{'EDITENV_ENABLE_SOCKS' | translate}}</mat-checkbox>
         <mat-checkbox class="example-section" [(ngModel)]="localServerMode"
                       color="primary">{{'EDITENV_ENABLE_LOCAL_MODE' | translate}}</mat-checkbox>
-        <mat-form-field *ngIf="!enableSocks" class="full-width">
-            <input matInput [(ngModel)]="serverIp" placeholder="{{'EDITENV_SERVER_IP' | translate}}">
-        </mat-form-field>
-        <mat-form-field *ngIf="!enableSocks" class="full-width">
-            <input matInput [(ngModel)]="serverPort" placeholder="{{'EDITENV_SERVER_PORT' | translate}}">
-        </mat-form-field>
     </div>
 </div>
 
@@ -74,10 +67,9 @@
 <div *ngIf="chosenEnvs.length > 0">
     <h4 class="centered-content">Chosen environments</h4>
     <table mat-table [dataSource]="chosenEnvs" class="mat-elevation-z8 full-width">
-
         <ng-container matColumnDef="environment">
             <th mat-header-cell *matHeaderCellDef>Environment</th>
-            <td mat-cell *matCellDef="let element"> {{ element.title? element.title: element.envId}} </td>
+            <td mat-cell *matCellDef="let element"> {{ element.title}} </td>
         </ng-container>
 
         <ng-container matColumnDef="label">
@@ -91,12 +83,10 @@
                 <button (click)="openEditDialog(element)" style="margin-right:5px;" mat-raised-button >Edit</button>
                 <button (click)="deleteEnv(element)" mat-raised-button color="warn">delete</button>
             </td>
-
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-
     </table>
 </div>
 <br>

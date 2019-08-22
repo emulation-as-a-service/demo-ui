@@ -299,7 +299,8 @@ module.exports = ['$rootScope', '$scope', '$state', '$http', '$uibModal', '$stat
                     },
                     localConfig: function () {
                         return localConfig;
-                    }
+                    },
+                    eaasClient: () => eaasClient
                 },
                 controller: "NetworkModalController as networkModalCtrl"
             });

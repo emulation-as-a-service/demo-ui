@@ -9,7 +9,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {downgradeComponent, UpgradeModule} from '@angular/upgrade/static';
 import {platformBrowserDynamic} from "@angular/platform-browser-dynamic";
 import {setAngularJSGlobal} from '@angular/upgrade/static';
-
+import { MatIconModule } from '@angular/material/icon';
 import '../app/app.js';
 import {AddNetworkComponent} from "./components/network-environments/add/add-network-env.component.ts";
 import {EditNetworkComponent} from "./components/network-environments/edit/edit-network-env.component.ts";
@@ -21,8 +21,8 @@ import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {TranslateLoader, TranslateModule, TranslateService} from "@ngx-translate/core";
 import {MatButtonModule, MatCheckboxModule} from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {NetworkDialogComponent} from "./components/network-environments/modal/edit-network-elements-modal.ts";
-import {NetworkEnvironmentView} from "./components/network-environments/views/network-environment-view.component.ts";
+import {NetworkDialogComponent} from "./components/network-environments/templates/network-environment-view-template/modal/edit-network-elements-modal.ts";
+import {NetworkEnvironmentView} from "./components/network-environments/templates/network-environment-view-template/network-environment-view.component.ts";
 import {StartedNetworkOverview} from "./components/network-environments/run/started-network-overview.component.ts";
 
 
@@ -43,6 +43,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         MatCheckboxModule,
         MaterialModule,
         BrowserAnimationsModule,
+        MatIconModule,
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,

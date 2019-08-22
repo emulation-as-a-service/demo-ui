@@ -3,9 +3,9 @@ import {MatDialog} from '@angular/material/dialog';
 import {HttpClient} from "@angular/common/http";
 import {ViewChild} from '@angular/core';
 import {MatTable} from '@angular/material';
-import {NetworkDialogComponent} from "../modal/edit-network-elements-modal.ts";
+import {NetworkDialogComponent} from "./modal/edit-network-elements-modal.ts";
 import * as uuid from "uuid";
-import {NgForm} from '@angular/forms';
+import {FormArray, FormGroup, NgForm} from '@angular/forms';
 
 
 @Component({
@@ -17,8 +17,6 @@ export class NetworkEnvironmentView {
     @Input() networking: any;
     @Input() enableInternet: boolean;
     @Input() serverMode: boolean;
-    @Input() serverIp: string;
-    @Input() serverPort: string;
     @Input() gwPrivateMask: string;
     @Input() enableSocks: boolean;
     @Input() isDHCPenabled: boolean;
@@ -63,7 +61,7 @@ export class NetworkEnvironmentView {
     openEditDialog(env) {
         const dialogRef = this.dialog.open(NetworkDialogComponent, {
             width: '40%',
-            data: {env: env},
+            data: {env: env, allowExternalConnections: this.allowExternalConnections},
         });
         dialogRef.updatePosition({top: '10%'});
         dialogRef.afterClosed().subscribe(result => {
@@ -71,6 +69,8 @@ export class NetworkEnvironmentView {
             if (typeof result != "undefined") {
                 this.chosenEnvs.find(item => item.uiID == result.env.uiID).macAddress = result.macAddress;
                 this.chosenEnvs.find(item => item.uiID == result.env.uiID).label = result.label;
+                this.chosenEnvs.find(item => item.uiID == result.env.uiID).serverIp = result.serverIp;
+                this.chosenEnvs.find(item => item.uiID == result.env.uiID).serverPorts = result.serverPorts;
             }
         });
     }

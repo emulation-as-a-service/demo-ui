@@ -73,7 +73,7 @@
         </button>
 
         <button class="btn btn-default"
-                ng-if="(chosenEnv.networking.serverMode || chosenEnv.networking.localServerMode || actionsCtrl.emulator.detached)"
+                ng-if="(chosenEnv.networking.serverMode || chosenEnv.networking.localServerMode || actionsCtrl.emulator.detached || actionsCtrl.isNetworkEnvironment)"
                 ng-disabled="actionsCtrl.emulator.state !== 'STARTED'"
                 ng-click="actionsCtrl.openNetworkDialog()">
             Connection Info

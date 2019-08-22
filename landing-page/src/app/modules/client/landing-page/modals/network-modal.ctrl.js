@@ -1,5 +1,5 @@
-module.exports = ['$state', '$http', '$scope', '$uibModal', 'currentEnv' , 'localConfig', 'growl', '$timeout', '$uibModalStack', 'REST_URLS', 'helperFunctions',
-    function ($state, $http, $scope, $uibModal, currentEnv , localConfig, growl, $timeout, $uibModalStack, REST_URLS, helperFunctions) {
+module.exports = ['$state', '$http', '$scope', '$uibModal', 'currentEnv', 'eaasClient' ,'localConfig', 'growl', '$timeout', '$uibModalStack', 'REST_URLS', 'helperFunctions',
+    function ($state, $http, $scope, $uibModal, currentEnv, eaasClient, localConfig, growl, $timeout, $uibModalStack, REST_URLS, helperFunctions) {
 
         var modalCtrl = this;
 

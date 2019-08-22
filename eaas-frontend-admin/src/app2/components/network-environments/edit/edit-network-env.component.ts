@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, Inject, Input, ViewChild} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {HttpClient} from "@angular/common/http";
-import {NetworkEnvironmentView} from "../views/network-environment-view.component.ts";
+import {NetworkEnvironmentView} from "../templates/network-environment-view-template/network-environment-view.component.ts";
 import {NgForm} from "@angular/forms";
 
 @Component({
@@ -23,6 +23,15 @@ export class EditNetworkComponent implements AfterViewInit {
                 @Inject('growl') private growl: any) {
     };
 
+    ngOnInit() {
+        // enrich chosenEnvs with title
+        if (this.selectedNetworkEnvironment.emilEnvironments.length > 0) {
+            this.selectedNetworkEnvironment.emilEnvironments.forEach(networkElement =>
+                networkElement.title = this.environments.find((env => env.envId == networkElement.envId)).title
+            )
+        }
+    }
+
     ngAfterViewInit() {
         this.networkEnvironmentView.submitForm = (f: NgForm) => {
             if (f.valid) {
@@ -33,8 +42,6 @@ export class EditNetworkComponent implements AfterViewInit {
                         serverMode: this.networkEnvironmentView.serverMode,
                         localServerMode: this.networkEnvironmentView.localServerMode,
                         enableSocks: this.networkEnvironmentView.enableSocks,
-                        serverPort: this.networkEnvironmentView.serverPort,
-                        serverIp: this.networkEnvironmentView.serverIp,
                         isDHCPenabled: this.networkEnvironmentView.isDHCPenabled,
                         isArchivedInternetEnabled: this.networkEnvironmentView.isArchivedInternetEnabled,
                         allowExternalConnections: this.networkEnvironmentView.allowExternalConnections
@@ -43,15 +50,13 @@ export class EditNetworkComponent implements AfterViewInit {
                     title: this.networkEnvironmentView.networkEnvironmentTitle,
                     envId: this.selectedNetworkEnvironment.envId
                 }).subscribe((reply : any) =>{
-                    console.log("reply", reply);
-                    // TODO check status
-                    // if(reply.status == "0"){
+                    if(reply.status == "0"){
                         this.growl.success("Done");
                         this.$state.go('admin.standard-envs-overview', {}, {reload: true});
-                    // } else {
-                    //     this.growl.error("Saved failed! ", reply);
-                    //     console.log(reply);
-                    // }
+                    } else {
+                        this.growl.error("Saved failed! ", reply);
+                        console.log(reply);
+                    }
                 });
             } else {
                 f.form.controls['evnLabel'].markAsTouched();

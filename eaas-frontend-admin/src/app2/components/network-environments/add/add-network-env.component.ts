@@ -4,7 +4,7 @@ import {HttpClient} from "@angular/common/http";
 import {ViewChild} from '@angular/core';
 import * as uuid from "uuid";
 import {NgForm} from '@angular/forms';
-import {NetworkEnvironmentView}  from "../views/network-environment-view.component.ts";
+import {NetworkEnvironmentView}  from "../templates/network-environment-view-template/network-environment-view.component.ts";
 
 @Component({
     selector: 'add-network-environment',
@@ -34,8 +34,6 @@ export class AddNetworkComponent implements AfterViewInit {
                         serverMode: this.networkEnvironmentView.serverMode,
                         localServerMode: this.networkEnvironmentView.localServerMode,
                         enableSocks: this.networkEnvironmentView.enableSocks,
-                        serverPort: this.networkEnvironmentView.serverPort,
-                        serverIp: this.networkEnvironmentView.serverIp,
                         allowExternalConnections: this.networkEnvironmentView.allowExternalConnections,
                         isDHCPenabled: this.networkEnvironmentView.isDHCPenabled,
                         isArchivedInternetEnabled: this.networkEnvironmentView.isArchivedInternetEnabled
