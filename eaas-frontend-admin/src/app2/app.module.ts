@@ -19,7 +19,7 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MultiTranslateHttpLoader} from "ngx-translate-multi-http-loader";
 import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {TranslateLoader, TranslateModule, TranslateService} from "@ngx-translate/core";
-import {MatButtonModule, MatCheckboxModule} from '@angular/material';
+import {MatButtonModule, MatCheckboxModule, MatCardModule} from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {NetworkDialogComponent} from "./components/network-environments/templates/network-environment-view-template/modal/edit-network-elements-modal.ts";
 import {NetworkEnvironmentView} from "./components/network-environments/templates/network-environment-view-template/network-environment-view.component.ts";
@@ -44,6 +44,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         MaterialModule,
         BrowserAnimationsModule,
         MatIconModule,
+        MatCardModule,
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,

@@ -31,6 +31,8 @@ export class NetworkEnvironmentView {
     displayedColumns: string[] = ['environment', 'label', "actions"];
     @ViewChild(MatTable, <any>{}) table: MatTable<any>;
     localServerMode: boolean;
+    dhcpIP: string;
+    dhcpSubnet: any;
 
 
     constructor(public dialog: MatDialog,
@@ -75,7 +77,7 @@ export class NetworkEnvironmentView {
         });
     }
 
-    // Abstract method to be overwritten by the parent compo
+    // Abstract method to be overwritten by the parent component
     submitForm(f: NgForm) {}
 }
 

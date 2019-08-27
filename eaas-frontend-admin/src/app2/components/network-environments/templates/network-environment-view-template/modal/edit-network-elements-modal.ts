@@ -21,8 +21,6 @@ export class NetworkDialogComponent {
                 @Inject('$state') private $state: any,
                 @Inject('REST_URLS') private REST_URLS: any,
                 @Inject('localConfig') private localConfig: any) {
-        console.log(this.data.env);
-
         this.macAddress = "";
         if (typeof this.data.env.macAddress != "undefined")
             this.macAddress = this.data.env.macAddress;

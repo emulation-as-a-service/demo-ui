@@ -131,6 +131,9 @@ module.exports = function makeWebpackConfig() {
                 loader: 'style-loader'
             },
             {
+                loader: 'to-string-loader'
+            },
+            {
                 loader: 'css-loader'
             },
             {

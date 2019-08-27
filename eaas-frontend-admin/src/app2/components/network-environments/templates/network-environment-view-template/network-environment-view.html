@@ -7,8 +7,17 @@
 </form>
 
 <!--Networking Checkboxes sections-->
-<mat-checkbox [disabled]=true class="example-section" color="primary">Emulate DHCP (Coming soon)
-</mat-checkbox>
+<mat-checkbox class="example-section" [(ngModel)]="isDHCPenabled"
+              color="primary">{{'EDITENV_ENABLE_DHCP' | translate}}</mat-checkbox>
+<div *ngIf="isDHCPenabled">
+    <mat-form-field>
+        <input matInput [(ngModel)]="dhcpIP" placeholder="{{'EDITENV_GW_PRIVATE_IP' | translate}}">
+    </mat-form-field>
+    <mat-form-field  style="margin-left: 5px">
+        <input matInput type="number" [(ngModel)]="dhcpSubnet"
+               placeholder="{{'EDITENV_GW_PRIVATE_MASK' | translate}}">
+    </mat-form-field>
+</div>
 <mat-checkbox class="example-section" [(ngModel)]="enableInternet"
               color="primary">{{'EDITENV_ENABLE_INTERNET' | translate}}</mat-checkbox>
 
@@ -22,8 +31,6 @@
 
 
 <div class="paddingLeft" *ngIf="allowExternalConnections">
-    <mat-checkbox class="example-section" [(ngModel)]="isDHCPenabled"
-                  color="primary">{{'EDITENV_ENABLE_DHCP' | translate}} (internal)</mat-checkbox>
     <mat-checkbox class="example-section" [(ngModel)]="serverMode"
                   color="primary">{{'EDITENV_ENABLE_SERVERMODE' | translate}}</mat-checkbox>
     <!--    If server mode is enabled -->
@@ -97,6 +104,6 @@
 <br>
 <div mat-dialog-actions align="end">
     <button type="submit" value="submit" [disabled]="chosenEnvs.length == 0" mat-raised-button style="margin-right:5px;" color="primary"
-            (click)="submitForm(f)">{{"ADD_NETWORK_ENVIRONMENT" | translate}}</button>
-    <button mat-stroked-button (click)="$state.go('admin.standard-envs-overview', {}, {reload: true})">{{"ADDENV_CANCEL" | translate}}</button>
+            (click)="submitForm(f)">{{"CHAR_SAVE" | translate}}</button>
+    <button mat-stroked-button (click)="$state.go('admin.standard-envs-overview', {showNetworkEnvs: true}, {reload: true})">{{"ADDENV_CANCEL" | translate}}</button>
 </div>

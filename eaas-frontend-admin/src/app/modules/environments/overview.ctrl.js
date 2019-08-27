@@ -94,6 +94,8 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'lo
              vm.view = 2;
         else if($stateParams.showObjects)
             vm.view = 1;
+        else if($stateParams.showNetworkEnvs)
+            vm.view = 4;
         else
             vm.view = 0;
 
@@ -217,7 +219,7 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'lo
                     });
                     $rootScope.chk.transitionEnable = true;
                     growl.success($translate.instant('JS_DELENV_SUCCESS'));
-                    $state.go('admin.standard-envs-overview', {}, {reload: true});
+                    $state.go('admin.standard-envs-overview', {showNetworkEnvs: vm.view === 4}, {reload: true});
                 } else if (response.data.status === "2") {
 
                     $uibModal.open({

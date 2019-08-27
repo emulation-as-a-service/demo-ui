@@ -24,6 +24,7 @@
   "CHOOSE_ACTION" : "Choose action",
   "CHOOSE_DELETE_SELECTED" : "Delete selected",
   "ADD_NETWORK_ENVIRONMENT": "Create Network",
+  "EDIT_NETWORK_ENVIRONMENT": "Edit Network",
   "NO_ENVIRONMENTS_WITH_NETWORK": "There are no environments with enabled network!",
   "ADD_NETWORK_ENVIRONMENT_LABEL": "Environment Label",
   "ADD_NETWORK_ENVIRONMENT_MAC_ADDRESS": "Mac Address",
@@ -234,7 +235,7 @@
   "EDITENV_SERVER_IP" : "Internal server IP",
   "EDITENV_SERVER_PORT" : "Internal server port",
   "EDITENV_GW_PRIVATE_IP" : "Internal gateway IP",
-  "EDITENV_GW_PRIVATE_MASK" : "Internal gateway IP mask(decimal)",
+  "EDITENV_GW_PRIVATE_MASK" : "IP mask(decimal)",
 
   "OBJECTS_NEW_OBJECT" : "Import Object",
   "OBJECTS_DETAILS" : "Details",

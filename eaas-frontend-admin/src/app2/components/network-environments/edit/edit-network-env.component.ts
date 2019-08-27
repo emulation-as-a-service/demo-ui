@@ -3,6 +3,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {HttpClient} from "@angular/common/http";
 import {NetworkEnvironmentView} from "../templates/network-environment-view-template/network-environment-view.component.ts";
 import {NgForm} from "@angular/forms";
+import * as uuid from "uuid";
 
 @Component({
     selector: 'edit-network-environment',
@@ -24,10 +25,12 @@ export class EditNetworkComponent implements AfterViewInit {
     };
 
     ngOnInit() {
-        // enrich chosenEnvs with title
+        // enrich chosenEnvs with title and implicit id
         if (this.selectedNetworkEnvironment.emilEnvironments.length > 0) {
-            this.selectedNetworkEnvironment.emilEnvironments.forEach(networkElement =>
-                networkElement.title = this.environments.find((env => env.envId == networkElement.envId)).title
+            this.selectedNetworkEnvironment.emilEnvironments.forEach(networkElement => {
+                    networkElement.title = this.environments.find((env => env.envId == networkElement.envId)).title;
+                    networkElement.uiID = uuid.v4();
+                }
             )
         }
     }
@@ -52,7 +55,7 @@ export class EditNetworkComponent implements AfterViewInit {
                 }).subscribe((reply : any) =>{
                     if(reply.status == "0"){
                         this.growl.success("Done");
-                        this.$state.go('admin.standard-envs-overview', {}, {reload: true});
+                        this.$state.go('admin.standard-envs-overview', {showObjects: false, showContainers: false, showNetworkEnvs: true}, {reload: true});
                     } else {
                         this.growl.error("Saved failed! ", reply);
                         console.log(reply);

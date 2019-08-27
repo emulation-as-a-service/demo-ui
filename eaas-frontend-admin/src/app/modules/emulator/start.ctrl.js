@@ -244,7 +244,8 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams',
                                 "envId": env.envId,
                                 "title": env.title,
                                 "label": networkElement.label,
-                                "componentId": componentSession.componentId
+                                "componentId": componentSession.componentId,
+                                "networkData": {serverIp: networkElement.serverIp, serverPorts: networkElement.serverPorts}
                             });
                             componentSession.networkLabel = networkElement.label;
                             componentSession.hwAddress = networkElement.macAddress;
@@ -252,6 +253,7 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams',
                         }
                         eaasClient.network = new NetworkSession(eaasClient.API_URL, eaasClient.idToken);
                         eaasClient.sessions = sessions;
+                        console.log("chosenEnv.networking!!!!!", chosenEnv.networking);
                         await eaasClient.network.startNetwork(sessions, chosenEnv.networking);
                     } else {
                         await eaasClient.start(envs, params, attachId);

@@ -52,7 +52,7 @@ module.exports = ['$state', '$http', '$scope', '$uibModal', 'currentEnv', 'eaasC
         this.localConnectionPort = 8080;
 
         this.getLocalProxy = function () {
-            return eaasClient.getProxyURL({localPort: modalCtrl.localConnectionPort}).then(
+            return eaasClient.getProxyURL({wsConnection: modalCtrl.localConnectionPort}).then(
                 function (result) {
                     // use the result here
                     modalCtrl.proxy = result;
