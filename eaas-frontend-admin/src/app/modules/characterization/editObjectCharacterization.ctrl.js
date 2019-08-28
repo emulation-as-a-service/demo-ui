@@ -34,7 +34,7 @@ module.exports = ['$scope', '$state', '$stateParams', '$uibModal', '$http', 'Obj
                 archiveId: $stateParams.objectArchive,
                 objectId: $stateParams.objectId,
                 updateClassification: updateClassification,
-                updateProposal, updateProposal
+                updateProposal: updateProposal
                 }).$promise.then(function(response) {
                     vm.suggested = response.objectEnvironments.suggested;
                     vm.metadata = response.metadata;

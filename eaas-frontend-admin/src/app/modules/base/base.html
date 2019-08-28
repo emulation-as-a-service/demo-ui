@@ -37,7 +37,6 @@
                             <li><a ng-if="baseCtrl.config.features.oaipmh" ui-sref="admin.metadata">{{'BASE_MENU_MD' | translate }}</a></li>
                             <li><a ng-click="baseCtrl.showSettingsDialog()" href="">{{'BASE_MENU_SHOW_SETTINGS_DLG' | translate}}</a></li>
                             <li><a ng-if="baseCtrl.config.features.advanced" ng-click="baseCtrl.showAdvancedDialog()" href="">{{'BASE_MENU_ADVANCED' | translate}}</a></li>
-                            <hr ng-if="baseCtrl.config.features.emulators"/>
                             <li><a ng-if="baseCtrl.config.features.emulators" ui-sref="admin.emulators" href="">{{'BASE_EMULATORS' | translate }}</a></li>
                             <li ng-if="baseCtrl.config.helpUrl"><a href="{{baseCtrl.config.helpUrl}}" target="_blank">{{'BASE_MENU_HELP' | translate}}</a></li>
                             <li ng-if="baseCtrl.authEnabled"><a href="" ng-click="baseCtrl.logout()">Logout</a> </li>

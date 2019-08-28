@@ -11,7 +11,8 @@ module.exports = ["$http", "$rootScope", "$scope", "$state", "$stateParams", "En
        let handlePrefix = "11270/";
        var vm = this;
        vm.networking = {};
-
+       vm.config = localConfig.data;
+       
        vm.editMode = false;
        let emulatorContainerVersionSpillter = "|";
 

@@ -23,6 +23,7 @@
             </uib-tab>
         </uib-tabset>
 <p></p>
+
 <div class="separator-right" ng-if="standardEnvsOverviewCtrl.view == 4">
     <button class="btn btn-default" ng-if="standardEnvsOverviewCtrl.view == 4"
             ui-sref="admin.create-network-environment()">
@@ -30,9 +31,7 @@
     </button>
 </div>
 
-
-
-<uib-tabset ng-if="standardEnvsOverviewCtrl.view != 1" active="standardEnvsOverviewCtrl.viewArchive" type="pills">
+<uib-tabset ng-if="!standardEnvsOverviewCtrl.config.features.standalone && standardEnvsOverviewCtrl.view != 1" active="standardEnvsOverviewCtrl.viewArchive" type="pills">
     <uib-tab index="0" disable="standardEnvsOverviewCtrl.view == 4" heading="Private" ng-click="standardEnvsOverviewCtrl.view != 4 ? standardEnvsOverviewCtrl.updateTable(standardEnvsOverviewCtrl.view) : null"></uib-tab>
     <uib-tab index="1" heading="Public" ng-click="standardEnvsOverviewCtrl.updateTable(standardEnvsOverviewCtrl.view)"></uib-tab>
     <uib-tab index="2" disable="standardEnvsOverviewCtrl.view == 4" heading="Remote" ng-click="standardEnvsOverviewCtrl.view != 4 ? standardEnvsOverviewCtrl.updateTable(standardEnvsOverviewCtrl.view) : null"></uib-tab>
@@ -44,7 +43,7 @@
            placeholder="{{'CHOOSE_ENV_SEARCH' | translate}}"/>
 </div>
 <div style="padding: 4px;">
-    <div class="ag-theme-balham"><b>Number of Environments: {{standardEnvsOverviewCtrl.initRowData().length;}}</b></div>
+    <div class="ag-theme-balham"><b>{{'CHOOSE_ENV_COUNT' | translate}}: {{standardEnvsOverviewCtrl.rowCount}}</b></div>
 
     <div style="top: 0; left: 0;">
         <div class="ag-theme-balham"> Page Size:
