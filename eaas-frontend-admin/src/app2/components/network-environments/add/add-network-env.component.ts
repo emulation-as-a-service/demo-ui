@@ -36,6 +36,8 @@ export class AddNetworkComponent implements AfterViewInit {
                         enableSocks: this.networkEnvironmentView.enableSocks,
                         allowExternalConnections: this.networkEnvironmentView.allowExternalConnections,
                         isDHCPenabled: this.networkEnvironmentView.isDHCPenabled,
+                        dhcpNetworkMask: this.networkEnvironmentView.dhcpNetworkMask,
+                        dhcpNetworkAddress: this.networkEnvironmentView.dhcpNetworkAddress,
                         isArchivedInternetEnabled: this.networkEnvironmentView.isArchivedInternetEnabled
                     },
                     emilEnvironments: this.networkEnvironmentView.chosenEnvs,

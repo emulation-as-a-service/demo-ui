@@ -24,6 +24,8 @@ export class NetworkEnvironmentView {
     @Input() isArchivedInternetEnabled: boolean;
     @Input() networkEnvironmentTitle: string;
     @Input() chosenEnvs: any[] = [];
+    @Input() dhcpNetworkAddress: string;
+    @Input() dhcpNetworkMask: string;
 
 
     selectedEnv: any;
@@ -31,8 +33,7 @@ export class NetworkEnvironmentView {
     displayedColumns: string[] = ['environment', 'label', "actions"];
     @ViewChild(MatTable, <any>{}) table: MatTable<any>;
     localServerMode: boolean;
-    dhcpIP: string;
-    dhcpSubnet: any;
+
 
 
     constructor(public dialog: MatDialog,
@@ -58,7 +59,7 @@ export class NetworkEnvironmentView {
         this.chosenEnvs = this.chosenEnvs.filter(item => item !== element);
         this.table.renderRows();
     }
-
+serverIp
 
     openEditDialog(env) {
         const dialogRef = this.dialog.open(NetworkDialogComponent, {

@@ -46,6 +46,8 @@ export class EditNetworkComponent implements AfterViewInit {
                         localServerMode: this.networkEnvironmentView.localServerMode,
                         enableSocks: this.networkEnvironmentView.enableSocks,
                         isDHCPenabled: this.networkEnvironmentView.isDHCPenabled,
+                        dhcpNetworkMask: this.networkEnvironmentView.dhcpNetworkMask,
+                        dhcpNetworkAddress: this.networkEnvironmentView.dhcpNetworkAddress,
                         isArchivedInternetEnabled: this.networkEnvironmentView.isArchivedInternetEnabled,
                         allowExternalConnections: this.networkEnvironmentView.allowExternalConnections
                     },

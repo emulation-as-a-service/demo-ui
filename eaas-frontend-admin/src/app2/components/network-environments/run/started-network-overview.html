@@ -6,7 +6,6 @@
     <br> <a href="https://gitlab.com/emulation-as-a-service/eaas-proxy/-/jobs/artifacts/master/raw/eaas-proxy/eaas-proxy.exe?job=build"  target="eaas-proxy"> Windows </a>
     <br> <a href="https://gitlab.com/emulation-as-a-service/eaas-proxy/-/jobs/artifacts/master/raw/eaas-proxy/eaas-proxy?job=build"  target="eaas-proxy"> Linux </a>
 
-
     <!--    Network environments action table (connect, delete environments)   -->
     <h4 class="m-t-0">Connected Environments</h4>
     <table mat-table [dataSource]="networkSessionEnvironments" multiTemplateDataRows class="mat-elevation-z8">
@@ -48,7 +47,7 @@
                                         <b>{{'EDITENV_SERVER_PORT' | translate}}:</b> {{port}}<br>
                                         <mat-form-field>
                                             <!-- Allow only valid ports -->
-                                            <input ngModel  name="localPortBinding" required pattern="^()([1-9]|[1-5]?[0-9]{2,4}|6[1-4][0-9]{3}|65[1-4][0-9]{2}|655[1-2][0-9]|6553[1-5])$" matInput type="number"
+                                            <input ngModel name="localPortBinding" required pattern="^()([1-9]|[1-5]?[0-9]{2,4}|6[1-4][0-9]{3}|65[1-4][0-9]{2}|655[1-2][0-9]|6553[1-5])$" matInput type="number"
                                                    placeholder="Local Port">
                                             <mat-error>Entered port is invalid!</mat-error>
                                         </mat-form-field>
