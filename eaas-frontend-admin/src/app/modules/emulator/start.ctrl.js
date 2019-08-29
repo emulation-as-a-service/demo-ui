@@ -205,21 +205,25 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams',
                         throw new Error("reattch requires a network session");
 
                     vm.networkSessionEnvironments = [];
+                    console.log("$stateParams.session", $stateParams.session);
                     for (const component of $stateParams.session.components) {
-                        console.log(component);
                         if (component.type === type)
+                            component.networkElement = $stateParams.session.network.components.find(el => el.componentId === component.componentId);
                             Environments.get({envId: component.environmentId}).$promise.then((envMetaData) => {
                                 vm.networkSessionEnvironments.push({
                                     "envId": component.environmentId,
                                     "title": envMetaData.title,
-                                    "label": $stateParams.session.network.components.find(el => el.componentId === component.componentId).networkLabel,
-                                    "componentId": component.componentId
+                                    "label": component.networkElement.networkLabel,
+                                    "componentId": component.componentId,
+                                    "networkData": {serverIp: component.networkElement.serverIp, serverPorts: component.networkElement.serverPorts}
                                 });
                             });
                     }
                     eaasClient.load($stateParams.session.sessionId, $stateParams.session.components, $stateParams.session.network);
                     let componentSession = eaasClient.getSession($stateParams.componentId);
                     await eaasClient.connect($("#emulator-container")[0], componentSession);
+                    eaasClient.network.sessionId = $stateParams.session.sessionId;
+                    console.log("!!!!!!!!!! eaasClient.network.sessionId", eaasClient.network.sessionId);
                     $rootScope.emulator.detached = true;
                 } else {
                     if ($stateParams.isNetworkEnvironment) {
@@ -288,6 +292,8 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams',
                                 "networkData": {serverIp: networkElement.serverIp, serverPorts: networkElement.serverPorts}
                             });
                             componentSession.networkLabel = networkElement.label;
+                            componentSession.serverIp = networkElement.serverIp;
+                            componentSession.serverPorts = networkElement.serverPorts;
                             componentSession.hwAddress = networkElement.macAddress;
                             sessions.push(componentSession);
                         }
@@ -348,16 +354,9 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams',
             }
         }
 
-        if ($stateParams.session) {
+        if ($stateParams.session || $stateParams.isNetworkEnvironment) {
             vm.runEmulator([]);
-        }
-        if(!chosenEnv.networking) {
-            vm.runEmulator([]);
-        }
-        if(!chosenEnv.networking){
-            vm.runEmulator([]);
-        }
-        else if (!chosenEnv.networking.connectEnvs) {
+        } else if (!chosenEnv.networking && !chosenEnv.networking.connectEnvs) {
             vm.runEmulator([]);
         }
         else {
