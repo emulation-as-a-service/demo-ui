@@ -228,16 +228,56 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams',
                         // !FIXME
                         // make Network Environment a proper component and run it from backend!
                         // currently, last element always will be visualized
-
                         for (const networkElement of chosenEnv.emilEnvironments) {
                             let env = await Environments.get({envId: networkElement.envId}).$promise;
-                            data = createData(env.envId,
-                                env.archive,
-                                "machine",
-                                env.objectArchive,
-                                env.objectId,
-                                env.userId,
-                                env.softwareId);
+                            if (env.runtimeId) {
+                                const runtimeEnv = await Environments.get({envId: env.runtimeId}).$promise;
+
+                                let modal = $uibModal.open({
+                                    animation: true,
+                                    template: require('../containers/modals/container-run-dialog-modified.html'),
+                                    resolve: {
+                                        currentEnv: function () {
+                                            return vm.env;
+                                        },
+                                        localConfig: function () {
+                                            return localConfig;
+                                        }
+                                    },
+                                    controller: "ContainerInputDialog as runContainerDlgCtrl"
+                                });
+
+                                let input_data = [];
+                                var input = {};
+                                input.size_mb = 512;
+                                input.destination = env.input;
+                                input.content = await modal.result;
+                                input_data.push(input);
+                                data = createData(
+                                    env.runtimeId,
+                                    runtimeEnv.archive,
+                                    type,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    {
+                                        userContainerEnvironment: env.envId,
+                                        userContainerArchive: env.archive,
+                                        networking: env.networking,
+                                        input_data: input_data
+                                    });
+                            } else {
+                                data = createData(env.envId,
+                                    env.archive,
+                                    "machine",
+                                    env.objectArchive,
+                                    env.objectId,
+                                    env.userId,
+                                    env.softwareId);
+                            }
                             // data.userNetworkLabel = networkElement.label;
                             let componentSession = await eaasClient.start([{data, visualize: true}], {});
                             vm.networkSessionEnvironments.push({
@@ -253,13 +293,12 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams',
                         }
                         eaasClient.network = new NetworkSession(eaasClient.API_URL, eaasClient.idToken);
                         eaasClient.sessions = sessions;
-                        console.log("chosenEnv.networking!!!!!", chosenEnv.networking);
                         await eaasClient.network.startNetwork(sessions, chosenEnv.networking);
                     } else {
                         await eaasClient.start(envs, params, attachId);
                     }
                     await eaasClient.connect($("#emulator-container")[0]);
-                    
+
                     $rootScope.idsData = eaasClient.envsComponentsData;
                     $rootScope.idsData.forEach(function (idData) {
                         if (idData.env) {
@@ -313,7 +352,10 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams',
             vm.runEmulator([]);
         }
         if(!chosenEnv.networking) {
-                vm.runEmulator([]);
+            vm.runEmulator([]);
+        }
+        if(!chosenEnv.networking){
+            vm.runEmulator([]);
         }
         else if (!chosenEnv.networking.connectEnvs) {
             vm.runEmulator([]);

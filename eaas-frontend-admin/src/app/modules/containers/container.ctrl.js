@@ -1,11 +1,10 @@
-module.exports = ['$rootScope', '$scope', '$sce', '$state','$http', '$stateParams', 'Environments', 'chosenEnv', '$translate', 'Upload', 'localConfig', 'growl', '$uibModal',
-    function ($rootScope, $scope, $sce, $state, $http, $stateParams, Environments, chosenEnv, $translate, Upload, localConfig, growl, $uibModal) {
+module.exports = ['$rootScope', '$scope', '$sce', '$state','$http', '$stateParams', 'eaasClient', 'Environments', 'chosenEnv', '$translate', 'Upload', 'localConfig', 'growl', '$uibModal',
+    function ($rootScope, $scope, $sce, $state, $http, $stateParams, eaasClient, Environments, chosenEnv, $translate, Upload, localConfig, growl, $uibModal) {
         var vm = this;
         vm.env = chosenEnv;
 
         $("#container-stopped").hide();
 
-        window.eaasClient = new Client(localConfig.data.eaasBackendURL, $("#emulator-container")[0]);
         eaasClient.onError = function (message) {
             window.onbeforeunload = null;
             $state.go('error', {errorMsg: {title: "Error", message: message.error}});
@@ -21,7 +20,7 @@ module.exports = ['$rootScope', '$scope', '$sce', '$state','$http', '$stateParam
             window.onbeforeunload = null;
         };
 
-        window.eaasClient.onEmulatorStopped = function () {
+        eaasClient.onEmulatorStopped = function () {
             $("#emulator-loading-container").hide();
             $("#container-running").hide();
             $("#container-stopped").show();
