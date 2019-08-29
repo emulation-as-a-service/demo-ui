@@ -312,6 +312,9 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams',
         if ($stateParams.session) {
             vm.runEmulator([]);
         }
+        if(!chosenEnv.networking) {
+                vm.runEmulator([]);
+        }
         else if (!chosenEnv.networking.connectEnvs) {
             vm.runEmulator([]);
         }
