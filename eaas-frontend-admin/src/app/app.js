@@ -147,17 +147,6 @@ export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize'
             addButtonText: '@'
         }
     })
-    .component('containerInputList', {
-        templateUrl: 'partials/components/containerInputList.html',
-        bindings: {
-            list: '=',
-            heading: '@',
-            listEmptyNote: '@',
-            inputPlaceholder: '@',
-            addButtonText: '@'
-        }
-    })
-
     .component('containerInputListModified', {
         templateUrl: 'partials/components/containerInputListModified.html',
         bindings: {
@@ -741,7 +730,8 @@ function($stateProvider,
             resolve: {
                 chosenEnv: function($stateParams, Environments) {
                     return Environments.get({envId: $stateParams.envId}).$promise;
-                }
+                },
+                eaasClient: (localConfig) => new Client(localConfig.data.eaasBackendURL)
             },
             params: {
                 envId: null,

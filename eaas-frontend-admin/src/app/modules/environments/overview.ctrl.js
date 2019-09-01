@@ -299,9 +299,7 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'lo
 
                   <li role="menuitem"><a ng-if="landingPage" target="_blank" class="dropdown-content"
                   ng-click="switchAction(data.id, \'openLandingPage\')"">{{'CONTAINER_LANDING_PAGE'| translate}}</a></li>
-                
                 </ul>
-                
              </div>`;
 
             let container = `

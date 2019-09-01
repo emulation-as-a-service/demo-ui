@@ -60,6 +60,7 @@ module.exports = ['$state', '$scope', '$stateParams', '$uibModal', 'groupdIds', 
 
     function connect(id) {
         $http.get(localConfig.data.eaasBackendURL + "sessions/" + id).then((response) => {
+            response.data.sessionId = id;
             $state.go('admin.emulator', {envId: response.data.components[0].environmentId, componentId: response.data.components[0].componentId, session: response.data}, {reload: true});
         })
     }
