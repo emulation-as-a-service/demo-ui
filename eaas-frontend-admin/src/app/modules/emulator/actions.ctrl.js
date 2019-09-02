@@ -37,17 +37,17 @@ module.exports = ['$rootScope', '$scope', '$state', '$http', '$uibModal', '$stat
         else
             vm.enablePrinting = false;
 
-        if (vm.enablePrinting) {
-            $rootScope.$on('emulatorStart', function (event, args) {
-                eaasClient.eventSource.addEventListener('print-job', function (e) {
-                    var obj = JSON.parse(e.data);
-                    if (obj && obj.status === 'done') {
-                        vm.printJobsAvailable = true;
-                        growl.info($translate.instant('ACTIONS_PRINT_READY'));
-                    }
-                });
-            });
-        }
+        // if (vm.enablePrinting) {
+        //     $rootScope.$on('emulatorStart', function (event, args) {
+        //         eaasClient.eventSource.addEventListener('print-job', function (e) {
+        //             var obj = JSON.parse(e.data);
+        //             if (obj && obj.status === 'done') {
+        //                 vm.printJobsAvailable = true;
+        //                 growl.info($translate.instant('ACTIONS_PRINT_READY'));
+        //             }
+        //         });
+        //     });
+        // }
 
         $scope.screenshot = function () {
             var canvas = document.getElementsByTagName("canvas")[0];
