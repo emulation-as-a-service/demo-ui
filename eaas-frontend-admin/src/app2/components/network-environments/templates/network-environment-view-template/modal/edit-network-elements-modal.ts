@@ -13,6 +13,7 @@ export class NetworkDialogComponent {
     serverIp: string;
     portForm: FormGroup;
     ports: FormArray;
+    fqdn: string;
 
     constructor(public dialogRef: MatDialogRef<NetworkDialogComponent>,
                 @Inject(MAT_DIALOG_DATA) public data: any,

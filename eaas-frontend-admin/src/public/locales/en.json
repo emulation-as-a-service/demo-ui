@@ -29,6 +29,7 @@
   "NO_ENVIRONMENTS_WITH_NETWORK": "There are no environments with enabled network!",
   "ADD_NETWORK_ENVIRONMENT_LABEL": "Environment Label",
   "ADD_NETWORK_ENVIRONMENT_MAC_ADDRESS": "Mac Address",
+  "ADD_NETWORK_FQDN": "Server Name / FQDN",
 
 
   "ERROR_RETURN_BTN" : "Back to overview",

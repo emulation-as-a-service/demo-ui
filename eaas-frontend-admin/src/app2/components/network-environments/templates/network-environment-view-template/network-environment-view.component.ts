@@ -74,6 +74,7 @@ serverIp
                 this.chosenEnvs.find(item => item.uiID == result.env.uiID).label = result.label;
                 this.chosenEnvs.find(item => item.uiID == result.env.uiID).serverIp = result.serverIp;
                 this.chosenEnvs.find(item => item.uiID == result.env.uiID).serverPorts = result.serverPorts;
+                this.chosenEnvs.find(item => item.uiID == result.env.uiID).fqdn = result.fqdn;
             }
         });
     }

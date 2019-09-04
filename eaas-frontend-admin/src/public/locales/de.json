@@ -28,8 +28,7 @@
   "NO_ENVIRONMENTS_WITH_NETWORK": "Es gibt keine Umgebungen mit aktiviertem Netzwerk!",
   "ADD_NETWORK_ENVIRONMENT_LABEL": "Umgebung bezeichnung",
   "ADD_NETWORK_ENVIRONMENT_MAC_ADDRESS": "MAC-Adresse",
-
-
+  "ADD_NETWORK_FQDN": "Server Name / FQDN",
 
   "ERROR_RETURN_BTN" : "Zurück zur Übersicht",
 
