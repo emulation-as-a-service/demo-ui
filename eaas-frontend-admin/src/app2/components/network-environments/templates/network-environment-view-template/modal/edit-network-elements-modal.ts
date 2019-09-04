@@ -55,6 +55,7 @@ export class NetworkDialogComponent {
                 env: this.data.env,
                 macAddress: this.macAddress,
                 label: this.label,
+                fqdn: this.fqdn,
                 serverIp: this.serverIp,
                 serverPorts: portNumbers
             });
