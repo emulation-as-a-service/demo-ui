@@ -15,6 +15,7 @@ export class EditNetworkComponent implements AfterViewInit {
 
     @ViewChild(NetworkEnvironmentView, {static: false})
     private networkEnvironmentView: NetworkEnvironmentView;
+    private networkingConfig: any;
 
     constructor(public dialog: MatDialog,
                 private http: HttpClient,
@@ -25,6 +26,21 @@ export class EditNetworkComponent implements AfterViewInit {
     };
 
     ngOnInit() {
+        this.networkingConfig = {
+            serverMode: this.selectedNetworkEnvironment.networking.serverMode,
+            isDHCPenabled: this.selectedNetworkEnvironment.networking.isDHCPenabled,
+            enableInternet: this.selectedNetworkEnvironment.networking.enableInternet,
+            localServerMode: this.selectedNetworkEnvironment.networking.localServerMode,
+            enableSocks: this.selectedNetworkEnvironment.networking.enableSocks,
+            dhcpNetworkMask: this.selectedNetworkEnvironment.networking.dhcpNetworkMask,
+            dhcpNetworkAddress: this.selectedNetworkEnvironment.networking.dhcpNetworkAddress,
+            isArchivedInternetEnabled: this.selectedNetworkEnvironment.networking.isArchivedInternetEnabled,
+            allowExternalConnections: this.selectedNetworkEnvironment.networking.allowExternalConnections,
+            network: this.selectedNetworkEnvironment.network,
+            gateway: this.selectedNetworkEnvironment.gateway,
+            upstream_dns: this.selectedNetworkEnvironment.upstream_dns,
+            dnsServiceEnvId: this.selectedNetworkEnvironment.dnsServiceEnvId,
+        };
         // enrich chosenEnvs with title and implicit id
         if (this.selectedNetworkEnvironment.emilEnvironments.length > 0) {
             this.selectedNetworkEnvironment.emilEnvironments.forEach(networkElement => {
@@ -41,16 +57,22 @@ export class EditNetworkComponent implements AfterViewInit {
                 // You will get form value if your form is valid
                 this.http.post(`${this.localConfig.data.eaasBackendURL}${this.REST_URLS.networkEnvironmentUrl}`, {
                     networking: {
-                        enableInternet: this.networkEnvironmentView.enableInternet,
-                        serverMode: this.networkEnvironmentView.serverMode,
-                        localServerMode: this.networkEnvironmentView.localServerMode,
-                        enableSocks: this.networkEnvironmentView.enableSocks,
-                        isDHCPenabled: this.networkEnvironmentView.isDHCPenabled,
-                        dhcpNetworkMask: this.networkEnvironmentView.dhcpNetworkMask,
-                        dhcpNetworkAddress: this.networkEnvironmentView.dhcpNetworkAddress,
-                        isArchivedInternetEnabled: this.networkEnvironmentView.isArchivedInternetEnabled,
-                        allowExternalConnections: this.networkEnvironmentView.allowExternalConnections
+                        enableInternet: this.networkEnvironmentView.networkingConfig.enableInternet,
+                        serverMode: this.networkEnvironmentView.networkingConfig.serverMode,
+                        localServerMode: this.networkEnvironmentView.networkingConfig.localServerMode,
+                        enableSocks: this.networkEnvironmentView.networkingConfig.enableSocks,
+                        isDHCPenabled: this.networkEnvironmentView.networkingConfig.isDHCPenabled,
+                        dhcpNetworkMask: this.networkEnvironmentView.networkingConfig.dhcpNetworkMask,
+                        dhcpNetworkAddress: this.networkEnvironmentView.networkingConfig.dhcpNetworkAddress,
+                        isArchivedInternetEnabled: this.networkEnvironmentView.networkingConfig.isArchivedInternetEnabled,
+                        allowExternalConnections: this.networkEnvironmentView.networkingConfig.allowExternalConnections
                     },
+                    upstream_dns: this.networkEnvironmentView.networkingConfig.upstream_dns,
+                    gateway: this.networkEnvironmentView.networkingConfig.gateway,
+                    network: this.networkEnvironmentView.networkingConfig.network,
+                    dnsServiceEnvId:
+                        this.networkEnvironmentView.networkConfigTemplate.isDnsDefined ?
+                            this.networkEnvironmentView.networkingConfig.dnsServiceEnv.envId : undefined,
                     emilEnvironments: this.networkEnvironmentView.chosenEnvs,
                     title: this.networkEnvironmentView.networkEnvironmentTitle,
                     envId: this.selectedNetworkEnvironment.envId

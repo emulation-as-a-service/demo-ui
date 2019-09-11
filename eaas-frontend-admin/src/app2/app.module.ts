@@ -23,6 +23,7 @@ import {MatButtonModule, MatCheckboxModule, MatCardModule} from '@angular/materi
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {NetworkDialogComponent} from "./components/network-environments/templates/network-environment-view-template/modal/edit-network-elements-modal.ts";
 import {NetworkEnvironmentView} from "./components/network-environments/templates/network-environment-view-template/network-environment-view.component.ts";
+import {NetworkConfigTemplate} from "./components/network-environments/templates/network-environment-view-template/network-config-template/network-config-template.ts";
 import {StartedNetworkOverview} from "./components/network-environments/run/started-network-overview.component.ts";
 
 
@@ -57,7 +58,8 @@ export function HttpLoaderFactory(http: HttpClient) {
         NetworkDialogComponent,
         EditNetworkComponent,
         NetworkEnvironmentView,
-        StartedNetworkOverview
+        StartedNetworkOverview,
+        NetworkConfigTemplate
     ],
     entryComponents: [
         AddNetworkComponent,

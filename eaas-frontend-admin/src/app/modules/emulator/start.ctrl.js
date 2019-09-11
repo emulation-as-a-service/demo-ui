@@ -1,8 +1,8 @@
 import {stopClient} from "./utils/stop-client";
 import {NetworkSession} from "../../../../../eaas-client/eaas-client";
 
-module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams', '$cookies', '$translate', 'localConfig', 'growl', 'Environments', 'chosenEnv', 'eaasClient',
-    function ($rootScope, $uibModal, $scope, $state, $stateParams, $cookies, $translate, localConfig, growl, Environments, chosenEnv, eaasClient) {
+module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams', '$cookies', '$translate', '$http', 'localConfig', 'growl', 'Environments', 'chosenEnv', 'eaasClient',
+    function ($rootScope, $uibModal, $scope, $state, $stateParams, $cookies, $translate, $http, localConfig, growl, Environments, chosenEnv, eaasClient) {
 
         var vm = this;
         vm.eaasClient = eaasClient;
@@ -89,7 +89,7 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams',
                     } else {
                         params.hasTcpGateway = chosenEnv.networking.serverMode;
                     }
-                    params.hasInternet = chosenEnv.networking.enableInternet;
+                    params.enableInternet = chosenEnv.networking.enableInternet;
                     if (params.hasTcpGateway || chosenEnv.networking.localServerMode) {
                         params.tcpGatewayConfig = {
                             socks: chosenEnv.networking.enableSocks,
@@ -159,7 +159,7 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams',
                 // console.log("locking user session");
             }
 
-            function createData(envId, archive, type, objectArchive, objectId, userId, softwareId, keyboardLayout, keyboardModel, containerRuntime) {
+            function createData(envId, archive, type, objectArchive, objectId, userId, softwareId, keyboardLayout, keyboardModel, containerRuntime, nic) {
                 let data = {};
                 data.type = type;
                 data.archive = archive;
@@ -168,6 +168,7 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams',
                 data.objectArchive = objectArchive;
                 data.userId = userId;
                 data.software = softwareId;
+                data.nic = nic;
                 if (containerRuntime != null) {
                     data.linuxRuntimeData = {
                         userContainerEnvironment: containerRuntime.userContainerEnvironment,
@@ -223,7 +224,6 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams',
                     let componentSession = eaasClient.getSession($stateParams.componentId);
                     await eaasClient.connect($("#emulator-container")[0], componentSession);
                     eaasClient.network.sessionId = $stateParams.session.sessionId;
-                    console.log("!!!!!!!!!! eaasClient.network.sessionId", eaasClient.network.sessionId);
                     $rootScope.emulator.detached = true;
                 } else {
                     if ($stateParams.isNetworkEnvironment) {
@@ -232,6 +232,7 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams',
                         // !FIXME
                         // make Network Environment a proper component and run it from backend!
                         // currently, last element always will be visualized
+                        const promises = [];
                         for (const networkElement of chosenEnv.emilEnvironments) {
                             let env = await Environments.get({envId: networkElement.envId}).$promise;
                             if (env.runtimeId) {
@@ -242,7 +243,7 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams',
                                     template: require('../containers/modals/container-run-dialog-modified.html'),
                                     resolve: {
                                         currentEnv: function () {
-                                            return vm.env;
+                                            return env;
                                         },
                                         localConfig: function () {
                                             return localConfig;
@@ -280,25 +281,91 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams',
                                     env.objectArchive,
                                     env.objectId,
                                     env.userId,
-                                    env.softwareId);
+                                    env.softwareId,
+                                    null,
+                                    null,
+                                    null,
+                                    networkElement.macAddress,
+                                    );
                             }
-                            // data.userNetworkLabel = networkElement.label;
-                            let componentSession = await eaasClient.start([{data, visualize: true}], {});
-                            vm.networkSessionEnvironments.push({
-                                "envId": env.envId,
-                                "title": env.title,
-                                "label": networkElement.label,
-                                "componentId": componentSession.componentId,
-                                "networkData": {serverIp: networkElement.serverIp, serverPorts: networkElement.serverPorts}
-                            });
-                            componentSession.networkLabel = networkElement.label;
-                            componentSession.serverIp = networkElement.serverIp;
-                            componentSession.serverPorts = networkElement.serverPorts;
-                            componentSession.hwAddress = networkElement.macAddress;
-                            sessions.push(componentSession);
+                            // start multiple environments simultaneously
+                            promises.push((async () => {
+                                let componentSession = await eaasClient.start([{data, visualize: true}], {});
+                                vm.networkSessionEnvironments.push({
+                                    "envId": env.envId,
+                                    "title": env.title,
+                                    "label": networkElement.label,
+                                    "componentId": componentSession.componentId,
+                                    "networkData": {
+                                        serverIp: networkElement.serverIp,
+                                        serverPorts: networkElement.serverPorts
+                                    }
+                                });
+                                componentSession.networkLabel = networkElement.label;
+                                componentSession.serverIp = networkElement.serverIp;
+                                componentSession.serverPorts = networkElement.serverPorts;
+                                componentSession.hwAddress = networkElement.macAddress;
+                                sessions.push(componentSession);
+                            })());
                         }
+                        if (chosenEnv.dnsServiceEnvId) {
+                            promises.push((async () => {
+
+                                let env = await Environments.get({envId: chosenEnv.dnsServiceEnvId}).$promise;
+
+                                if (env.runtimeId) {
+                                    const runtimeEnv = await Environments.get({envId: env.runtimeId}).$promise;
+                                    vm.dnsServiceEnv = env;
+
+                                    let input_data = [];
+                                    var input = {};
+                                    input.size_mb = 512;
+                                    input.destination = env.input;
+
+                                    const url = await $http.get(localConfig.data.eaasBackendURL + "network-environments/" + chosenEnv.envId + "?jsonUrl=true");
+                                    input.content = [{
+                                        "action": "copy",
+                                        "url": url.data.url,
+                                        "compression_format": "tar",
+                                        "name": "network.json",
+                                    }];
+                                    console.log("input.content", input.content);
+                                    input_data.push(input);
+                                    data = createData(
+                                        env.runtimeId,
+                                        runtimeEnv.archive,
+                                        type,
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        {
+                                            userContainerEnvironment: env.envId,
+                                            userContainerArchive: env.archive,
+                                            networking: env.networking,
+                                            input_data: input_data
+                                        });
+                                    let componentSession = await eaasClient.start([{data, visualize: true}], {});
+                                    vm.networkSessionEnvironments.push({
+                                        "envId": env.envId,
+                                        "title": env.title,
+                                        "label": "dns",
+                                        "componentId": componentSession.componentId,
+                                        "networkData": {
+                                            serverIp: "",
+                                            serverPorts: []
+                                        }
+                                    });
+                                    sessions.push(componentSession);
+                                }
+                            })());
+                        }
+                        await Promise.all(promises);
                         eaasClient.network = new NetworkSession(eaasClient.API_URL, eaasClient.idToken);
                         eaasClient.sessions = sessions;
+                        chosenEnv.networking.gateway = chosenEnv.gateway;
                         await eaasClient.network.startNetwork(sessions, chosenEnv.networking);
                     } else {
                         await eaasClient.start(envs, params, attachId);

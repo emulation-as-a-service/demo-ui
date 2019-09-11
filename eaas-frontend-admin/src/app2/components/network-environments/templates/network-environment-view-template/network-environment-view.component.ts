@@ -1,4 +1,4 @@
-import {Component, Inject, Input} from '@angular/core';
+import {Component, EventEmitter, Inject, Input, Output} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {HttpClient} from "@angular/common/http";
 import {ViewChild} from '@angular/core';
@@ -6,6 +6,7 @@ import {MatTable} from '@angular/material';
 import {NetworkDialogComponent} from "./modal/edit-network-elements-modal.ts";
 import * as uuid from "uuid";
 import {FormArray, FormGroup, NgForm} from '@angular/forms';
+import {NetworkConfigTemplate} from "./network-config-template/network-config-template.ts";
 
 
 @Component({
@@ -14,19 +15,12 @@ import {FormArray, FormGroup, NgForm} from '@angular/forms';
 })
 export class NetworkEnvironmentView {
     @Input() environments: any;
-    @Input() networking: any;
-    @Input() enableInternet: boolean;
-    @Input() serverMode: boolean;
-    @Input() gwPrivateMask: string;
-    @Input() enableSocks: boolean;
-    @Input() isDHCPenabled: boolean;
-    @Input() allowExternalConnections: boolean;
-    @Input() isArchivedInternetEnabled: boolean;
-    @Input() networkEnvironmentTitle: string;
     @Input() chosenEnvs: any[] = [];
-    @Input() dhcpNetworkAddress: string;
-    @Input() dhcpNetworkMask: string;
+    @Input() networkingConfig: any;
+    @Input() networkEnvironmentTitle: string;
 
+    @ViewChild(NetworkConfigTemplate, {static: false})
+    networkConfigTemplate: NetworkConfigTemplate;
 
     selectedEnv: any;
     envLabel: any;
@@ -34,14 +28,17 @@ export class NetworkEnvironmentView {
     @ViewChild(MatTable, <any>{}) table: MatTable<any>;
     localServerMode: boolean;
 
-
-
     constructor(public dialog: MatDialog,
                 private http: HttpClient,
                 @Inject('$state') private $state: any,
                 @Inject('REST_URLS') private REST_URLS: any,
                 @Inject('localConfig') private localConfig: any,
                 @Inject('growl') private growl: any) {
+
+    }
+
+    ngOnInit (){
+        this.networkingConfig.dnsServiceEnv = this.environments.find((env => env.envId == this.networkingConfig.dnsServiceEnvId));
     }
 
     private addEnv() {
@@ -59,12 +56,11 @@ export class NetworkEnvironmentView {
         this.chosenEnvs = this.chosenEnvs.filter(item => item !== element);
         this.table.renderRows();
     }
-serverIp
 
     openEditDialog(env) {
         const dialogRef = this.dialog.open(NetworkDialogComponent, {
             width: '40%',
-            data: {env: env, allowExternalConnections: this.allowExternalConnections},
+            data: {env: env, allowExternalConnections: this.networkingConfig.allowExternalConnections},
         });
         dialogRef.updatePosition({top: '10%'});
         dialogRef.afterClosed().subscribe(result => {

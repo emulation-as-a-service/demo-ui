@@ -1,10 +1,10 @@
-<h2 class="m-t-0">Network Environment Overview</h2>
+<h2 class="m-t-0" (click)="showComponents()">Network Environment Overview</h2>
 
 <div *ngIf="eaasClient.network">
-<p>Please note!<br> for local connection you would need: <br> <b>1)</b> Download and run following software
-    <br> <a href="https://gitlab.com/emulation-as-a-service/eaas-proxy/-/jobs/artifacts/master/raw/eaas-proxy/eaas-proxy.app.zip?job=build" target="eaas-proxy"> MAC</a>
-    <br> <a href="https://gitlab.com/emulation-as-a-service/eaas-proxy/-/jobs/artifacts/master/raw/eaas-proxy/eaas-proxy.exe?job=build"  target="eaas-proxy"> Windows </a>
-    <br> <a href="https://gitlab.com/emulation-as-a-service/eaas-proxy/-/jobs/artifacts/master/raw/eaas-proxy/eaas-proxy?job=build"  target="eaas-proxy"> Linux </a>
+    <network-config-template
+        [networkingConfig]="networkingConfig"
+        [isDisabled]="true"
+    ></network-config-template>
 
     <!--    Network environments action table (connect, delete environments)   -->
     <h4 class="m-t-0">Connected Environments</h4>

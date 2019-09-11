@@ -30,16 +30,19 @@ export class AddNetworkComponent implements AfterViewInit {
                 // You will get form value if your form is valid
                 this.http.put(`${this.localConfig.data.eaasBackendURL}${this.REST_URLS.networkEnvironmentUrl}`, {
                     networking: {
-                        enableInternet: this.networkEnvironmentView.enableInternet,
-                        serverMode: this.networkEnvironmentView.serverMode,
-                        localServerMode: this.networkEnvironmentView.localServerMode,
-                        enableSocks: this.networkEnvironmentView.enableSocks,
-                        allowExternalConnections: this.networkEnvironmentView.allowExternalConnections,
-                        isDHCPenabled: this.networkEnvironmentView.isDHCPenabled,
-                        dhcpNetworkMask: this.networkEnvironmentView.dhcpNetworkMask,
-                        dhcpNetworkAddress: this.networkEnvironmentView.dhcpNetworkAddress,
-                        isArchivedInternetEnabled: this.networkEnvironmentView.isArchivedInternetEnabled
+                        enableInternet: this.networkEnvironmentView.networkingConfig.enableInternet,
+                        serverMode: this.networkEnvironmentView.networkingConfig.serverMode,
+                        localServerMode: this.networkEnvironmentView.networkingConfig.localServerMode,
+                        enableSocks: this.networkEnvironmentView.networkingConfig.enableSocks,
+                        isDHCPenabled: this.networkEnvironmentView.networkingConfig.isDHCPenabled,
+                        dhcpNetworkMask: this.networkEnvironmentView.networkingConfig.dhcpNetworkMask,
+                        dhcpNetworkAddress: this.networkEnvironmentView.networkingConfig.dhcpNetworkAddress,
+                        isArchivedInternetEnabled: this.networkEnvironmentView.networkingConfig.isArchivedInternetEnabled,
+                        allowExternalConnections: this.networkEnvironmentView.networkingConfig.allowExternalConnections
                     },
+                    upstream_dns: this.networkEnvironmentView.networkingConfig.upstream_dns,
+                    gateway: this.networkEnvironmentView.networkingConfig.gateway,
+                    network: this.networkEnvironmentView.networkingConfig.network,
                     emilEnvironments: this.networkEnvironmentView.chosenEnvs,
                     title: this.networkEnvironmentView.networkEnvironmentTitle,
                     envId: uuid.v4()
