@@ -1,0 +1,65 @@
+<!--Networking Checkboxes sections-->
+<mat-form-field class="full-width">
+    <!--            allow ip or empty string-->
+    <input [disabled]="isDisabled" matInput name='network'  [(ngModel)]="networkingConfig.network"
+           placeholder="Network">
+</mat-form-field>
+
+<mat-form-field class="full-width">
+    <!--            allow ip or empty string-->
+    <input [disabled]="isDisabled" matInput name='gateway'  [(ngModel)]="networkingConfig.gateway"
+           pattern="^([0-9]{1,3})[.]([0-9]{1,3})[.]([0-9]{1,3})[.]([0-9]{1,3})$|(^$)"
+           placeholder="{{'Gateway' | translate}}">
+    <mat-error>Entered ip is invalid!</mat-error>
+</mat-form-field>
+
+<mat-form-field class="full-width">
+    <!--            allow ip or empty string-->
+    <input [disabled]="isDisabled"  matInput name='upstream_dns' [(ngModel)]="networkingConfig.upstream_dns"
+           pattern="^([0-9]{1,3})[.]([0-9]{1,3})[.]([0-9]{1,3})[.]([0-9]{1,3})$|(^$)"
+           placeholder="Upstream DNS">
+    <mat-error>Entered ip is invalid!</mat-error>
+</mat-form-field>
+
+<mat-checkbox  [disabled]="isDisabled" class="example-section" [(ngModel)]="networkingConfig.isDHCPenabled"
+               color="primary">{{'EDITENV_ENABLE_DHCP' | translate}}</mat-checkbox>
+<div *ngIf="networkingConfig.isDHCPenabled">
+    <mat-form-field class="paddingLeft example-section">
+        <input [disabled]="isDisabled" matInput  [(ngModel)]="networkingConfig.dhcpNetworkAddress" placeholder="{{'EDITENV_GW_PRIVATE_IP' | translate}}">
+    </mat-form-field>
+</div>
+<mat-checkbox [disabled]="isDisabled" class="example-section" [(ngModel)]="networkingConfig.enableInternet"
+              color="primary">{{'EDITENV_ENABLE_INTERNET' | translate}}</mat-checkbox>
+
+<mat-checkbox [disabled]="true" *ngIf="networkingConfig.enableInternet" class="paddingLeft example-section"
+              [(ngModel)]="networkingConfig.isArchivedInternetEnabled"
+              color="primary">Archived Internet (Optional) (Coming soon)
+</mat-checkbox>
+
+<mat-checkbox [disabled]="isDisabled" class="example-section" [(ngModel)]="networkingConfig.allowExternalConnections"
+              color="primary">{{'EDITENV_ALLOW_EXT_CONNECTIONS' | translate}}</mat-checkbox>
+
+<div class="paddingLeft"  *ngIf="networkingConfig.allowExternalConnections">
+    <mat-checkbox [disabled]="true" class="example-section" [(ngModel)]="networkingConfig.serverMode"
+                  color="primary">{{'EDITENV_ENABLE_SERVERMODE' | translate}}</mat-checkbox>
+    <!--    If server mode is enabled -->
+    <div>
+        <mat-checkbox [disabled]="isDisabled" class="example-section" [(ngModel)]="networkingConfig.enableSocks"
+                      color="primary">{{'EDITENV_ENABLE_SOCKS' | translate}}</mat-checkbox>
+        <mat-checkbox [disabled]="isDisabled" class="example-section" [(ngModel)]="networkingConfig.localServerMode"
+                      color="primary">{{'EDITENV_ENABLE_LOCAL_MODE' | translate}}</mat-checkbox>
+    </div>
+</div>
+
+<!--DNS/DHCP Service-->
+<mat-checkbox [disabled]="isDisabled" class="example-section" [(ngModel)]="isDnsDefined"
+              color="primary">DNS/DHCP Service</mat-checkbox>
+
+<mat-form-field class="paddingLeft example-section" *ngIf="isDnsDefined" style="display:inline-block;margin-right:15px; width:40%;">
+    <mat-label>DNS/DHCP</mat-label>
+    <mat-select  [disabled]="isDisabled" [(value)]="networkingConfig.dnsServiceEnv">
+        <mat-option *ngFor="let env of environments" [value]="env">
+            {{env.title}}
+        </mat-option>
+    </mat-select>
+</mat-form-field>

@@ -30,6 +30,9 @@ export class NetworkDialogComponent {
 
         if (typeof this.data.env.serverIp != "undefined")
             this.serverIp = this.data.env.serverIp;
+
+        if (typeof this.data.env.fqdn != "undefined")
+            this.fqdn = this.data.env.fqdn;
     }
 
     ngOnInit() {

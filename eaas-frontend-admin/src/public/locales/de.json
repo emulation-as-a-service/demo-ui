@@ -225,6 +225,7 @@
 
   "EDITENV_CANCONNECTENVS": "Umgebung verbinden (Experimental)",
   "EDITENV_ENABLE_INTERNET" : "Internetzugang aktivieren",
+  "EDITENV_ALLOW_EXT_CONNECTIONS" : "Externe Verbindungen zulassen",
   "EDITENV_ENABLE_SERVERMODE" : "Nutzung als Server ermöglichen",
   "EDITENV_ENABLE_SOCKS" : "SOCKS5 Proxy aktivieren",
   "EDITENV_ENABLE_DHCP" : "DHCP aktivieren",

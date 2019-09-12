@@ -21,6 +21,7 @@ module.exports = ['$state', '$scope', '$stateParams', '$uibModal', 'groupdIds', 
         });
     }
     var vm = this;
+    vm.pageSize = "10";
     vm.config = localConfig.data;
     $scope.groupdIds = groupdIds.data;
 

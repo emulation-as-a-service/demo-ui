@@ -242,6 +242,7 @@
 
   "EDITENV_CANCONNECTENVS": "Can be connected with other environments (Experimental)",
   "EDITENV_ENABLE_INTERNET" : "Enable Internet access",
+  "EDITENV_ALLOW_EXT_CONNECTIONS" : "Allow external connections",
   "EDITENV_ENABLE_SERVERMODE" : "Enable server mode",
   "EDITENV_ENABLE_SOCKS" : "Use SOCKS5",
   "EDITENV_ENABLE_DHCP" : "Enable DHCP",

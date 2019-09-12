@@ -4,6 +4,7 @@ import {HttpClient} from "@angular/common/http";
 import {MatTable} from '@angular/material';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {NgForm} from '@angular/forms'
+import {ConsolidatedNetworkView} from "../templates/consolidated-network-view-template/consolidated-network-view.component.ts";
 
 
 @Component({
@@ -21,9 +22,12 @@ import {NgForm} from '@angular/forms'
 export class StartedNetworkOverview {
     @Input() eaasClient: any;
     @Input() networkSessionEnvironments: any;
+    @Input() selectedNetworkEnvironment: any;
+    @Input() dnsServiceEnv: any;
     @ViewChild(MatTable, <any>{}) table: MatTable<any>;
     displayedColumns: string[] = ['environment', 'label', "actions"];
     expandedElement: {componentId: null};
+    networkingConfig: any;
 
     constructor(public dialog: MatDialog,
                 private http: HttpClient,
@@ -32,6 +36,34 @@ export class StartedNetworkOverview {
                 @Inject('localConfig') private localConfig: any,
                 @Inject('growl') private growl: any) {
     };
+
+    openConsolidatedNetworkView() {
+        const dialogRef = this.dialog.open(ConsolidatedNetworkView, {
+            width: '40%',
+            data: {networkSessionEnvironments: this.networkSessionEnvironments},
+        });
+        dialogRef.updatePosition({top: '10%'});
+        dialogRef.afterClosed().subscribe(result => {
+
+        });
+    }
+
+    ngOnInit() {
+        this.networkingConfig = {
+            serverMode: this.selectedNetworkEnvironment.networking.serverMode,
+            isDHCPenabled: this.selectedNetworkEnvironment.networking.isDHCPenabled,
+            enableInternet: this.selectedNetworkEnvironment.networking.enableInternet,
+            enableSocks: this.selectedNetworkEnvironment.networking.enableSocks,
+            dhcpNetworkMask: this.selectedNetworkEnvironment.networking.dhcpNetworkMask,
+            dhcpNetworkAddress: this.selectedNetworkEnvironment.networking.dhcpNetworkAddress,
+            isArchivedInternetEnabled: this.selectedNetworkEnvironment.networking.isArchivedInternetEnabled,
+            allowExternalConnections: this.selectedNetworkEnvironment.networking.allowExternalConnections,
+            network: this.selectedNetworkEnvironment.network,
+            gateway: this.selectedNetworkEnvironment.gateway,
+            upstream_dns: this.selectedNetworkEnvironment.upstream_dns,
+            dnsServiceEnv: this.dnsServiceEnv,
+        };
+    }
 
    async connect(element: any) {
         let container = this.eaasClient.container;

@@ -4,44 +4,15 @@
                placeholder="Network Environment Title">
         <mat-error *ngIf="!f.valid">Title is required</mat-error>
     </mat-form-field>
+
+
+    <!--Networking Checkboxes sections-->
+    <network-config-template
+        [(networkingConfig)]="networkingConfig"
+        [isDisabled]="false"
+        [environments]="environments"
+    ></network-config-template>
 </form>
-
-<!--Networking Checkboxes sections-->
-<mat-checkbox class="example-section" [(ngModel)]="isDHCPenabled"
-              color="primary">{{'EDITENV_ENABLE_DHCP' | translate}}</mat-checkbox>
-<div *ngIf="isDHCPenabled">
-    <mat-form-field>
-        <input matInput [(ngModel)]="dhcpNetworkAddress" placeholder="{{'EDITENV_GW_PRIVATE_IP' | translate}}">
-    </mat-form-field>
-    <mat-form-field  style="margin-left: 5px">
-        <input matInput type="number" [(ngModel)]="dhcpNetworkMask"
-               placeholder="{{'EDITENV_GW_PRIVATE_MASK' | translate}}">
-    </mat-form-field>
-</div>
-<mat-checkbox class="example-section" [(ngModel)]="enableInternet"
-              color="primary">{{'EDITENV_ENABLE_INTERNET' | translate}}</mat-checkbox>
-
-<mat-checkbox *ngIf="enableInternet" [disabled]=true class="paddingLeft example-section"
-              [(ngModel)]="isArchivedInternetEnabled"
-              color="primary">Archived Internet (Optional) (Coming soon)
-</mat-checkbox>
-
-<mat-checkbox class="example-section" [(ngModel)]="allowExternalConnections"
-              color="primary">{{'Allow external connections' | translate}}</mat-checkbox>
-
-
-<div class="paddingLeft" *ngIf="allowExternalConnections">
-    <mat-checkbox class="example-section" [(ngModel)]="serverMode"
-                  color="primary">{{'EDITENV_ENABLE_SERVERMODE' | translate}}</mat-checkbox>
-    <!--    If server mode is enabled -->
-    <div class="paddingLeft" *ngIf="serverMode">
-        <mat-checkbox class="example-section" [(ngModel)]="enableSocks"
-                      color="primary">{{'EDITENV_ENABLE_SOCKS' | translate}}</mat-checkbox>
-        <mat-checkbox class="example-section" [(ngModel)]="localServerMode"
-                      color="primary">{{'EDITENV_ENABLE_LOCAL_MODE' | translate}}</mat-checkbox>
-    </div>
-</div>
-
 <br>
 <div class="borderAround tekst">
     <mat-divider></mat-divider>
