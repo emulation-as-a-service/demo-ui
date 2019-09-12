@@ -5,6 +5,7 @@ import {NgForm, FormArray, FormControl, FormGroup, FormBuilder} from '@angular/f
 @Component({
     selector: 'dialog-content-dialog',
     template: require('./edit-network-elements-modal.html'),
+    styles: [require("./edit-network-elements-modal.css").toString()],
     encapsulation: ViewEncapsulation.None,
 })
 export class NetworkDialogComponent {
@@ -14,6 +15,7 @@ export class NetworkDialogComponent {
     portForm: FormGroup;
     ports: FormArray;
     fqdn: string;
+    wildcard: boolean;
 
     constructor(public dialogRef: MatDialogRef<NetworkDialogComponent>,
                 @Inject(MAT_DIALOG_DATA) public data: any,
@@ -22,7 +24,6 @@ export class NetworkDialogComponent {
                 @Inject('$state') private $state: any,
                 @Inject('REST_URLS') private REST_URLS: any,
                 @Inject('localConfig') private localConfig: any) {
-        this.macAddress = "";
         if (typeof this.data.env.macAddress != "undefined")
             this.macAddress = this.data.env.macAddress;
         if (typeof this.data.env.label != "undefined")
@@ -33,6 +34,8 @@ export class NetworkDialogComponent {
 
         if (typeof this.data.env.fqdn != "undefined")
             this.fqdn = this.data.env.fqdn;
+        if (typeof this.data.env.wildcard != "undefined")
+            this.wildcard = this.data.env.wildcard;
     }
 
     ngOnInit() {
@@ -59,6 +62,7 @@ export class NetworkDialogComponent {
                 macAddress: this.macAddress,
                 label: this.label,
                 fqdn: this.fqdn,
+                wildcard: this.wildcard,
                 serverIp: this.serverIp,
                 serverPorts: portNumbers
             });

@@ -325,11 +325,10 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams',
                                     const url = await $http.get(localConfig.data.eaasBackendURL + "network-environments/" + chosenEnv.envId + "?jsonUrl=true");
                                     input.content = [{
                                         "action": "copy",
-                                        "url": url.data.url,
+                                        "url": sessionStorage.DEBUG_network_json_url ? sessionStorage.DEBUG_network_json_url : url.data.url,
                                         "compression_format": "tar",
                                         "name": "network.json",
                                     }];
-                                    console.log("input.content", input.content);
                                     input_data.push(input);
                                     data = createData(
                                         env.runtimeId,
