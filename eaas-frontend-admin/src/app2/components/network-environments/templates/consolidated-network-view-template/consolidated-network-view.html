@@ -1,0 +1,16 @@
+<div *ngFor="let env of data.networkSessionEnvironments">
+    <div *ngIf="env.networkData.serverIp">
+        <h3>{{env.title}}</h3>
+        <h4>{{env.label}}</h4>
+        <div class="block_container">
+            <div class="bloc1">ServerIp: </div>
+            <div class="bloc2">{{env.networkData.serverIp}}</div>
+        </div>
+        <div *ngFor="let port of  env.networkData.serverPorts">
+            <div class="block_container">
+                <div class="bloc1">{{'EDITENV_SERVER_PORT' | translate}}: </div>
+                <div class="bloc2">{{port}}</div>
+            </div>
+        </div>
+    </div>
+</div>

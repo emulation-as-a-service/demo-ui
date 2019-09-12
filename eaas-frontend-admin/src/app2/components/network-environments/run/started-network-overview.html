@@ -1,10 +1,16 @@
-<h2 class="m-t-0" (click)="showComponents()">Network Environment Overview</h2>
+<h2 class="m-t-0">Network Environment Overview</h2>
+
+
 
 <div *ngIf="eaasClient.network">
     <network-config-template
         [networkingConfig]="networkingConfig"
         [isDisabled]="true"
     ></network-config-template>
+    <br>
+    <div class="tekst">
+     <button style="display: inline" (click)="openConsolidatedNetworkView()" mat-raised-button>Consolidated View</button>
+    </div>
 
     <!--    Network environments action table (connect, delete environments)   -->
     <h4 class="m-t-0">Connected Environments</h4>
@@ -35,30 +41,35 @@
             <div class="example-element-detail"
                  [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
                 <div class="example-element-description">
-                    <p> <b>2)</b> Select a port and initialize a local connection </p>
+                    <div *ngIf="!element.networkData.serverIp"><b>Network is not defined</b></div>
                     <div class="tekst" *ngIf="element.networkData.serverIp">
-                        <mat-card>
-                            <mat-card-title>{{element.title}}</mat-card-title>
-                            <mat-card-subtitle>{{element.label}}</mat-card-subtitle>
-                            <b>ServerIp:</b> {{element.networkData.serverIp}}
-                            <mat-card-actions>
-                                <div *ngFor="let port of element.networkData.serverPorts">
-                                <form name="localPort-binding-form" (ngSubmit)="bindLocalPort(f, element.networkData.serverIp, port)"  #f="ngForm" class="tekst">
-                                        <b>{{'EDITENV_SERVER_PORT' | translate}}:</b> {{port}}<br>
-                                        <mat-form-field>
-                                            <!-- Allow only valid ports -->
-                                            <input ngModel name="localPortBinding" required pattern="^()([1-9]|[1-5]?[0-9]{2,4}|6[1-4][0-9]{3}|65[1-4][0-9]{2}|655[1-2][0-9]|6553[1-5])$" matInput type="number"
-                                                   placeholder="Local Port">
-                                            <mat-error>Entered port is invalid!</mat-error>
-                                        </mat-form-field>
-                                        <button type="submit" value="submit" style="margin-left: 2px" mat-raised-button>
-                                            {{"SYNC_SET_URI_BTN"|translate}}
-                                            <mat-icon>leak_add</mat-icon>
-                                        </button>
-                                    </form>
+                            <div class="block_container">
+                                <div class="bloc1">ServerIp: </div>
+                                <div class="bloc2">{{element.networkData.serverIp}}</div>
+                            </div>
+                            <br>
+                        <div *ngFor="let port of element.networkData.serverPorts">
+                            <form name="localPort-binding-form"
+                                  (ngSubmit)="bindLocalPort(f, element.networkData.serverIp, port)" #f="ngForm"
+                                  class="tekst">
+                                <div class="block_container">
+                                    <div class="bloc1">{{'EDITENV_SERVER_PORT' | translate}}: </div>
+                                    <div class="bloc2">{{port}}</div>
                                 </div>
-                            </mat-card-actions>
-                        </mat-card>
+                                <mat-form-field>
+                                    <!-- Allow only valid ports -->
+                                    <input ngModel name="localPortBinding" required
+                                           pattern="^()([1-9]|[1-5]?[0-9]{2,4}|6[1-4][0-9]{3}|65[1-4][0-9]{2}|655[1-2][0-9]|6553[1-5])$"
+                                           matInput type="number"
+                                           placeholder="Local Port">
+                                    <mat-error>Entered port is invalid!</mat-error>
+                                </mat-form-field>
+                                <button type="submit" value="submit" style="margin-left: 2px" mat-raised-button>
+                                    {{"SYNC_SET_URI_BTN"|translate}}
+                                    <mat-icon>leak_add</mat-icon>
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>

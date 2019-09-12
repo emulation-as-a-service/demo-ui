@@ -4,6 +4,7 @@ import {HttpClient} from "@angular/common/http";
 import {MatTable} from '@angular/material';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {NgForm} from '@angular/forms'
+import {ConsolidatedNetworkView} from "../templates/consolidated-network-view-template/consolidated-network-view.component.ts";
 
 
 @Component({
@@ -14,7 +15,7 @@ import {NgForm} from '@angular/forms'
         trigger('detailExpand', [
             state('collapsed', style({height: '0px', minHeight: '0'})),
             state('expanded', style({height: '*'})),
-            transition('expanded <=> collapsed', animate('125ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+            transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
         ]),
     ],
 })
@@ -35,6 +36,17 @@ export class StartedNetworkOverview {
                 @Inject('localConfig') private localConfig: any,
                 @Inject('growl') private growl: any) {
     };
+
+    openConsolidatedNetworkView() {
+        const dialogRef = this.dialog.open(ConsolidatedNetworkView, {
+            width: '40%',
+            data: {networkSessionEnvironments: this.networkSessionEnvironments},
+        });
+        dialogRef.updatePosition({top: '10%'});
+        dialogRef.afterClosed().subscribe(result => {
+
+        });
+    }
 
     ngOnInit() {
         this.networkingConfig = {
@@ -59,14 +71,6 @@ export class StartedNetworkOverview {
         let componentSession = this.eaasClient.getSession(element.componentId);
         await this.eaasClient.connect(container, componentSession);
 
-    }
-
-    showComponents() {
-        console.log("this.eaasClient", this.eaasClient.network.sessionComponents);
-        console.log("this.eaasClient", this.eaasClient);
-        console.log("networkSessionEnvironments", this.networkSessionEnvironments);
-        console.log("expandedElement", this.expandedElement);
-        console.log("this.eaasClient.network.wsConnection() ", this.eaasClient.network.wsConnection())
     }
 
    async delete(element: any) {

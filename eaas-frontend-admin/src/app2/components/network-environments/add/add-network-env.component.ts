@@ -43,6 +43,9 @@ export class AddNetworkComponent implements AfterViewInit {
                     upstream_dns: this.networkEnvironmentView.networkingConfig.upstream_dns,
                     gateway: this.networkEnvironmentView.networkingConfig.gateway,
                     network: this.networkEnvironmentView.networkingConfig.network,
+                    dnsServiceEnvId:
+                        this.networkEnvironmentView.networkConfigTemplate.isDnsDefined ?
+                            this.networkEnvironmentView.networkingConfig.dnsServiceEnv.envId : undefined,
                     emilEnvironments: this.networkEnvironmentView.chosenEnvs,
                     title: this.networkEnvironmentView.networkEnvironmentTitle,
                     envId: uuid.v4()
