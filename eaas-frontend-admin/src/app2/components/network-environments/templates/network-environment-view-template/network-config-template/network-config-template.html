@@ -31,7 +31,7 @@
 <mat-checkbox [disabled]="isDisabled" class="example-section" [(ngModel)]="networkingConfig.enableInternet"
               color="primary">{{'EDITENV_ENABLE_INTERNET' | translate}}</mat-checkbox>
 
-<mat-checkbox [disabled]="isDisabled" *ngIf="networkingConfig.enableInternet" class="paddingLeft example-section"
+<mat-checkbox [disabled]="true" *ngIf="networkingConfig.enableInternet" class="paddingLeft example-section"
               [(ngModel)]="networkingConfig.isArchivedInternetEnabled"
               color="primary">Archived Internet (Optional) (Coming soon)
 </mat-checkbox>
