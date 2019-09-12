@@ -1,5 +1,5 @@
 import {stopClient} from "./utils/stop-client";
-import {NetworkSession} from "../../../../../eaas-client/eaas-client";
+import {NetworkSession,BWFLA} from "../../../../../eaas-client/eaas-client";
 
 module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams', '$cookies', '$translate', '$http', 'localConfig', 'growl', 'Environments', 'chosenEnv', 'eaasClient',
     function ($rootScope, $uibModal, $scope, $state, $stateParams, $cookies, $translate, $http, localConfig, growl, Environments, chosenEnv, eaasClient) {
