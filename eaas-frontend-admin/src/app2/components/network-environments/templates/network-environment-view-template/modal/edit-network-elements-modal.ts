@@ -80,4 +80,9 @@ export class NetworkDialogComponent {
         const control = <FormArray>this.portForm.controls['ports'];
         control.removeAt(i);
     }
+
+    assignRandomMac() {
+        this.macAddress = "XX:XX:XX:XX:XX:XX".replace(/X/g,
+            () => "0123456789ABCDEF".charAt(Math.floor(Math.random() * 16)))
+    }
 }

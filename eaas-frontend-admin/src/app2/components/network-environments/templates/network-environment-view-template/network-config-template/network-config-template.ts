@@ -14,10 +14,16 @@ export class NetworkConfigTemplate {
     constructor() {
     }
 
+    ngOnInit() {
+        if (typeof this.networkingConfig === "undefined") {
+            this.networkingConfig = {};
+        }
+    }
+
     ngAfterViewInit() {
         this.isDnsDefined = !!this.networkingConfig.dnsServiceEnv;
         // if the view is not interactive, environments are not passed, but dnsServiceEnv is defined: render dnsServiceEnv
-        if(this.isDisabled && this.isDnsDefined && this.environments == undefined){
+        if (this.isDisabled && this.isDnsDefined && this.environments == undefined) {
             this.environments = [this.networkingConfig.dnsServiceEnv];
         }
     }

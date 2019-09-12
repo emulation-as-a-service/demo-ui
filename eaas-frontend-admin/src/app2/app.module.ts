@@ -25,6 +25,7 @@ import {NetworkDialogComponent} from "./components/network-environments/template
 import {NetworkEnvironmentView} from "./components/network-environments/templates/network-environment-view-template/network-environment-view.component.ts";
 import {ConsolidatedNetworkView} from "./components/network-environments/templates/consolidated-network-view-template/consolidated-network-view.component.ts";
 import {NetworkConfigTemplate} from "./components/network-environments/templates/network-environment-view-template/network-config-template/network-config-template.ts";
+import {BindPortView} from "./components/network-environments/templates/bind-port-view-template/bind-port-view.ts";
 import {StartedNetworkOverview} from "./components/network-environments/run/started-network-overview.component.ts";
 
 
@@ -61,7 +62,8 @@ export function HttpLoaderFactory(http: HttpClient) {
         NetworkEnvironmentView,
         StartedNetworkOverview,
         ConsolidatedNetworkView,
-        NetworkConfigTemplate
+        NetworkConfigTemplate,
+        BindPortView
     ],
     entryComponents: [
         AddNetworkComponent,

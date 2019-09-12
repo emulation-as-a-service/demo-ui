@@ -15,11 +15,11 @@ tr.example-detail-row {
     text-align:left;
 }
 
-.bloc1 {
+.textBold {
     font-weight: bold;
 }
 
-.bloc2 {
+.textBlue {
     color: blue;
 }
 

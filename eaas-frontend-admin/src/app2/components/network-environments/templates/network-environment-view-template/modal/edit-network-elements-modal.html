@@ -5,9 +5,15 @@
         <input name="evnLabel" [(ngModel)]="label" required matInput #evnLabel="ngModel" placeholder="{{'ADD_NETWORK_ENVIRONMENT_LABEL' | translate}}">
         <mat-error>Label is required</mat-error>
     </mat-form-field>
-    <mat-form-field class="full-width">
+    <mat-form-field class="example-section">
         <input matInput [(ngModel)]="macAddress" [ngModelOptions]="{standalone: true}"  placeholder="{{'ADD_NETWORK_ENVIRONMENT_MAC_ADDRESS' | translate}}">
     </mat-form-field>
+
+    <button style="margin-bottom: 5px; margin-left: 10px;" type="button" mat-raised-button (click)="assignRandomMac()">
+        Random
+        <mat-icon>blur_on</mat-icon>
+    </button>
+
     <mat-form-field class="full-width">
         <input matInput [(ngModel)]="fqdn" [ngModelOptions]="{standalone: true}"  placeholder="{{'ADD_NETWORK_FQDN' | translate}}">
     </mat-form-field>

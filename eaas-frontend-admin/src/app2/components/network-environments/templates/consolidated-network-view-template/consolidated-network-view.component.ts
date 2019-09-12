@@ -7,8 +7,6 @@ import {NgForm, FormArray, FormControl, FormGroup, FormBuilder} from '@angular/f
     template: require('./consolidated-network-view.html'),
 })
 export class ConsolidatedNetworkView {
-    @Input() networkSessionEnvironments: any;
-
     constructor(public dialogRef: MatDialogRef<ConsolidatedNetworkView>,
                 @Inject(MAT_DIALOG_DATA) public data: any,
                 private http: HttpClient,
