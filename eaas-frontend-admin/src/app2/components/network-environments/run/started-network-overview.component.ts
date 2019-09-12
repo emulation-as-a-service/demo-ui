@@ -40,7 +40,7 @@ export class StartedNetworkOverview {
     openConsolidatedNetworkView() {
         const dialogRef = this.dialog.open(ConsolidatedNetworkView, {
             width: '40%',
-            data: {networkSessionEnvironments: this.networkSessionEnvironments},
+            data: {networkSessionEnvironments: this.networkSessionEnvironments, eaasClient: this.eaasClient},
         });
         dialogRef.updatePosition({top: '10%'});
         dialogRef.afterClosed().subscribe(result => {
@@ -70,7 +70,6 @@ export class StartedNetworkOverview {
         this.eaasClient.disconnect(this.eaasClient.activeView.componentId);
         let componentSession = this.eaasClient.getSession(element.componentId);
         await this.eaasClient.connect(container, componentSession);
-
     }
 
    async delete(element: any) {
@@ -82,15 +81,5 @@ export class StartedNetworkOverview {
        this.networkSessionEnvironments = await this.networkSessionEnvironments.filter(item => item.componentId !== session.componentId);
        await this.table.renderRows();
        this.growl.success("Environment stopped successfully!");
-    }
-
-    bindLocalPort(f: NgForm, serverIp, serverPort) {
-        if(f.valid){
-            this.eaasClient.getProxyURL({localPort: f.value.localPortBinding, serverIP: serverIp, serverPort: serverPort}).then((result) => {
-                const element: HTMLIFrameElement = document.getElementById('eaas-proxy-iframe') as HTMLIFrameElement;
-                const iframe = element.contentWindow;
-                iframe.location = result;
-            })
-        }
     }
 }

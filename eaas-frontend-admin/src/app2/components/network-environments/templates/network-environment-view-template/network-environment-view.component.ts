@@ -37,8 +37,11 @@ export class NetworkEnvironmentView {
 
     }
 
-    ngOnInit (){
-        this.networkingConfig.dnsServiceEnv = this.environments.find((env => env.envId == this.networkingConfig.dnsServiceEnvId));
+    ngOnInit () {
+        if (this.networkingConfig)
+            this.networkingConfig.dnsServiceEnv = this.environments.find((env => env.envId == this.networkingConfig.dnsServiceEnvId));
+        else
+            this.networkingConfig = {};
     }
 
     private addEnv() {

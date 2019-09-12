@@ -1,6 +1,7 @@
-<h2 class="m-t-0">Network Environment Overview</h2>
-
-
+<div class="block_container">
+    <h2 class="m-t-0" style="float:left;">Network Environment Overview</h2>
+    <button style="float:right;" (click)="openConsolidatedNetworkView()" mat-raised-button>Consolidated View</button>
+</div>
 
 <div *ngIf="eaasClient.network">
     <network-config-template
@@ -8,10 +9,6 @@
         [isDisabled]="true"
     ></network-config-template>
     <br>
-    <div class="tekst">
-     <button style="display: inline" (click)="openConsolidatedNetworkView()" mat-raised-button>Consolidated View</button>
-    </div>
-
     <!--    Network environments action table (connect, delete environments)   -->
     <h4 class="m-t-0">Connected Environments</h4>
     <table mat-table [dataSource]="networkSessionEnvironments" multiTemplateDataRows class="mat-elevation-z8">
@@ -43,33 +40,11 @@
                 <div class="example-element-description">
                     <div *ngIf="!element.networkData.serverIp"><b>Network is not defined</b></div>
                     <div class="tekst" *ngIf="element.networkData.serverIp">
-                            <div class="block_container">
-                                <div class="bloc1">ServerIp: </div>
-                                <div class="bloc2">{{element.networkData.serverIp}}</div>
-                            </div>
-                            <br>
-                        <div *ngFor="let port of element.networkData.serverPorts">
-                            <form name="localPort-binding-form"
-                                  (ngSubmit)="bindLocalPort(f, element.networkData.serverIp, port)" #f="ngForm"
-                                  class="tekst">
-                                <div class="block_container">
-                                    <div class="bloc1">{{'EDITENV_SERVER_PORT' | translate}}: </div>
-                                    <div class="bloc2">{{port}}</div>
-                                </div>
-                                <mat-form-field>
-                                    <!-- Allow only valid ports -->
-                                    <input ngModel name="localPortBinding" required
-                                           pattern="^()([1-9]|[1-5]?[0-9]{2,4}|6[1-4][0-9]{3}|65[1-4][0-9]{2}|655[1-2][0-9]|6553[1-5])$"
-                                           matInput type="number"
-                                           placeholder="Local Port">
-                                    <mat-error>Entered port is invalid!</mat-error>
-                                </mat-form-field>
-                                <button type="submit" value="submit" style="margin-left: 2px" mat-raised-button>
-                                    {{"SYNC_SET_URI_BTN"|translate}}
-                                    <mat-icon>leak_add</mat-icon>
-                                </button>
-                            </form>
-                        </div>
+                        <bind-port-view
+                            [serverIp]="element.networkData.serverIp"
+                            [serverPorts]="element.networkData.serverPorts"
+                            [eaasClient]="eaasClient"
+                        ></bind-port-view>
                     </div>
                 </div>
             </div>
@@ -88,5 +63,6 @@
     ></tr>
 
 </table>
+<!--    iframe for opening eaas-proxy in localMode scenario-->
     <iframe id="eaas-proxy-iframe" name="eaas-proxy" hidden sandbox></iframe>
 </div>
