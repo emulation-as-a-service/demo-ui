@@ -1,5 +1,5 @@
 import {stopClient} from "./utils/stop-client";
-import {NetworkSession,BWFLA} from "../../../../../eaas-client/eaas-client";
+import {NetworkSession,requestPointerLock} from "../../../../../eaas-client/eaas-client";
 
 module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams', '$cookies', '$translate', '$http', 'localConfig', 'growl', 'Environments', 'chosenEnv', 'eaasClient',
     function ($rootScope, $uibModal, $scope, $state, $stateParams, $cookies, $translate, $http, localConfig, growl, Environments, chosenEnv, eaasClient) {
@@ -388,7 +388,7 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams',
                 $rootScope.emulator.state = 'STARTED';
                 if (eaasClient.params.pointerLock === "true") {
                     growl.info($translate.instant('EMU_POINTER_LOCK_AVAILABLE'));
-                    BWFLA.requestPointerLock(eaasClient.guac.getDisplay().getElement(), 'click');
+                    requestPointerLock(eaasClient.guac.getDisplay().getElement(), 'click');
                 }
                 $scope.$apply();
                 $rootScope.$broadcast("emulatorStart", "success");
