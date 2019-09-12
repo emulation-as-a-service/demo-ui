@@ -14,9 +14,13 @@
         <mat-icon>blur_on</mat-icon>
     </button>
 
+    <mat-checkbox id="wildcardValueId" name='wildcardValue' #wildcardValue='ngModel' class="example-section" [(ngModel)]="wildcard"
+                  color="primary">Wildcard</mat-checkbox>
+    <div *ngIf="!wildcard">
     <mat-form-field class="full-width">
         <input matInput [(ngModel)]="fqdn" [ngModelOptions]="{standalone: true}"  placeholder="{{'ADD_NETWORK_FQDN' | translate}}">
     </mat-form-field>
+    </div>
     <div *ngIf="data.allowExternalConnections">
         <mat-form-field class="full-width">
 <!--            allow ip or empty string-->

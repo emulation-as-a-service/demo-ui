@@ -39,7 +39,7 @@ export class StartedNetworkOverview {
 
     openConsolidatedNetworkView() {
         const dialogRef = this.dialog.open(ConsolidatedNetworkView, {
-            width: '40%',
+            width: '20%',
             data: {networkSessionEnvironments: this.networkSessionEnvironments, eaasClient: this.eaasClient},
         });
         dialogRef.updatePosition({top: '10%'});

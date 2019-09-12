@@ -1,5 +1,5 @@
 <div class="block_container">
-    <div class="bloc1 textBold">ServerIp: </div>
+    <div class="bloc1 textBold">Server Ip: </div>
     <div class="bloc2 textBlue">{{serverIp}}</div>
 </div>
 <div *ngFor="let port of  serverPorts">
@@ -19,7 +19,7 @@
                        placeholder="Local Port">
                 <mat-error>Entered port is invalid!</mat-error>
             </mat-form-field>
-            <button type="submit" value="submit" style="margin-left: 2px" mat-raised-button>
+            <button type="submit" value="submit" style="margin-left: 10px" mat-raised-button>
                 {{"SYNC_SET_URI_BTN"|translate}}
                 <mat-icon>leak_add</mat-icon>
             </button>
