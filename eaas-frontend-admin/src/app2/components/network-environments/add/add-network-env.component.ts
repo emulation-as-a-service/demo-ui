@@ -38,7 +38,8 @@ export class AddNetworkComponent implements AfterViewInit {
                         dhcpNetworkMask: this.networkEnvironmentView.networkingConfig.dhcpNetworkMask,
                         dhcpNetworkAddress: this.networkEnvironmentView.networkingConfig.dhcpNetworkAddress,
                         isArchivedInternetEnabled: this.networkEnvironmentView.networkingConfig.isArchivedInternetEnabled,
-                        allowExternalConnections: this.networkEnvironmentView.networkingConfig.allowExternalConnections
+                        allowExternalConnections: this.networkEnvironmentView.networkingConfig.allowExternalConnections,
+                        archiveInternetDate: this.networkEnvironmentView.networkingConfig.archiveInternetDate
                     },
                     upstream_dns: this.networkEnvironmentView.networkingConfig.upstream_dns,
                     gateway: this.networkEnvironmentView.networkingConfig.gateway,

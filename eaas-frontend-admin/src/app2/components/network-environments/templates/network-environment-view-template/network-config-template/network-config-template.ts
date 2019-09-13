@@ -10,7 +10,8 @@ export class NetworkConfigTemplate {
     @Input() isDisabled: boolean;
     @Input() environments: any;
     isDnsDefined: boolean;
-    
+    startDate = new Date(2000, 0, 1);
+
     ngAfterViewInit() {
         this.isDnsDefined = !!this.networkingConfig.dnsServiceEnv;
         // if the view is not interactive, environments are not passed, but dnsServiceEnv is defined: render dnsServiceEnv

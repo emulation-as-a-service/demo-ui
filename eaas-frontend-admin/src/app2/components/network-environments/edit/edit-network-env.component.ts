@@ -36,6 +36,7 @@ export class EditNetworkComponent implements AfterViewInit {
             dhcpNetworkAddress: this.selectedNetworkEnvironment.networking.dhcpNetworkAddress,
             isArchivedInternetEnabled: this.selectedNetworkEnvironment.networking.isArchivedInternetEnabled,
             allowExternalConnections: this.selectedNetworkEnvironment.networking.allowExternalConnections,
+            archiveInternetDate: this.selectedNetworkEnvironment.networking.archiveInternetDate,
             network: this.selectedNetworkEnvironment.network,
             gateway: this.selectedNetworkEnvironment.gateway,
             upstream_dns: this.selectedNetworkEnvironment.upstream_dns,
@@ -65,7 +66,8 @@ export class EditNetworkComponent implements AfterViewInit {
                         dhcpNetworkMask: this.networkEnvironmentView.networkingConfig.dhcpNetworkMask,
                         dhcpNetworkAddress: this.networkEnvironmentView.networkingConfig.dhcpNetworkAddress,
                         isArchivedInternetEnabled: this.networkEnvironmentView.networkingConfig.isArchivedInternetEnabled,
-                        allowExternalConnections: this.networkEnvironmentView.networkingConfig.allowExternalConnections
+                        allowExternalConnections: this.networkEnvironmentView.networkingConfig.allowExternalConnections,
+                        archiveInternetDate: this.networkEnvironmentView.networkingConfig.archiveInternetDate
                     },
                     upstream_dns: this.networkEnvironmentView.networkingConfig.upstream_dns,
                     gateway: this.networkEnvironmentView.networkingConfig.gateway,

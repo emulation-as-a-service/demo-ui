@@ -31,10 +31,16 @@
 <mat-checkbox [disabled]="isDisabled" class="example-section" [(ngModel)]="networkingConfig.enableInternet"
               color="primary">{{'EDITENV_ENABLE_INTERNET' | translate}}</mat-checkbox>
 
-<mat-checkbox [disabled]="true" *ngIf="networkingConfig.enableInternet" class="paddingLeft example-section"
+<mat-checkbox [disabled]="isDisabled" *ngIf="networkingConfig.enableInternet" class="paddingLeft example-section"
               [(ngModel)]="networkingConfig.isArchivedInternetEnabled"
               color="primary">Archived Internet (Optional) (Coming soon)
 </mat-checkbox>
+<!--date picker-->
+<mat-form-field *ngIf="networkingConfig.isArchivedInternetEnabled" class="paddingLeft example-section">
+    <input matInput [disabled]="isDisabled" [(ngModel)]="networkingConfig.archiveInternetDate" [matDatepicker]="picker" placeholder="Choose a date">
+    <mat-datepicker-toggle matSuffix  [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker startView="multi-year" [startAt]="startDate" ></mat-datepicker>
+</mat-form-field>
 
 <mat-checkbox [disabled]="isDisabled" class="example-section" [(ngModel)]="networkingConfig.allowExternalConnections"
               color="primary">{{'EDITENV_ALLOW_EXT_CONNECTIONS' | translate}}</mat-checkbox>
