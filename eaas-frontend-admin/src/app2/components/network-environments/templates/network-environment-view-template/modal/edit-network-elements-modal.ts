@@ -86,7 +86,6 @@ export class NetworkDialogComponent {
     }
 
     assignRandomMac() {
-        this.macAddress = "XX:XX:XX:XX:XX:XX".replace(/X/g,
-            () => "0123456789ABCDEF".charAt(Math.floor(Math.random() * 16)))
+        this.macAddress = "auto";
     }
 }
