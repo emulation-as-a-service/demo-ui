@@ -204,13 +204,20 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams',
                 if ($stateParams.componentId && $stateParams.session) {
                     if (!$stateParams.session.network)
                         throw new Error("reattch requires a network session");
-
                     vm.networkSessionEnvironments = [];
-                    console.log("$stateParams.session", $stateParams.session);
+                    chosenEnv = {};
+                    chosenEnv.dhcpNetworkAddress = $stateParams.session.network.dhcpNetworkAddress;
+                    chosenEnv.dhcpNetworkMask = $stateParams.session.network.dhcpNetworkMask;
+                    chosenEnv.isDHCPenabled = $stateParams.session.network.enableDhcp;
+                    chosenEnv.gateway = $stateParams.session.network.gateway;
+                    chosenEnv.enableInternet = $stateParams.session.network.hasInternet;
+                    chosenEnv.hasTcpGateway = $stateParams.session.network.hasTcpGateway;
+
                     for (const component of $stateParams.session.components) {
-                        if (component.type === type)
+                        if (component.type === type){
+                            // vm.dnsServiceEnv = await Environments.get({envId: chosenEnv.dnsServiceEnvId}).$promise;
                             component.networkElement = $stateParams.session.network.components.find(el => el.componentId === component.componentId);
-                            Environments.get({envId: component.environmentId}).$promise.then((envMetaData) => {
+                            await Environments.get({envId: component.environmentId}).$promise.then((envMetaData) => {
                                 vm.networkSessionEnvironments.push({
                                     "envId": component.environmentId,
                                     "title": envMetaData.title,
@@ -219,13 +226,15 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams',
                                     "networkData": {serverIp: component.networkElement.serverIp, serverPorts: component.networkElement.serverPorts}
                                 });
                             });
+                        }
                     }
                     eaasClient.load($stateParams.session.sessionId, $stateParams.session.components, $stateParams.session.network);
                     let componentSession = eaasClient.getSession($stateParams.componentId);
                     await eaasClient.connect($("#emulator-container")[0], componentSession);
                     eaasClient.network.sessionId = $stateParams.session.sessionId;
                     $rootScope.emulator.detached = true;
-                } else {
+                } else
+                    {
                     if ($stateParams.isNetworkEnvironment) {
                         vm.networkSessionEnvironments = [];
                         let sessions = [];

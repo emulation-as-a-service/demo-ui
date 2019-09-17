@@ -62,7 +62,9 @@ module.exports = ['$state', '$scope', '$stateParams', '$uibModal', 'groupdIds', 
     function connect(id) {
         $http.get(localConfig.data.eaasBackendURL + "sessions/" + id).then((response) => {
             response.data.sessionId = id;
-            $state.go('admin.emulator', {envId: response.data.components[0].environmentId, componentId: response.data.components[0].componentId, session: response.data}, {reload: true});
+            //temporary, until we define which eenvironmentwe want to first
+            const envIdToInitialize = response.data.components.find(e => {return e.type === "machine"}).environmentId;
+            $state.go('admin.emulator', {envId: envIdToInitialize, componentId: response.data.components[0].componentId, session: response.data}, {reload: true});
         })
     }
 

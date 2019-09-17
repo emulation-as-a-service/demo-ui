@@ -1,4 +1,4 @@
-import {Component, Inject, Input, ViewChild} from '@angular/core';
+import {Component, Inject, Input, SimpleChanges, ViewChild} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {HttpClient} from "@angular/common/http";
 import {MatTable} from '@angular/material';
@@ -47,7 +47,14 @@ export class StartedNetworkOverview {
 
         });
     }
+    debug(){
+        console.log("selectedNetworkEnvironment", this.selectedNetworkEnvironment);
+        console.log("networkSessionEnvironments", this.networkSessionEnvironments);
+        console.log("eaasClient", this.eaasClient);
+        console.log("dnsServiceEnv", this.dnsServiceEnv);
+        this.table.renderRows()
 
+    }
     ngOnInit() {
         this.networkingConfig = {
             serverMode: this.selectedNetworkEnvironment.networking.serverMode,

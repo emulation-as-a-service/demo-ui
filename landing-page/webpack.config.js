@@ -36,7 +36,8 @@ module.exports = function makeWebpackConfig() {
    * Reference: http://webpack.github.io/docs/configuration.html#entry
    */
   config.entry = {
-    app: './src/app/app.js'
+      polyfills: './src/app2/polyfills.js',
+      app: './src/app2/app.module.ts'
   };
 
   /**
@@ -123,13 +124,16 @@ module.exports = function makeWebpackConfig() {
             publicPath: isProd ? PRODUCTION_PATH : LOCAL_WEBSERVER_PATH
         },   
     }, {
-      // HTML LOADER
-      // Reference: https://github.com/webpack/raw-loader
-      // Allow loading html through js
-      test: /\.html$/,
-      loader: 'raw-loader'
-    }]
+        // HTML LOADER
+        // Reference: https://github.com/webpack/raw-loader
+        // Allow loading html through js
+        test: /\.html$/,
+        loader: 'raw-loader'
+    },
+        { test: /\.tsx?$/,exclude: /\.node_modules/, loader: "ts-loader" }]
+
   };
+
 
   /**
    * PostCSS
