@@ -64,7 +64,8 @@ module.exports = ['$state', '$scope', '$stateParams', '$uibModal', 'groupdIds', 
             response.data.sessionId = id;
             //temporary, until we define which eenvironmentwe want to first
             const envIdToInitialize = response.data.components.find(e => {return e.type === "machine"}).environmentId;
-            $state.go('admin.emulator', {envId: envIdToInitialize, componentId: response.data.components[0].componentId, session: response.data}, {reload: true});
+            const componentId = response.data.components.find(e => {return e.type === "machine"}).componentId;
+            $state.go('admin.emulator', {envId: envIdToInitialize, componentId: componentId, session: response.data}, {reload: true});
         })
     }
 
