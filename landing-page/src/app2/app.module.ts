@@ -19,7 +19,6 @@ import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {TranslateLoader, TranslateModule, TranslateService} from "@ngx-translate/core";
 import {MatButtonModule, MatCheckboxModule, MatCardModule} from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-;
 
 
 export function HttpLoaderFactory(http: HttpClient) {

@@ -50,8 +50,8 @@ const appendScript = function(scriptText) {
 import guacamolejs from 'raw-loader!../../../eaas-client/guacamole/guacamole.js';
 appendScript(guacamolejs);
 
-import eaasclientjs from 'raw-loader!../../../eaas-client/eaas-client.js';
-appendScript(eaasclientjs);
+import {Client, hideCursor, showCursor, requestPointerLock} from '../../../eaas-client/eaas-client.js';
+
 
 /*
  * Import application specific modules
@@ -331,6 +331,7 @@ export default angular.module('emilUI', ['angular-loading-bar', 'ngSanitize', 'n
                     return new URLSearchParams(window.location.search).get('id')
                 },
                 buildInfo: ($http, localConfig, REST_URLS) => $http.get(localConfig.data.eaasBackendURL + REST_URLS.buildVersionUrl),
+                eaasClient: (localConfig) => new Client(localConfig.data.eaasBackendURL)
             },
             controller: "ContainerLandingCtrl as containerLandingCtrl"
         });

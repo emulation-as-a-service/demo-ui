@@ -1,9 +1,8 @@
-module.exports = ['$state', '$sce', '$http', '$stateParams', '$translate', '$uibModal', 'Upload', '$scope', 'localConfig', 'Environments', 'chosenEnvId', 'buildInfo', 'WizardHandler', 'helperFunctions', 'growl',
-    function ($state, $sce, $http, $stateParams, $translate, $uibModal, Upload, $scope, localConfig, Environments, chosenEnvId, buildInfo, WizardHandler, helperFunctions, growl) {
+import {createData} from "../../../../../../eaas-frontend-admin/src/app/modules/emulator/utils/eaas-data-creator";
 
+module.exports = ['$state', '$sce', '$http', '$stateParams', '$translate', '$uibModal', 'Upload', 'eaasClient', '$scope', 'localConfig', 'Environments', 'chosenEnvId', 'buildInfo', 'WizardHandler', 'helperFunctions', 'growl',
+    function ($state, $sce, $http, $stateParams, $translate, $uibModal, Upload, eaasClient, $scope, localConfig, Environments, chosenEnvId, buildInfo, WizardHandler, helperFunctions, growl) {
 
-
-    console.log("!!!" , chosenEnvId);
         if (chosenEnvId == null) {
             $state.go('error', {
                 errorMsg: {
@@ -13,8 +12,7 @@ module.exports = ['$state', '$sce', '$http', '$stateParams', '$translate', '$uib
             });
         }
         var vm = this;
-
-
+        
         Environments.get({envId: chosenEnvId}).$promise.then(function (response) {
 
 
@@ -98,7 +96,7 @@ module.exports = ['$state', '$sce', '$http', '$stateParams', '$translate', '$uib
                 if (vm.env.isContainer)
                     var startFunction = "startContainer";
                 else {
-                    var startFunction = "startEnvironment";
+                    var startFunction = "start";
                     $("#container-running").hide();
                 }
                 $("#container-stopped").hide();
@@ -110,6 +108,8 @@ module.exports = ['$state', '$sce', '$http', '$stateParams', '$translate', '$uib
                 input.destination = vm.env.input;
                 input.content = inputs;
                 params.input_data.push(input);
+
+
 
                 if (vm.data) {
 
@@ -131,7 +131,6 @@ module.exports = ['$state', '$sce', '$http', '$stateParams', '$translate', '$uib
                 }
                 vm.proxy = "";
 
-
                 vm.getOutput = function () {
                     const unloadBackup = eaasClient.deleteOnUnload;
                     eaasClient.deleteOnUnload = false;
@@ -140,7 +139,7 @@ module.exports = ['$state', '$sce', '$http', '$stateParams', '$translate', '$uib
                     let _header = localStorage.getItem('id_token') ? {"Authorization": "Bearer " + localStorage.getItem('id_token')} : {};
 
                     async function f() {
-                        const containerOutput = await fetch(window.eaasClient.getContainerResultUrl(), {
+                        const containerOutput = await fetch(eaasClient.getContainerResultUrl(), {
                             headers: _header,
                         });
                         const containerOutputBlob = await containerOutput.blob();
@@ -162,19 +161,17 @@ module.exports = ['$state', '$sce', '$http', '$stateParams', '$translate', '$uib
                 };
 
                 vm.sendCtrlAltDel = function () {
-                    window.eaasClient.sendCtrlAltDel();
+                    eaasClient.sendCtrlAltDel();
                 };
 
-                window.eaasClient = new EaasClient.Client(localConfig.data.eaasBackendURL, $("#emulator-container")[0]);
-
-                window.eaasClient.onEmulatorStopped = function () {
+                eaasClient.onEmulatorStopped = function () {
                     $("#emulator-loading-container").hide();
                     $("#container-running").hide();
                     $("#container-stopped").show();
                     console.log("done " + eaasClient.getContainerResultUrl());
                 };
 
-                window.eaasClient.onError = function (msg) {
+                eaasClient.onError = function (msg) {
                     $state.go('error', {errorMsg: {title: "Error ", message: msg}});
                 };
 
@@ -204,10 +201,24 @@ module.exports = ['$state', '$sce', '$http', '$stateParams', '$translate', '$uib
                     if (localStorage.DEBUG_script) eval(localStorage.DEBUG_script);
                 } catch (e) {
                 }
+                let envs;
+                if (vm.env.isContainer) {
+                    envs = vm.env.envId
+                } else {
+                    envs = [];
+                    const data = createData(vm.env.envId,
+                        vm.env.archive,
+                        "machine",
+                        vm.env.objectArchive,
+                        vm.env.objectId,
+                        vm.env.userId,
+                        vm.env.softwareId);
+                    envs.push({data, visualize: true});
+                }
 
-                eaasClient[startFunction](vm.env.envId, params, vm.input_data).then(function () {
+                eaasClient[startFunction](envs, params, vm.input_data).then(function () {
 
-                    eaasClient.connect().then(function () {
+                    eaasClient.connect($("#emulator-container")[0]).then(function () {
                         $("#emulator-loading-container").hide();
                         $("#emulator-container").show();
                         $("#emulator-downloadable-attachment-link").show();

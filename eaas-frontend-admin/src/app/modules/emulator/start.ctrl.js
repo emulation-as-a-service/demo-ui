@@ -1,4 +1,5 @@
 import {stopClient} from "./utils/stop-client";
+import {createData} from "./utils/eaas-data-creator";
 import {NetworkSession,requestPointerLock} from "../../../../../eaas-client/eaas-client";
 
 module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams', '$cookies', '$translate', '$http', 'localConfig', 'growl', 'Environments', 'chosenEnv', 'eaasClient',
@@ -159,34 +160,6 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams',
                 // console.log("locking user session");
             }
 
-            function createData(envId, archive, type, objectArchive, objectId, userId, softwareId, keyboardLayout, keyboardModel, containerRuntime, nic) {
-                let data = {};
-                data.type = type;
-                data.archive = archive;
-                data.environment = envId;
-                data.object = objectId;
-                data.objectArchive = objectArchive;
-                data.userId = userId;
-                data.software = softwareId;
-                data.nic = nic;
-                if (containerRuntime != null) {
-                    data.linuxRuntimeData = {
-                        userContainerEnvironment: containerRuntime.userContainerEnvironment,
-                        userContainerArchive: containerRuntime.userContainerArchive,
-                        isDHCPenabled: containerRuntime.networking.isDHCPenabled
-                    };
-                    data.input_data = containerRuntime.input_data;
-                }
-                if (typeof keyboardLayout != "undefined") {
-                    data.keyboardLayout = keyboardLayout;
-                }
-
-                if (typeof keyboardModel != "undefined") {
-                    data.keyboardModel = keyboardModel;
-                }
-                return data;
-            };
-
             envs.push({ data, visualize: true });
             $scope.$on('$locationChangeStart', function (event, newUrl, oldUrl) {
                 console.log("onStateChange");
@@ -205,14 +178,6 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams',
                     if (!$stateParams.session.network)
                         throw new Error("reattch requires a network session");
                     vm.networkSessionEnvironments = [];
-                    chosenEnv = {};
-                    chosenEnv.dhcpNetworkAddress = $stateParams.session.network.dhcpNetworkAddress;
-                    chosenEnv.dhcpNetworkMask = $stateParams.session.network.dhcpNetworkMask;
-                    chosenEnv.isDHCPenabled = $stateParams.session.network.enableDhcp;
-                    chosenEnv.gateway = $stateParams.session.network.gateway;
-                    chosenEnv.enableInternet = $stateParams.session.network.hasInternet;
-                    chosenEnv.hasTcpGateway = $stateParams.session.network.hasTcpGateway;
-
                     for (const component of $stateParams.session.components) {
                         if (component.type === type){
                             // vm.dnsServiceEnv = await Environments.get({envId: chosenEnv.dnsServiceEnvId}).$promise;
