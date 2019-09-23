@@ -1,8 +1,8 @@
-import {createData} from "../../../../../../eaas-frontend-admin/src/app/modules/emulator/utils/eaas-data-creator";
+import {startNetworkEnvironment} from "EaasLibs/start-network-environment.js";
+import {createData} from "EaasLibs/eaas-data-creator.js";
 
-module.exports = ['$state', '$sce', '$http', '$stateParams', '$translate', '$uibModal', 'Upload', 'eaasClient', '$scope', 'localConfig', 'Environments', 'chosenEnvId', 'buildInfo', 'WizardHandler', 'helperFunctions', 'growl',
-    function ($state, $sce, $http, $stateParams, $translate, $uibModal, Upload, eaasClient, $scope, localConfig, Environments, chosenEnvId, buildInfo, WizardHandler, helperFunctions, growl) {
-
+module.exports = ['$state', '$sce', '$http', '$stateParams', '$translate', '$uibModal', 'Upload', 'eaasClient', '$scope', 'localConfig', 'Environments', 'EmilNetworkEnvironments', 'chosenEnvId', 'isNetworkEnvironment', 'buildInfo', 'WizardHandler', 'helperFunctions', 'growl',
+   function ($state, $sce, $http, $stateParams, $translate, $uibModal, Upload, eaasClient, $scope, localConfig, Environments, EmilNetworkEnvironments, chosenEnvId, isNetworkEnvironment, buildInfo, WizardHandler, helperFunctions, growl) {
         if (chosenEnvId == null) {
             $state.go('error', {
                 errorMsg: {
@@ -12,12 +12,9 @@ module.exports = ['$state', '$sce', '$http', '$stateParams', '$translate', '$uib
             });
         }
         var vm = this;
-        
-        Environments.get({envId: chosenEnvId}).$promise.then(function (response) {
-
-
+        //check whether it's emilNetworkEnvironemnt
+        (isNetworkEnvironment ? EmilNetworkEnvironments : Environments).get({envId: chosenEnvId}).$promise.then(function (response) {
             vm.env = response;
-
             vm.env.isContainer = vm.env.envType ==="container";
             vm.network = "";
             vm.buildInfo = buildInfo.data.version;
@@ -91,7 +88,7 @@ module.exports = ['$state', '$sce', '$http', '$stateParams', '$translate', '$uib
             vm.input_data.size_mb = 512;
 
 
-            var confirmStartFn = function (inputs) {
+            var confirmStartFn = async function (inputs) {
 
                 if (vm.env.isContainer)
                     var startFunction = "startContainer";
@@ -215,7 +212,9 @@ module.exports = ['$state', '$sce', '$http', '$stateParams', '$translate', '$uib
                         vm.env.softwareId);
                     envs.push({data, visualize: true});
                 }
-
+                if(isNetworkEnvironment){
+                    await startNetworkEnvironment(vm, eaasClient, chosenEnv, Environments, $http, $uibModal, localConfig);
+                } else {
                 eaasClient[startFunction](envs, params, vm.input_data).then(function () {
 
                     eaasClient.connect($("#emulator-container")[0]).then(function () {
@@ -255,6 +254,7 @@ module.exports = ['$state', '$sce', '$http', '$stateParams', '$translate', '$uib
                         eaasClient.release();
                     });
                 });
+                }
             };
 
             vm.openNetworkDialog = function () {

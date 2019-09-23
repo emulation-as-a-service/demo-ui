@@ -364,7 +364,10 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 'lo
         };
 
         vm.openLandingPage = function (id) {
-            window.open(vm.landingPage + "?id=" + id);
+            if(vm.view ===4 ){
+                window.open(vm.landingPage + "?id=" + id + "&isNetworkEnvironment=" + "true");
+            } else
+                window.open(vm.landingPage + "?id=" + id)
         };
 
         $scope.onPageSizeChanged = function() {

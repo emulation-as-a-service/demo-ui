@@ -221,6 +221,10 @@ module.exports = function makeWebpackConfig() {
     },
     open: true
   };
-
+  config.resolve = {
+      alias: {
+          EaasLibs: path.resolve(__dirname, '../eaas-fronend-lib/')
+      }
+  };
   return config;
 }();

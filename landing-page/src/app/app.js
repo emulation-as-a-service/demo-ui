@@ -228,6 +228,9 @@ export default angular.module('emilUI', ['angular-loading-bar', 'ngSanitize', 'n
     .factory('Environments', function ($http, $resource, localConfig) {
         return $resource(localConfig.data.eaasBackendURL + 'EmilEnvironmentData/:envId');
     })
+    .factory('EmilNetworkEnvironments', function($http, $resource, localConfig) {
+        return $resource(localConfig.data.eaasBackendURL + 'network-environments/:envId');
+    })
     .config([
         '$compileProvider',
         function ($compileProvider) {
@@ -329,6 +332,9 @@ export default angular.module('emilUI', ['angular-loading-bar', 'ngSanitize', 'n
             resolve: {
                 chosenEnvId: function() {
                     return new URLSearchParams(window.location.search).get('id')
+                },
+                isNetworkEnvironment: function() {
+                    return new URLSearchParams(window.location.search).get('isNetworkEnvironment')
                 },
                 buildInfo: ($http, localConfig, REST_URLS) => $http.get(localConfig.data.eaasBackendURL + REST_URLS.buildVersionUrl),
                 eaasClient: (localConfig) => new Client(localConfig.data.eaasBackendURL)

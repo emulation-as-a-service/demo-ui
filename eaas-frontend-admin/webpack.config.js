@@ -8,6 +8,7 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 var UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 var WriteFilePlugin = require ('write-file-webpack-plugin');
+var path = require('path');
 
 /**
  * Env
@@ -37,6 +38,9 @@ catch(err) {
 }
 
 module.exports = function makeWebpackConfig() {
+
+
+
   /**
    * Config
    * Reference: http://webpack.github.io/docs/configuration.html
@@ -260,6 +264,10 @@ module.exports = function makeWebpackConfig() {
     },
 	open: true
   };
-
+  config.resolve = {
+      alias: {
+          EaasLibs: path.resolve(__dirname, '../eaas-fronend-lib/')
+      }
+  };
   return config;
 }();
