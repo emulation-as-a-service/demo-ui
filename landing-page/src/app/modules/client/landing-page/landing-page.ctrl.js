@@ -212,11 +212,8 @@ module.exports = ['$state', '$sce', '$http', '$stateParams', '$translate', '$uib
                         vm.env.softwareId);
                     envs.push({data, visualize: true});
                 }
-                if(isNetworkEnvironment){
-                    await startNetworkEnvironment(vm, eaasClient, chosenEnv, Environments, $http, $uibModal, localConfig);
-                } else {
-                eaasClient[startFunction](envs, params, vm.input_data).then(function () {
 
+                (isNetworkEnvironment ? startNetworkEnvironment(vm, eaasClient, vm.env, Environments, $http, $uibModal, localConfig) : eaasClient[startFunction](envs, params, vm.input_data)).then(function () {
                     eaasClient.connect($("#emulator-container")[0]).then(function () {
                         $("#emulator-loading-container").hide();
                         $("#emulator-container").show();
@@ -254,7 +251,7 @@ module.exports = ['$state', '$sce', '$http', '$stateParams', '$translate', '$uib
                         eaasClient.release();
                     });
                 });
-                }
+
             };
 
             vm.openNetworkDialog = function () {
