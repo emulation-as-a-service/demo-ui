@@ -76,7 +76,6 @@
     "concurrently": "^3.2.0",
     "copy-webpack-plugin": "4.0.1",
     "css-loader": "0.26.1",
-    "enhanced-resolve": "^4.1.0",
     "extract-text-webpack-plugin": "2.0.0-beta.5",
     "file-loader": "^0.9.0",
     "html-webpack-plugin": "^2.7.1",
