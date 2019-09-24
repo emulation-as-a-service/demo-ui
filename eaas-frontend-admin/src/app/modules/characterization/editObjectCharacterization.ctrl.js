@@ -34,7 +34,7 @@ module.exports = ['$scope', '$state', '$stateParams', '$uibModal', '$http', 'Obj
                 archiveId: $stateParams.objectArchive,
                 objectId: $stateParams.objectId,
                 updateClassification: updateClassification,
-                updateProposal, updateProposal
+                updateProposal: updateProposal
                 }).$promise.then(function(response) {
                     vm.suggested = response.objectEnvironments.suggested;
                     vm.metadata = response.metadata;
@@ -119,6 +119,7 @@ module.exports = ['$scope', '$state', '$stateParams', '$uibModal', '$http', 'Obj
              return;
          }
 
+
          var i;
          for (i = 0; i < vm.objEnvironments.length; i++) {
              if (vm.objEnvironments[i].id === env.id) {
@@ -154,7 +155,7 @@ module.exports = ['$scope', '$state', '$stateParams', '$uibModal', '$http', 'Obj
 
      vm.saveSoftware = function() {
         vm.softwareObj.objectId = $stateParams.objectId;
-        vm.softwareObj.label = vm.metadata.title;
+        vm.softwareObj.label = (vm.metadata) ? vm.metadata.title : $stateParams.objectId;
 
         vm.softwareObj.archiveId = $stateParams.objectArchive;
 
