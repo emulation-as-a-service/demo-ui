@@ -4,7 +4,7 @@
 /*.modal-backdrop.in {*/
     /*opacity: 1;*/
 /*}*/
-
+@import '../../../eaas-frontend-admin/src/app2/theme.scss';
 .parent {
     position: relative;
 }
@@ -246,4 +246,8 @@ div.ex4{
 .tekst {
     display:block;
     margin-bottom:5px;   /* adapt the margin value to the desire space between span and select box */
+}
+.tekstMore {
+  display:block;
+  margin-bottom:10px;   /* adapt the margin value to the desire space between span and select box */
 }

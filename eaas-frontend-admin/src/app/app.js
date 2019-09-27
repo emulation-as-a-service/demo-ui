@@ -107,7 +107,7 @@ import './app.scss';
 import {downgradeComponent} from '@angular/upgrade/static';
 import {AddNetworkComponent} from '../app2/components/network-environments/add/add-network-env.component.ts';
 import {EditNetworkComponent} from "../app2/components/network-environments/edit/edit-network-env.component.ts";
-import {StartedNetworkOverview} from "../app2/components/network-environments/run/started-network-overview.component.ts";
+import {StartedNetworkOverview} from "EaasLibs/network-environments/run/started-network-overview.component.ts";
 
 
 

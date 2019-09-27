@@ -333,15 +333,28 @@
                              src="img/gears.gif"/>
                     </div>
                     <p id="container-running">please wait... container is running.</p>
+
                     <div class="center-wrapper">
                     <br>
-                    <div ng-hide="containerLandingCtrl.env.isContainer" class="modal-body">
+                    <div ng-hide="containerLandingCtrl.env.isContainer && !containerLandingCtrl.env.runtimeId" class="modal-body">
+                        <div class="centered-content tekstMore">
+                            <div style="max-width: 1000px; min-width: 600px; text-align: left"
+                                 ng-if="containerLandingCtrl.networkSessionEnvironments && containerLandingCtrl.eaasClient.network"
+                                 class="tekstMore">
+                                <started-network-environment-overview
+                                    [network-Session-Environments]="containerLandingCtrl.networkSessionEnvironments"
+                                    [selected-Network-Environment]="containerLandingCtrl.env"
+                                    [dns-Service-Env]="containerLandingCtrl.dnsServiceEnv"
+                                    [eaas-Client]="containerLandingCtrl.eaasClient">
+                                </started-network-environment-overview>
+                            </div>
+                        </div>
                         <div class="centered-content">
                             <div id="emulator-container" class="eaas-emulator-container-transcursor"></div>
                             <br>
                             <div class="modal-footer">
 
-                                <button ng-hide="containerLandingCtrl.env.isContainer" type="submit" class="btn btn-default" ng-click="containerLandingCtrl.sendCtrlAltDel()">{{'ACTIONS_CTRLALTDEL' | translate}}</button>
+                                <button ng-hide="containerLandingCtrl.env.isContainer && !containerLandingCtrl.env.runtimeId" type="submit" class="btn btn-default" ng-click="containerLandingCtrl.sendCtrlAltDel()">{{'ACTIONS_CTRLALTDEL' | translate}}</button>
 
                                 <button ng-if="containerLandingCtrl.network || containerLandingCtrl.env.networking.localServerMode"
                                         ng-click="containerLandingCtrl.openNetworkDialog()" class="btn btn-default">Connection info</button>

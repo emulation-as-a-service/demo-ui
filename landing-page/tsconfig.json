@@ -4,6 +4,11 @@
     "target": "es5",
     "module": "commonjs",
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "baseUrl": "./",
+    "paths": {
+      "@angular/*": ["./node_modules/@angular/*"],
+      "uuid": ["./node_modules/uuid"]
+    }
   }
 }

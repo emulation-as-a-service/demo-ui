@@ -1,26 +1,27 @@
 <!--Networking Checkboxes sections-->
-<mat-form-field class="full-width">
+<br>
+<mat-form-field class="full-width tekstMore">
     <!--            allow ip or empty string-->
     <input [disabled]="isDisabled" matInput name='network'  [(ngModel)]="networkingConfig.network"
            placeholder="Network">
 </mat-form-field>
-
-<mat-form-field class="full-width">
+<br>
+<mat-form-field class="full-width tekstMore">
     <!--            allow ip or empty string-->
     <input [disabled]="isDisabled" matInput name='gateway'  [(ngModel)]="networkingConfig.gateway"
            pattern="^([0-9]{1,3})[.]([0-9]{1,3})[.]([0-9]{1,3})[.]([0-9]{1,3})$|(^$)"
            placeholder="{{'Gateway' | translate}}">
     <mat-error>Entered ip is invalid!</mat-error>
 </mat-form-field>
-
-<mat-form-field class="full-width">
+<br>
+<mat-form-field class="full-width tekstMore">
     <!--            allow ip or empty string-->
     <input [disabled]="isDisabled"  matInput name='upstream_dns' [(ngModel)]="networkingConfig.upstream_dns"
            pattern="^([0-9]{1,3})[.]([0-9]{1,3})[.]([0-9]{1,3})[.]([0-9]{1,3})$|(^$)"
            placeholder="Upstream DNS">
     <mat-error>Entered ip is invalid!</mat-error>
 </mat-form-field>
-
+<br>
 <mat-checkbox  [disabled]="isDisabled" class="example-section" [(ngModel)]="networkingConfig.isDHCPenabled"
                color="primary">{{'EDITENV_ENABLE_DHCP' | translate}}</mat-checkbox>
 <div *ngIf="networkingConfig.isDHCPenabled">

@@ -19,6 +19,12 @@ import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {TranslateLoader, TranslateModule, TranslateService} from "@ngx-translate/core";
 import {MatButtonModule, MatCheckboxModule, MatCardModule} from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {NetworkDialogComponent} from "EaasLibs/network-environments/networking-environments-templates/network-environment-view-template/modal/edit-network-elements-modal.ts";
+import {NetworkEnvironmentView} from "EaasLibs/network-environments/networking-environments-templates/network-environment-view-template/network-environment-view.component.ts";
+import {ConsolidatedNetworkView} from "EaasLibs/network-environments/networking-environments-templates/consolidated-network-view-template/consolidated-network-view.component.ts";
+import {NetworkConfigTemplate} from "EaasLibs/network-environments/networking-environments-templates/network-environment-view-template/network-config-template/network-config-template.ts";
+import {BindPortView} from "EaasLibs/network-environments/networking-environments-templates/bind-port-view-template/bind-port-view.ts";
+import {StartedNetworkOverview} from "EaasLibs/network-environments/run/started-network-overview.component.ts";
 
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -48,10 +54,20 @@ export function HttpLoaderFactory(http: HttpClient) {
             }
         })],
     declarations: [
-
+        BindPortView,
+        NetworkConfigTemplate,
+        ConsolidatedNetworkView,
+        NetworkEnvironmentView,
+        NetworkDialogComponent,
+        StartedNetworkOverview
     ],
     entryComponents: [
-
+        BindPortView,
+        NetworkConfigTemplate,
+        ConsolidatedNetworkView,
+        NetworkEnvironmentView,
+        NetworkDialogComponent,
+        StartedNetworkOverview
     ],
     providers: [
         {

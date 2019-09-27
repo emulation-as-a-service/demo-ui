@@ -1,8 +1,8 @@
 <div class="block_container">
-    <h2 class="m-t-0" (click)="debug()" style="float:left;">Network Environment Overview</h2>
+    <div class="m-t-0" (click)="debug()" style="float:left; font-weight: bold;font-size: 21px">Network Environment Overview</div>
     <button style="float:right;" (click)="openConsolidatedNetworkView()" mat-raised-button>Consolidated View</button>
 </div>
-
+<br>
 <div *ngIf="eaasClient.network">
     <network-config-template *ngIf="selectedNetworkEnvironment.network"
         [networkingConfig]="networkingConfig"

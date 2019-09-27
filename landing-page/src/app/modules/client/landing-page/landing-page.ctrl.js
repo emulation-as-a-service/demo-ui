@@ -1,5 +1,5 @@
-import {startNetworkEnvironment} from "EaasLibs/start-network-environment.js";
-import {createData} from "EaasLibs/eaas-data-creator.js";
+import {startNetworkEnvironment} from "EaasLibs/javascript-libs/start-network-environment.js";
+import {createData} from "EaasLibs/javascript-libs/eaas-data-creator.js";
 
 module.exports = ['$state', '$sce', '$http', '$stateParams', '$translate', '$uibModal', 'Upload', 'eaasClient', '$scope', 'localConfig', 'Environments', 'EmilNetworkEnvironments', 'chosenEnvId', 'isNetworkEnvironment', 'buildInfo', 'WizardHandler', 'helperFunctions', 'growl',
    function ($state, $sce, $http, $stateParams, $translate, $uibModal, Upload, eaasClient, $scope, localConfig, Environments, EmilNetworkEnvironments, chosenEnvId, isNetworkEnvironment, buildInfo, WizardHandler, helperFunctions, growl) {
@@ -12,15 +12,15 @@ module.exports = ['$state', '$sce', '$http', '$stateParams', '$translate', '$uib
             });
         }
         var vm = this;
+        vm.eaasClient = eaasClient;
         //check whether it's emilNetworkEnvironemnt
         (isNetworkEnvironment ? EmilNetworkEnvironments : Environments).get({envId: chosenEnvId}).$promise.then(function (response) {
+            console.log("!!!!", response);
             vm.env = response;
             vm.env.isContainer = vm.env.envType ==="container";
             vm.network = "";
             vm.buildInfo = buildInfo.data.version;
             vm.uiCommitHash = __UI_COMMIT_HASH__;
-
-            console.log("vm.env 2", vm.env);
 
             vm.canProcessAdditionalFiles = vm.env.canProcessAdditionalFiles;
             vm.inputs = [];
@@ -90,7 +90,7 @@ module.exports = ['$state', '$sce', '$http', '$stateParams', '$translate', '$uib
 
             var confirmStartFn = async function (inputs) {
 
-                if (vm.env.isContainer)
+                if (vm.env.isContainer && !vm.env.runtimeId)
                     var startFunction = "startContainer";
                 else {
                     var startFunction = "start";
@@ -105,8 +105,6 @@ module.exports = ['$state', '$sce', '$http', '$stateParams', '$translate', '$uib
                 input.destination = vm.env.input;
                 input.content = inputs;
                 params.input_data.push(input);
-
-
 
                 if (vm.data) {
 
@@ -198,23 +196,58 @@ module.exports = ['$state', '$sce', '$http', '$stateParams', '$translate', '$uib
                     if (localStorage.DEBUG_script) eval(localStorage.DEBUG_script);
                 } catch (e) {
                 }
-                let envs;
-                if (vm.env.isContainer) {
+                let envs = [];
+                if(vm.env.isContainer && vm.env.runtimeId){
+                    const runtimeEnv = await Environments.get({envId: vm.env.runtimeId}).$promise;
+                    console.log("!!!!!!!!!!!!!!!! vm.env.runtimeId", vm.env.runtimeId);
+                    console.log("params.input_data", params.input_data);
+                    const data = createData(
+                        vm.env.runtimeId,
+                        runtimeEnv.archive,
+                        "machine",
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        {
+                            userContainerEnvironment: vm.env.envId,
+                            userContainerArchive: vm.env.archive,
+                            networking: vm.env.networking,
+                            input_data: params.input_data
+                        });
+                    envs.push({data, visualize: true});
+                } else if (vm.env.isContainer) {
                     envs = vm.env.envId
                 } else {
-                    envs = [];
                     const data = createData(vm.env.envId,
                         vm.env.archive,
                         "machine",
                         vm.env.objectArchive,
                         vm.env.objectId,
                         vm.env.userId,
-                        vm.env.softwareId);
+                        vm.env.softwareId
+                    );
+                    data.input_data = [];
+                    data.input_data.push(vm.input_data);
                     envs.push({data, visualize: true});
                 }
+                // check for network environment!
 
-                (isNetworkEnvironment ? startNetworkEnvironment(vm, eaasClient, vm.env, Environments, $http, $uibModal, localConfig) : eaasClient[startFunction](envs, params, vm.input_data)).then(function () {
+                (isNetworkEnvironment ? startNetworkEnvironment(vm, eaasClient, vm.env, Environments, $http, $uibModal, localConfig) : eaasClient[startFunction](envs, params)).then(function () {
                     eaasClient.connect($("#emulator-container")[0]).then(function () {
+                        window.onbeforeunload = function (e) {
+                            var dialogText = $translate.instant('MESSAGE_QUIT');
+                            e.returnValue = dialogText;
+                            return dialogText;
+                        };
+
+                        window.onunload = function () {
+                            if (eaasClient)
+                                eaasClient.release();
+                            window.onbeforeunload = null;
+                        };
                         $("#emulator-loading-container").hide();
                         $("#emulator-container").show();
                         $("#emulator-downloadable-attachment-link").show();

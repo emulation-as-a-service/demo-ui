@@ -52,6 +52,10 @@ appendScript(guacamolejs);
 
 import {Client, hideCursor, showCursor, requestPointerLock} from '../../../eaas-client/eaas-client.js';
 
+// angular upgraded
+import {downgradeComponent} from '@angular/upgrade/static';
+import {StartedNetworkOverview} from "EaasLibs/network-environments/run/started-network-overview.component.ts";
+
 
 /*
  * Import application specific modules
@@ -72,7 +76,7 @@ import 'angular-growl-v2/build/angular-growl.css';
 import 'angular-loading-bar/build/loading-bar.css';
 import '../../../eaas-client/guacamole/guacamole.css';
 import '../../../eaas-client/eaas-client.css';
-import './app.css';
+import './app.scss';
 
 
 var env = {};
@@ -94,6 +98,11 @@ export default angular.module('emilUI', ['angular-loading-bar', 'ngSanitize', 'n
             ret.data = JSON.parse(xhr.responseText);
             return ret;
      })())
+
+    .directive(
+        'startedNetworkEnvironmentOverview',
+        downgradeComponent({component: StartedNetworkOverview})
+    )
 
     .component('containerInputList', {
         templateUrl: 'partials/containerInputList.html',

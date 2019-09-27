@@ -113,6 +113,22 @@ module.exports = function makeWebpackConfig() {
         ],
       })
     }, {
+        test: /\.scss$/,
+        use: [
+            {
+                loader: 'style-loader'
+            },
+            {
+                loader: 'to-string-loader'
+            },
+            {
+                loader: 'css-loader'
+            },
+            {
+                loader: 'sass-loader'
+            }
+        ]
+    }, {
       // ASSET LOADER
       // Reference: https://github.com/webpack/file-loader
       // Copy png, jpg, jpeg, gif, svg, woff, woff2, ttf, eot files to output
@@ -224,7 +240,10 @@ module.exports = function makeWebpackConfig() {
   };
   config.resolve = {
       alias: {
-          EaasLibs: path.resolve(__dirname, '../eaas-fronend-lib/')
+          EaasLibs: path.resolve(__dirname, '../eaas-frontend-lib/'),
+          '@angular': path.resolve(__dirname, './node_modules/@angular'),
+          'uuid': path.resolve(__dirname, './node_modules/uuid'),
+          'EaasClient': path.resolve(__dirname, '../eaas-client/')
       }
   };
   return config;

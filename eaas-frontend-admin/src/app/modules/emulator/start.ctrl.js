@@ -1,7 +1,7 @@
 import {stopClient} from "./utils/stop-client";
-import {createData} from "EaasLibs/eaas-data-creator";
-import {startNetworkEnvironment} from "EaasLibs/start-network-environment.js";
-import {NetworkSession,requestPointerLock} from "../../../../../eaas-client/eaas-client";
+import {createData} from "EaasLibs/javascript-libs/eaas-data-creator.js";
+import {startNetworkEnvironment} from "EaasLibs/javascript-libs/start-network-environment.js";
+import {NetworkSession,requestPointerLock} from "EaasClient/eaas-client.js";
 
 module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams', '$cookies', '$translate', '$http', 'localConfig', 'growl', 'Environments', 'chosenEnv', 'eaasClient',
     function ($rootScope, $uibModal, $scope, $state, $stateParams, $cookies, $translate, $http, localConfig, growl, Environments, chosenEnv, eaasClient) {

@@ -1,14 +1,14 @@
 import {createData} from "./eaas-data-creator.js";
-import {NetworkSession} from "../eaas-client/eaas-client";
+import {NetworkSession} from "EaasClient/eaas-client.js";
 
 export async function startNetworkEnvironment(controller, eaasClient, chosenEnv, Environments, $http, $uibModal, localConfig) {
     controller.networkSessionEnvironments = [];
     let sessions = [];
     let data = {};
     let type = "machine";
-// !FIXME
-// make Network Environment a proper component and run it from backend!
-// currently, last element always will be visualized
+    // !FIXME
+    // make Network Environment a proper component and run it from backend!
+    // currently, last element always will be visualized
     const promises = [];
     for (const networkElement of chosenEnv.emilEnvironments) {
         let env = await Environments.get({envId: networkElement.envId}).$promise;
@@ -16,7 +16,7 @@ export async function startNetworkEnvironment(controller, eaasClient, chosenEnv,
             const runtimeEnv = await Environments.get({envId: env.runtimeId}).$promise;
             let modal = $uibModal.open({
                 animation: true,
-                template: require('../eaas-frontend-admin/src/app/modules/containers/modals/container-run-dialog-modified.html'),
+                template: require('../../eaas-frontend-admin/src/app/modules/containers/modals/container-run-dialog-modified.html'),
                 resolve: {
                     currentEnv: function () {
                         return env;

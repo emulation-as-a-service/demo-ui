@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, Inject, Input, ViewChild} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {HttpClient} from "@angular/common/http";
-import {NetworkEnvironmentView} from "../templates/network-environment-view-template/network-environment-view.component.ts";
+import {NetworkEnvironmentView} from "EaasLibs/network-environments/networking-environments-templates/network-environment-view-template/network-environment-view.component.ts";
 import {NgForm} from "@angular/forms";
 import * as uuid from "uuid";
 

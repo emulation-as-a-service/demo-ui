@@ -4,7 +4,7 @@ import {HttpClient} from "@angular/common/http";
 import {ViewChild} from '@angular/core';
 import * as uuid from "uuid";
 import {NgForm} from '@angular/forms';
-import {NetworkEnvironmentView}  from "../templates/network-environment-view-template/network-environment-view.component.ts";
+import {NetworkEnvironmentView} from "EaasLibs/network-environments/networking-environments-templates/network-environment-view-template/network-environment-view.component.ts";
 
 @Component({
     selector: 'add-network-environment',

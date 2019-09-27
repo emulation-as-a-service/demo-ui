@@ -4,7 +4,7 @@ import {HttpClient} from "@angular/common/http";
 import {MatTable} from '@angular/material';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {NgForm} from '@angular/forms'
-import {ConsolidatedNetworkView} from "../templates/consolidated-network-view-template/consolidated-network-view.component.ts";
+import {ConsolidatedNetworkView} from "EaasLibs/network-environments/networking-environments-templates/consolidated-network-view-template/consolidated-network-view.component.ts";
 
 
 @Component({
