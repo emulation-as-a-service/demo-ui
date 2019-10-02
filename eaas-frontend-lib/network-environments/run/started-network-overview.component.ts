@@ -69,6 +69,7 @@ export class StartedNetworkOverview {
             gateway: this.selectedNetworkEnvironment.gateway,
             upstream_dns: this.selectedNetworkEnvironment.upstream_dns,
             dnsServiceEnv: this.dnsServiceEnv,
+            description: this.selectedNetworkEnvironment.description,
         };
     }
 

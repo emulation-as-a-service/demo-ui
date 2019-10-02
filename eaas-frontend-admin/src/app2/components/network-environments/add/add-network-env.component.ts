@@ -49,6 +49,7 @@ export class AddNetworkComponent implements AfterViewInit {
                             this.networkEnvironmentView.networkingConfig.dnsServiceEnv.envId : undefined,
                     emilEnvironments: this.networkEnvironmentView.chosenEnvs,
                     title: this.networkEnvironmentView.networkEnvironmentTitle,
+                    description: this.networkEnvironmentView.networkingConfig.description,
                     envId: uuid.v4()
                 }).subscribe((reply : any) =>{
                     if(reply.status == "0"){

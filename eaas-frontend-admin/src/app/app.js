@@ -78,7 +78,7 @@ Object.defineProperty(window, "EMULATORS_LIST", {
 import guacamolejs from 'raw-loader!../../../eaas-client/guacamole/guacamole.js';
 appendScript(guacamolejs);
 import {Client, hideCursor, showCursor, requestPointerLock} from '../../../eaas-client/eaas-client.js';
-
+import {textAngularComponent} from 'EaasLibs/javascript-libs/text-angularjs.component';
 /*
  * Import application specific modules
  */
@@ -137,6 +137,7 @@ export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize'
         'editNetworkEnvironment',
         downgradeComponent({component: EditNetworkComponent})
     )
+    .component('descriptionText', textAngularComponent)
     .component('inputList', {
         templateUrl: 'partials/components/inputList.html',
         bindings: {

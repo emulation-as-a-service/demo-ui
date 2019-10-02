@@ -1,6 +1,5 @@
 import {Component, Input} from '@angular/core';
 
-
 @Component({
     selector: 'network-config-template',
     template: require('./network-config-template.html'),
@@ -18,5 +17,11 @@ export class NetworkConfigTemplate {
         if (this.isDisabled && this.isDnsDefined && this.environments == undefined) {
             this.environments = [this.networkingConfig.dnsServiceEnv];
         }
+    }
+    debug() {
+        console.log("this.description", this.networkingConfig.description);
+    }
+    updateNetworkDescription(newDesc) {
+        this.networkingConfig.description = newDesc;
     }
 }

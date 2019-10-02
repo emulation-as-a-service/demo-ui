@@ -1,4 +1,9 @@
 <!--Networking Checkboxes sections-->
+<description-text [disabled]="isDisabled"
+[description]="networkingConfig.description"
+(updateDescription)="updateNetworkDescription($event)">
+</description-text>
+
 <br>
 <mat-form-field class="full-width tekstMore">
     <!--            allow ip or empty string-->

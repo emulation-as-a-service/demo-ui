@@ -41,6 +41,7 @@ export class EditNetworkComponent implements AfterViewInit {
             gateway: this.selectedNetworkEnvironment.gateway,
             upstream_dns: this.selectedNetworkEnvironment.upstream_dns,
             dnsServiceEnvId: this.selectedNetworkEnvironment.dnsServiceEnvId,
+            description: this.selectedNetworkEnvironment.description,
         };
         // enrich chosenEnvs with title and implicit id
         if (this.selectedNetworkEnvironment.emilEnvironments.length > 0) {
@@ -77,6 +78,7 @@ export class EditNetworkComponent implements AfterViewInit {
                             this.networkEnvironmentView.networkingConfig.dnsServiceEnv.envId : undefined,
                     emilEnvironments: this.networkEnvironmentView.chosenEnvs,
                     title: this.networkEnvironmentView.networkEnvironmentTitle,
+                    description: this.networkEnvironmentView.networkingConfig.description,
                     envId: this.selectedNetworkEnvironment.envId
                 }).subscribe((reply : any) =>{
                     if(reply.status == "0"){

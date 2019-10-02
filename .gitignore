@@ -4,7 +4,6 @@ dist
 coverage
 config.json
 
-
 .idea
 /sublime.sublime-workspace
 /sublime.sublime-project
@@ -16,3 +15,4 @@ sublime.sublime-workspace
 sublime.sublime-project
 auth.env
 package-lock.json
+eaas-frontend-lib/tsconfig.json
