@@ -51,6 +51,7 @@ import guacamolejs from 'raw-loader!../../../eaas-client/guacamole/guacamole.js'
 appendScript(guacamolejs);
 
 import {Client, hideCursor, showCursor, requestPointerLock} from '../../../eaas-client/eaas-client.js';
+import {textAngularComponent} from 'EaasLibs/javascript-libs/text-angularjs.component.js';
 
 // angular upgraded
 import {downgradeComponent} from '@angular/upgrade/static';
@@ -103,7 +104,7 @@ export default angular.module('emilUI', ['angular-loading-bar', 'ngSanitize', 'n
         'startedNetworkEnvironmentOverview',
         downgradeComponent({component: StartedNetworkOverview})
     )
-
+    .component('descriptionText', textAngularComponent)
     .component('containerInputList', {
         templateUrl: 'partials/containerInputList.html',
         bindings: {

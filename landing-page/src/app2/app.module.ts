@@ -25,6 +25,7 @@ import {ConsolidatedNetworkView} from "EaasLibs/network-environments/networking-
 import {NetworkConfigTemplate} from "EaasLibs/network-environments/networking-environments-templates/network-environment-view-template/network-config-template/network-config-template.ts";
 import {BindPortView} from "EaasLibs/network-environments/networking-environments-templates/bind-port-view-template/bind-port-view.ts";
 import {StartedNetworkOverview} from "EaasLibs/network-environments/run/started-network-overview.component.ts";
+import {DescriptionTextDirective} from "EaasLibs/directives/description-angular-text.directory.ts";
 
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -54,6 +55,7 @@ export function HttpLoaderFactory(http: HttpClient) {
             }
         })],
     declarations: [
+        DescriptionTextDirective,
         BindPortView,
         NetworkConfigTemplate,
         ConsolidatedNetworkView,
