@@ -5,27 +5,27 @@ export const textAngularComponent = {
         updateDescription: '&'
     },
     template: `
-            <h3 ng-click="$ctrl.debug()">{{'EDITENV_DESC' | translate}}</h3>
+            <br>
+            <h5 ng-if="!disabled">{{'EDITENV_DESC' | translate}}</h5>
 
             <text-angular ng-if="disabled"  ta-toolbar="[]" ta-bind="text" ng-readonly=true
-              ng-model="networkDescription"></text-angular>
+              ng-model="networkDescription.primitiveVariable"></text-angular>
                               
             <text-angular  ng-if="!disabled"
-                   ng-model="networkDescription"
+                   ng-model="networkDescription.primitiveVariable"
                    placeholder="{{'EDITENV_DESC_PH' | translate}}"></text-angular>`,
     controller: ["$scope", function ($scope) {
+        //https://stackoverflow.com/questions/38763460/angular-scope-variable-not-updating
+        $scope.networkDescription = {primitiveVariable: ""};
+
         var vm = this;
-        vm.debug = function () {
-        console.log("vm.disabled", vm.disabled)
-        };
         this.$onInit = function(){
-            var vm = this;
-            $scope.networkDescription = vm.description;
+            $scope.networkDescription.primitiveVariable = vm.description;
             $scope.disabled = vm.disabled;
         };
 
-        $scope.$watch('networkDescription', function() {
-            vm.updateDescription($scope.networkDescription);
+        $scope.$watch('networkDescription.primitiveVariable', function() {
+            vm.updateDescription($scope.networkDescription.primitiveVariable);
         });
     }],
     controllerAs: '$ctrl'

@@ -18,9 +18,7 @@ export class NetworkConfigTemplate {
             this.environments = [this.networkingConfig.dnsServiceEnv];
         }
     }
-    debug() {
-        console.log("this.description", this.networkingConfig.description);
-    }
+
     updateNetworkDescription(newDesc) {
         this.networkingConfig.description = newDesc;
     }

@@ -78,7 +78,7 @@ Object.defineProperty(window, "EMULATORS_LIST", {
 import guacamolejs from 'raw-loader!../../../eaas-client/guacamole/guacamole.js';
 appendScript(guacamolejs);
 import {Client, hideCursor, showCursor, requestPointerLock} from '../../../eaas-client/eaas-client.js';
-import {textAngularComponent} from 'EaasLibs/javascript-libs/text-angularjs.component';
+import {textAngularComponent} from 'EaasLibs/javascript-libs/text-angularjs.component.js';
 /*
  * Import application specific modules
  */
