@@ -28,26 +28,31 @@
                    placeholder="{{'EDITENV_SERVER_IP' | translate}}">
             <mat-error>Entered ip is invalid!</mat-error>
         </mat-form-field>
-        <div [formGroup]="portForm">
-            <div formArrayName="ports" *ngFor="let port of portForm.get('ports').controls; let i=index;">
-                <div [formGroupName]="i">
-                    <mat-form-field>
-<!--                    Allow only valid ports -->
-                        <input pattern="^()([1-9]|[1-5]?[0-9]{2,4}|6[1-4][0-9]{3}|65[1-4][0-9]{2}|655[1-2][0-9]|6553[1-5])$" matInput type="number" formControlName="portNumber"
-                               placeholder="{{'EDITENV_SERVER_PORT' | translate}}">
-                        <mat-error>Entered port is invalid!</mat-error>
-                    </mat-form-field>
-<!--                    Hide delete for the 1st port. At least one port is required!  -->
-                    <button mat-mini-fab [disabled]="i == 0 && portForm.get('ports').controls.length == 1" type="button" color="warn"  (click)="removePort(i)">
-                        <mat-icon>delete forever</mat-icon>
-                    </button>
+<!--        if serverIp and fqdn are not defined, hide ports! Note: dqdn is hidden if wildcard is true!-->
+        <div *ngIf="serverIp || (fqdn && !wildcard)">
+            <div [formGroup]="portForm">
+                <div formArrayName="ports" *ngFor="let port of portForm.get('ports').controls; let i=index;">
+                    <div [formGroupName]="i">
+                        <mat-form-field>
+                            <!--                    Allow only valid ports -->
+                            <input pattern="^()([1-9]|[1-5]?[0-9]{2,4}|6[1-4][0-9]{3}|65[1-4][0-9]{2}|655[1-2][0-9]|6553[1-5])$"
+                                   matInput type="number" formControlName="portNumber"
+                                   placeholder="{{'EDITENV_SERVER_PORT' | translate}}">
+                            <mat-error>Entered port is invalid!</mat-error>
+                        </mat-form-field>
+                        <!--                    Hide delete for the 1st port. At least one port is required!  -->
+                        <button mat-mini-fab [disabled]="i == 0 && portForm.get('ports').controls.length == 1"
+                                type="button" color="warn" (click)="removePort(i)">
+                            <mat-icon>delete forever</mat-icon>
+                        </button>
+                    </div>
                 </div>
             </div>
+            <button style="margin-bottom: 5px" type="button" mat-raised-button (click)="addPort('')">
+                <mat-icon>add box</mat-icon>
+                Add port
+            </button>
         </div>
-        <button style="margin-bottom: 5px" type="button" mat-raised-button (click)="addPort('')">
-            <mat-icon>add box</mat-icon>
-            Add extra port
-        </button>
     </div>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
