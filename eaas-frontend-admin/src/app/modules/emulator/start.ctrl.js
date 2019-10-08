@@ -142,8 +142,13 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams',
             }
 
             var archive = (chosenEnv) ? chosenEnv.archive : "default";
-            console.log("chosenEnv.envId",chosenEnv.envId);
-            let data = createData(chosenEnv.envId,
+            let environmentId= "";
+            if (chosenEnv && chosenEnv.envId)
+                environmentId = chosenEnv.envId;
+            else
+                environmentId = $stateParams.envId;
+
+            let data = createData(environmentId,
                 archive,
                 type,
                 $stateParams.objectArchive,
@@ -259,7 +264,7 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams',
 
         if ($stateParams.session || $stateParams.isNetworkEnvironment) {
             vm.runEmulator([]);
-        } else if (!chosenEnv.networking || !chosenEnv.networking.connectEnvs) {
+        } else if (!chosenEnv || !chosenEnv.networking || !chosenEnv.networking.connectEnvs) {
             vm.runEmulator([]);
         }
         else {
