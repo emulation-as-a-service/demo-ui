@@ -2,6 +2,8 @@ import {Component, Inject, ViewEncapsulation} from "@angular/core";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
 import {HttpClient} from "@angular/common/http";
 import {NgForm, FormArray, FormControl, FormGroup, FormBuilder} from '@angular/forms'
+import {assignRandomMac} from "EaasLibs/utils/randomMacGenerator.ts";
+
 @Component({
     selector: 'dialog-content-dialog',
     template: require('./edit-network-elements-modal.html'),
@@ -47,6 +49,8 @@ export class NetworkDialogComponent {
                 this.addPort(port)
             })
         } else this.addPort('');
+        //assign random macAddress on start if it's not defined
+        assignRandomMac();
     }
 
     editEnv(f: NgForm) {
@@ -86,6 +90,6 @@ export class NetworkDialogComponent {
     }
 
     assignRandomMac() {
-        this.macAddress = "auto";
+        this.macAddress = assignRandomMac()
     }
 }

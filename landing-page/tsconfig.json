@@ -2,12 +2,17 @@
   "compilerOptions": {
     "sourceMap": true,
     "target": "es5",
+    "lib": [
+      "es2017",
+      "dom",
+      "scripthost"
+    ],
     "module": "commonjs",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "baseUrl": "./",
     "paths": {
-      "@angular/*": ["./node_modules/@angular/*"],
+      "@*": ["./node_modules/@*"],
       "uuid": ["./node_modules/uuid"]
     }
   }

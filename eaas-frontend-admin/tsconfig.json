@@ -2,6 +2,11 @@
   "compilerOptions": {
     "sourceMap": true,
     "target": "es5",
+    "lib": [
+      "es2017",
+      "dom",
+      "scripthost"
+    ],
     "module": "commonjs",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,

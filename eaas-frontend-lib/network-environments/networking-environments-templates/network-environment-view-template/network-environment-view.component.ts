@@ -7,6 +7,7 @@ import {NetworkDialogComponent} from "./modal/edit-network-elements-modal.ts";
 import * as uuid from "uuid";
 import {FormArray, FormGroup, NgForm} from '@angular/forms';
 import {NetworkConfigTemplate} from "./network-config-template/network-config-template.ts";
+import {assignRandomMac} from "EaasLibs/utils/randomMacGenerator.ts";
 
 
 @Component({
@@ -47,6 +48,7 @@ export class NetworkEnvironmentView {
     private addEnv() {
         this.selectedEnv.label = this.envLabel;
         this.selectedEnv.uiID = uuid.v4();
+        this.selectedEnv.macAddress = assignRandomMac();
         let obh = Object.assign({}, this.selectedEnv);
         this.chosenEnvs.push(obh);
         this.selectedEnv = {};
