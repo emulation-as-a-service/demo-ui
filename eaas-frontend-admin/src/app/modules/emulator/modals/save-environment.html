@@ -7,19 +7,11 @@
 
         <div class="form-group"
              ng-if="openSaveEnvironmentDialogCtrl.type == 'objectEnvironment'
-				|| openSaveEnvironmentDialogCtrl.type == 'saveImport'
-				|| openSaveEnvironmentDialogCtrl.type == 'saveCreatedEnvironment'
 				|| openSaveEnvironmentDialogCtrl.type == 'newEnvironment'">
             <label>{{'SAVEENV_NAME' | translate}}</label> <input type="text"
                                                                  class="form-control"
                                                                  ng-model="openSaveEnvironmentDialogCtrl.envName"
                                                                  placeholder="{{'SAVEENV_NAME_PH' | translate}}" required>
-        </div>
-
-        <div class="form-group" ng-if="openSaveEnvironmentDialogCtrl.type == 'saveCreatedEnvironment'
-									|| openSaveEnvironmentDialogCtrl.type == 'saveImport'">
-            <label>{{'NEW_CONTAINER_AUTHOR' | translate}}</label>
-            <input type="text" class="form-control" ng-model="openSaveEnvironmentDialogCtrl.author"></input>
         </div>
 
         <div class="form-group">
@@ -28,17 +20,6 @@
                       ng-model="openSaveEnvironmentDialogCtrl.envDescription"
                       placeholder="{{'SAVEENV_DESC_PH' | translate}}" required></text-angular>
         </div>
-
-        <div ng-show="openSaveEnvironmentDialogCtrl.type == 'saveCreatedEnvironment'
-        || openSaveEnvironmentDialogCtrl.type == 'saveImport'">
-            <label>
-                <input type="checkbox" ng-model="openSaveEnvironmentDialogCtrl.isRelativeMouse">
-                <span>{{'EDITENV_RELMOUSE' | translate}}</span>
-            </label>
-        </div>
-
-
-
 
         <div class="form-group" ng-if="openSaveEnvironmentDialogCtrl.type == 'newEnvironment'
 									|| openSaveEnvironmentDialogCtrl.type == 'saveRevision'">
