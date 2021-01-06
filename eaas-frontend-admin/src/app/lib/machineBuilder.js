@@ -50,5 +50,4 @@ export class MachineBuilder {
             }, this.idToken);
         return result;
     }
-
 }

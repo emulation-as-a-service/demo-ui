@@ -2,11 +2,11 @@ import {getOsLabelById} from '../../lib/os.js'
 module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 
                     'localConfig', 'growl', '$translate', 'Environments', 
                     '$uibModal', 'softwareList', 
-                    'REST_URLS', '$timeout', "osList",
+                    'REST_URLS', '$timeout', "osList", "EaasClientHelper",
     function ($rootScope, $http, $state, $scope, $stateParams,
               localConfig, growl, $translate, Environments, 
               $uibModal, softwareList,  
-              REST_URLS, $timeout, osList) {
+              REST_URLS, $timeout, osList, EaasClientHelper) {
         
         var vm = this;
 
@@ -147,31 +147,6 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams',
             });
         };
 
-        vm.addSoftware = function(envId) {
-            $uibModal.open({
-                animation: true,
-                template: require('./modals/select-sw.html'),
-                controller: ["$scope", function($scope) {
-                    this.envId = envId;
-                    this.software = softwareList.data.descriptions;
-                    this.returnToObjects = $stateParams.showObjects;
-                }],
-                controllerAs: "addSoftwareDialogCtrl"
-            });
-        };
-
-        vm.addObject = function(envId) {
-            $uibModal.open({
-                animation: true,
-                template: require('./modals/select-sw.html'),
-                controller: ["$scope", function($scope) {
-                    this.envId = envId;
-                    this.software = softwareList.data.descriptions;
-                    this.returnToObjects = $stateParams.showObjects;
-                }],
-                controllerAs: "addSoftwareDialogCtrl"
-            });
-        };
         var confirmDeleteFn = function(envId)
         {
             console.log("confirmed");
@@ -390,7 +365,7 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams',
             vm[selected](id, archive);
         }
 
-        vm.run = function (id) {
+        vm.run = async function (id) {
             if (vm.view == 2) {
                 $state.go('admin.container', ({envId: id, modifiedDialog: true}));
                 return;
@@ -405,7 +380,18 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams',
             }
             if (typeof env.envId == "undefined")
                 $state.go('error', {errorMsg: {title: "Error ", message: "given envId: " + id + " is not found!"}});
-            $state.go('admin.emulator', {envId: env.envId, objectId: env.objectId, objectArchive: env.objectArchive, isNetworkEnvironment: vm.view === 4}, {reload: true});
+
+            let components = [];
+            let machine = EaasClientHelper.createMachine(env.envId);
+            if(env.objectId)
+                machine.setObject(env.objectId, env.objectArchive);
+            components.push(machine);
+
+            let clientOptions = await EaasClientHelper.clientOptions(env.envId);
+            $state.go("admin.emuView",  {
+                components: components, 
+                clientOptions: clientOptions
+            }, {}); 
         };
 
         vm.edit = function (id) {

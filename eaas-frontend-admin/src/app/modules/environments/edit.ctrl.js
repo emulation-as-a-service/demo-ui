@@ -3,10 +3,10 @@ import {Drives} from "../../lib/drives.js"
 import {getOsById} from '../../lib/os.js'
 module.exports = ["$http", "$rootScope", "$scope", "$state", "$stateParams", "Environments", "localConfig",
             "growl", "$translate", "objectDependencies", "helperFunctions", "osList", "softwareList", "$uibModal",
-             "$timeout", "nameIndexes", "REST_URLS", "Objects", "Images", "userInfo",
+             "$timeout", "nameIndexes", "REST_URLS", "Objects", "Images", "userInfo", "EaasClientHelper",
     function ($http, $rootScope, $scope, $state, $stateParams, Environments, localConfig,
             growl, $translate, objectDependencies, helperFunctions, osList, softwareList, $uibModal,
-            $timeout, nameIndexes, REST_URLS, Objects, Images, userInfo) {
+            $timeout, nameIndexes, REST_URLS, Objects, Images, userInfo, EaasClientHelper) {
 
        const replicateImage = publisher($http, $uibModal, $state, $timeout, growl, localConfig, REST_URLS, helperFunctions);
        let handlePrefix = "11270/";
@@ -94,25 +94,26 @@ module.exports = ["$http", "$rootScope", "$scope", "$state", "$stateParams", "En
                vm.showDateContextPicker = true;
             }
 
-            vm.run = function()
+            vm.run = async function()
             {
                 if($scope.form.$dirty) {
-                    if (window.confirm("There are unsaved modifications. Proceed anyway?"))
+                    if (!window.confirm("There are unsaved modifications. Proceed anyway?"))
                     {
-                        $state.go("admin.emulator",  {
-                            envId: vm.env.envId, 
-                            objectId: vm.env.objectId, 
-                            objectArchive: vm.env.objectArchive
-                        }, {});
+                        return;
                     }
                 }
-                else 
-                    $state.go("admin.emulator",  {
-                        envId: vm.env.envId, 
-                        objectId: vm.env.objectId, 
-                        objectArchive: vm.env.objectArchive
-                    }, {});
+
+                let components = [];
+                let machine = EaasClientHelper.createMachine(vm.env.envId);
+                machine.setObject(vm.env.objectId, vm.env.objectArchive);
+                components.push(machine);
+                let clientOptions = await EaasClientHelper.clientOptions(vm.env.envId);
+                $state.go("admin.emuView",  {
+                    components: components, 
+                    clientOptions: clientOptions
+                }, {});   
             }
+
             vm.os = getOsById(osList.operatingSystems, vm.env.os);
             if(localConfig.data.features.handle) {
                 $http.get(localConfig.data.eaasBackendURL + REST_URLS.getHandleList).then(function (response) {
@@ -185,13 +186,30 @@ module.exports = ["$http", "$rootScope", "$scope", "$state", "$stateParams", "En
            };
 
            vm.addSoftware = function(envId) {
-                 $uibModal.open({
+                 let modal = $uibModal.open({
                      animation: true,
                      template: require('./modals/select-sw.html'),
                      controller: ["$scope", function($scope) {
                          this.envId = envId;
                          this.software = softwareList.data.descriptions;
                          this.returnToObjects = $stateParams.showObjects;
+                         this.selected_sw = null;
+                         let _vm = this;
+                         $scope.runWithSoftware = async function() {
+                            console.log(_vm.selected_sw);
+                            let components = [];
+                            let machine = EaasClientHelper.createMachine(_vm.envId);
+                            machine.setSoftware(_vm.selected_sw.id, _vm.selected_sw.archiveId);
+                            components.push(machine);
+                    
+                            let clientOptions = await EaasClientHelper.clientOptions(_vm.envId);
+                            $state.go("admin.emuView",  {
+                                components: components, 
+                                clientOptions: clientOptions
+                            }, {}); 
+                            modal.close();
+                        }
+
                      }],
                      controllerAs: "addSoftwareDialogCtrl"
                  });

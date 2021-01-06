@@ -44,29 +44,7 @@ module.exports = ['$rootScope', '$scope', '$state', '$uibModal', '$stateParams',
     vm.enableSaveEnvironment = (chosenEnv == null);
     vm.isKVM = false;
     vm.waitModal = new WaitModal($uibModal);
-    if (chosenEnv)
-    {
-        console.log(chosenEnv);
-
-        vm.enablePrinting = chosenEnv.enablePrinting;
-        vm.shutdownByOs = chosenEnv.shutdownByOs;
-        if(chosenEnv.nativeConfig)
-            vm.isKVM = chosenEnv.nativeConfig.includes('-enable-kvm');
-
-        if(chosenEnv.drives)
-        {
-            for(let d of chosenEnv.drives)
-            {
-                if(d.type === 'disk')
-                    vm.enableSaveEnvironment = true;
-            }
-        }
-        else if(chosenEnv.linuxRuntime)
-            vm.enableSaveEnvironment = false;
-        else
-            vm.enableSaveEnvironment = true; // fallback to old metadata
-    }
-
+    
     /*
     if(vm.enablePrinting) {
         $rootScope.$on('emulatorStart', function(event, args) {
@@ -173,7 +151,7 @@ module.exports = ['$rootScope', '$scope', '$state', '$uibModal', '$stateParams',
         $state.go('admin.standard-envs-overview', {}, { reload: true });
     };
 
-    vm.openChangeEnvDialog = function() {
+    vm.openChangeEnvDialog = async function() {
         $uibModal.open({
             animation: true,
             template: require('./modals/choose-env-dialog.html'),
@@ -181,18 +159,28 @@ module.exports = ['$rootScope', '$scope', '$state', '$uibModal', '$stateParams',
                 this.custom_env = null;
                 this.environments = vm.objEnvironments;
 
-                this.changeEnv= function()
+                this.changeEnv = async function()
                 {
                     eaasClient.release();
-                    let data = {envId: this.custom_env.id};
+                    
+                    let components = [];
+                    let machine = EaasClientHelper.createMachine(this.custom_env.id);
+                    components.push(machine);
 
                     if($stateParams.uvi)
                     {
-                        data.enableDownload = $stateParams.enableDownload,
-                        data.uvi = $stateParams.uvi
+                        console.log("- - - FIX ME - - -");
+
+                 //       data.enableDownload = $stateParams.enableDownload,
+                 //       data.uvi = $stateParams.uvi
                     }
-                    $state.go('admin.emulator', data, {reload: true});
-                };
+
+                    let clientOptions = await EaasClientHelper.clientOptions(env.envId);
+                $state.go("admin.emuView",  {
+                    components: components, 
+                    clientOptions: clientOptions
+                }, {}); 
+               };
             }],
             controllerAs: "changeEnvDialogCtrl"
         });

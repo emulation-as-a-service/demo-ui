@@ -1,7 +1,7 @@
 module.exports = ['$scope', '$state', '$stateParams', '$uibModal', '$http', 'Objects', 'softwareObj', 'osList',
-                     'localConfig', 'Environments', 'growl', '$translate', 'helperFunctions', 'REST_URLS', '$timeout',
+                     'localConfig', 'Environments', 'growl', '$translate', 'helperFunctions', 'REST_URLS', '$timeout', 'EaasClientHelper',
                       function ($scope, $state, $stateParams, $uibModal, $http, Objects, softwareObj, osList,
-                      localConfig, Environments, growl, $translate, helperFunctions, REST_URLS, $timeout) {
+                      localConfig, Environments, growl, $translate, helperFunctions, REST_URLS, $timeout, EaasClientHelper) {
      var vm = this;
     console.log("$stateParams.userDescription", $stateParams.userDescription);
 
@@ -119,8 +119,25 @@ module.exports = ['$scope', '$state', '$stateParams', '$uibModal', '$http', 'Obj
          vm.objEnvironments.splice(i, 1);
      };
 
-     vm.resetChanges = function()
+     vm.run = async function(envId)
      {
+        let components = [];
+        let machine = EaasClientHelper.createMachine(envId);
+        if(vm.objectId)
+            machine.setObject(vm.objectId, vm.objectArchive);
+        components.push(machine);
+
+        let clientOptions = await EaasClientHelper.clientOptions(envId);
+        $state.go("admin.emuView",  {
+            components: components, 
+            clientOptions: clientOptions,
+            type: 'objectEnvironment',
+            returnToObjects: !vm.isSoftware
+        }, {}); 
+    }
+
+    vm.resetChanges = function()
+    {
          if (window.confirm($translate.instant('CHAR_CONFIRM_RESET_T'))) {
              $http.post(localConfig.data.eaasBackendURL + REST_URLS.overrideObjectCharacterizationUrl, {
                  objectId: $stateParams.objectId,
@@ -129,7 +146,7 @@ module.exports = ['$scope', '$state', '$stateParams', '$uibModal', '$http', 'Obj
                  $state.go('admin.object-overview');
              });
          }
-     }
+    }
 
      vm.saveCharacterization = function() {
              console.log("vm.description " , vm.description);

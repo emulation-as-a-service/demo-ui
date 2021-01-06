@@ -1,5 +1,8 @@
-module.exports = ['$state', '$scope', '$uibModal', 'localConfig', 'REST_URLS', '$http', 'Environments', "$translate", "growl", "EmilNetworkEnvironments", 
-    function ($state, $scope, $uibModal, localConfig, REST_URLS, $http, Environments, $translate, growl, EmilNetworkEnvironments) {
+import {NetworkBuilder} from "EaasClient/lib/networkBuilder.js"
+import {ClientError} from "EaasClient/eaas-client.js";
+
+module.exports = ['$state', '$scope', '$uibModal', 'localConfig', 'REST_URLS', '$http', 'Environments', "$translate", "growl", "EmilNetworkEnvironments", "authService",
+    function ($state, $scope, $uibModal, localConfig, REST_URLS, $http, Environments, $translate, growl, EmilNetworkEnvironments, authService) {
    
     var vm = this;
     vm.landingPage = localConfig.data.landingPage;
@@ -151,7 +154,7 @@ module.exports = ['$state', '$scope', '$uibModal', 'localConfig', 'REST_URLS', '
         });
     }
 
-    function run (id) {
+    async   function run (id) {
         var env = {};
         for (let i = 0; i < vm.envs.length; i++) {
             if (id == vm.envs[i].envId) {
@@ -161,7 +164,21 @@ module.exports = ['$state', '$scope', '$uibModal', 'localConfig', 'REST_URLS', '
         }
         if (typeof env.envId == "undefined")
             $state.go('error', {errorMsg: {title: "Error ", message: "given envId: " + id + " is not found!"}});
-        $state.go('admin.emulator', {envId: env.envId, isNetworkEnvironment: true}, {reload: true});
+
+        try {
+            let networkBuilder = new NetworkBuilder(localConfig.data.eaasBackendURL, () => authService.getToken());
+            let networkEnvironment = await networkBuilder.getNetworkEnvironmentById(env.envId);
+            await networkBuilder.loadNetworkEnvironment(networkEnvironment);
+
+            $state.go("admin.emuView",  {
+                components: networkBuilder.getComponents(), 
+                clientOptions: networkBuilder.getClientOptions()
+            }, {}); 
+        }
+        catch(e) {
+            const details = (e instanceof ClientError) ? e.toJson() : e.toString();
+            $state.go('error', { errorMsg: { title: "EaaS Client Error", message: details } });
+        }
     }
 
     function edit(id) {
@@ -177,9 +194,9 @@ module.exports = ['$state', '$scope', '$uibModal', 'localConfig', 'REST_URLS', '
         $http.get(localConfig.data.eaasBackendURL + "sessions/" + id).then((response) => {
             response.data.sessionId = id;
             //temporary, until we define which environment we want to visualize first
-            const envIdToInitialize = response.data.components.find(e => {return e.type === "machine"}).environmentId;
             const componentId = response.data.components.find(e => {return e.type === "machine"}).componentId;
-            $state.go('admin.emulator', {envId: envIdToInitialize, componentId: componentId, session: response.data}, {reload: true});
+
+            $state.go('admin.emuView', {componentId: componentId, session: response.data}, {reload: true});
         })
     }
 

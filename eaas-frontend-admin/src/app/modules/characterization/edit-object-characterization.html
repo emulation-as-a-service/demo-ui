@@ -69,12 +69,8 @@
                             <div class="btn btn-default" tabindex="0" style="float: right; color: #CC322E;" ng-click="editObjectCharacterizationCtrl.removeEnvironment(env)">
                                 <i class="glyphicon glyphicon-remove"></i>
                             </div>
-                            <div style="float: right;"><button type="submit" class="btn btn-primary"
-                                                               ui-sref="admin.emulator({envId: env.id,
-                                                        type: 'objectEnvironment',
-                                                        objectId: editObjectCharacterizationCtrl.objectId,
-                                                        objectArchive: editObjectCharacterizationCtrl.objectArchive,
-                                                        returnToObjects: !editObjectCharacterizationCtrl.isSoftware})" >Run</button>
+                            <div style="float: right;"><button type="button" class="btn btn-primary" 
+                                ng-click="editObjectCharacterizationCtrl.run(env.id)">Run</button>
                             </div>
                         </li>
                     </ul>

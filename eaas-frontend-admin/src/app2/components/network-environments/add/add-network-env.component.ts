@@ -6,6 +6,8 @@ import * as uuid from "uuid";
 import {NgForm} from '@angular/forms';
 import {NetworkEnvironmentView} from "EaasLibs/network-environments/networking-environments-templates/network-environment-view-template/network-environment-view.component.ts";
 import {saveNetworkEnv} from "EaasLibs/network-environments/network-environment-saver.ts";
+import {NetworkBuilder} from "../../../../../../eaas-client/lib/networkBuilder.js";
+import { AuthService } from '../../../auth/auth.service.ts';
 
 
 @Component({
@@ -24,7 +26,8 @@ export class AddNetworkComponent implements AfterViewInit {
                 @Inject('$state') private $state: any,
                 @Inject('REST_URLS') private REST_URLS: any,
                 @Inject('localConfig') private localConfig: any,
-                @Inject('growl') private growl: any) {
+                @Inject('growl') private growl: any,
+                public auth: AuthService) {
     }
 
     ngAfterViewInit() {
@@ -39,13 +42,20 @@ export class AddNetworkComponent implements AfterViewInit {
                     `${this.localConfig.data.eaasBackendURL}${this.REST_URLS.networkEnvironmentUrl}`,
                     this.networkEnvironmentView,
                     _uuid)
-                    .subscribe((reply: any) => {
+                    .subscribe(async (reply: any) => {
                         if (reply.status == "0") {
                             this.growl.success("Done");
                             if(!run)
                                 this.$state.go('admin.networking', {}, {reload: true});
-                            else
-                                this.$state.go('admin.emulator', {envId: _uuid, isNetworkEnvironment: true}, {reload: true});
+                            else {
+                                let networkBuilder = new NetworkBuilder(this.localConfig.data.eaasBackendURL, this.auth.getToken());
+                                let networkEnvironment = await networkBuilder.getNetworkEnvironmentById(_uuid);
+                                await networkBuilder.loadNetworkEnvironment(networkEnvironment);
+                                this.$state.go("admin.emuView",  {
+                                    components: networkBuilder.getComponents(), 
+                                    clientOptions: networkBuilder.getClientOptions()
+                                }, {}); 
+                            }
                         } else {
                             this.growl.error("Saved failed! ", reply);
                             console.log(reply);

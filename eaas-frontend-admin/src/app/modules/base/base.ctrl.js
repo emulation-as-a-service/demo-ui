@@ -8,7 +8,7 @@ function($uibModal, $state, $scope, $rootScope, localConfig, kbLayouts, buildInf
     $scope.$watch(function(){
         return $state.$current.name
     }, function(newVal, oldVal){
-        $scope.isCollapsed = newVal == "admin.emulator"
+        $scope.isCollapsed = newVal == "admin.emuView"
     });
 
     const auth0config = localConfig.data.auth0Config || {};

@@ -1,9 +1,7 @@
-import {startNetworkEnvironment} from "EaasLibs/javascript-libs/network-environment-utils/start-network-environment.js";
 import {requestPointerLock, ClientError} from "EaasClient/eaas-client.js";
-import { MachineComponentBuilder } from "EaasClient/lib/componentBuilder";
-import { TcpGatewayConfig, ClientOptions } from "EaasClient/lib/clientOptions";
 import { _fetch } from "../../lib/utils";
 import { UviMachineComponentBuilder } from "../../../../../eaas-client/lib/componentBuilder";
+import { EaasClientHelper } from "../../lib/eaasClientHelper";
 
 module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams', '$cookies', '$translate', '$http', 'localConfig', 'growl', 'Environments', 'EmilNetworkEnvironments', 'chosenEnv', 'eaasClient',
     function ($rootScope, $uibModal, $scope, $state, $stateParams, $cookies, $translate, $http, localConfig, growl, Environments, EmilNetworkEnvironments, chosenEnv, eaasClient) {
@@ -14,6 +12,8 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams',
         $rootScope.emulator.state = '';
         vm.emulator = $rootScope.emulator;
 
+        const eaasClientHelper = new EaasClientHelper();
+
         if ($stateParams.containerRuntime != null) {
             $scope.containerRuntime = $stateParams.containerRuntime;
             if(chosenEnv == null) chosenEnv = {};
@@ -21,8 +21,7 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams',
         }
 
         vm.runEmulator = async (networkSessionId) => {
-            await chosenEnv;
-
+           
             console.log(networkSessionId);
 
             window.onbeforeunload = function (e) {
@@ -75,95 +74,14 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams',
                 $scope.$apply();
             };
 
-            // fallback to defaults when no cookie is found
-            var kbLayoutPrefs = $cookies.getObject('kbLayoutPrefs') || {
-                language: {name: 'us'},
-                layout: {name: 'pc105'}
-            };
+         //   if($stateParams.uvi)
+         //       component = new UviMachineComponentBuilder($stateParams.uvi, environmentId, archive); 
 
-            let clientOptions = new ClientOptions();
-            try {
-                if (chosenEnv) {
-                    if (chosenEnv.networking) {
-                        if (chosenEnv.networking.connectEnvs)
-                            clientOptions.enableNetworking();
-
-                        clientOptions.getNetworkConfig().enableInternet(chosenEnv.networking.enableInternet);
-                        try {
-                            let tcpGatewayConfig = new TcpGatewayConfig(chosenEnv.networking.serverIp, chosenEnv.networking.serverPort);
-                            tcpGatewayConfig.enableSocks(chosenEnv.networking.enableSocks);
-                            tcpGatewayConfig.enableLocalMode(chosenEnv.networking.localServerMode);
-                            clientOptions.getNetworkConfig().setTcpGatewayConfig(tcpGatewayConfig);
-                        }
-                        catch(e)
-                        {
-                            // TcpGatewayConfig throws if serverIp / port is not set. 
-                        }
-                    }
-                    clientOptions.setXpraEncoding(chosenEnv.xpraEncoding);
-                }
-            }
-            catch(e)
-            {
-                console.error(e);
-                const details = (e instanceof ClientError) ? e.toJson() : e.toString();
-                $state.go('error', { errorMsg: { title: "Emulation Error", message: details } });
-            }
-            // console.log(params);
-
-            /*
-            let components = [];
-            for (let i = 0; i < selectedEnvs.length; i++) {
-                let component;
-
-                if (selectedEnvs[i].envType === "container" && selectedEnvs[i].runtimeId) {
-                    let runtimeEnv =  vm.environments.find(function(element) {
-                        return element.envId = selectedEnvs[i].runtimeId;
-                    });
-                    component = new MachineComponentBuilder(selectedEnvs[i].runtimeId, runtimeEnv.archive);
-                    component.setLinuxRuntime(
-                        {
-                            userContainerEnvironment: selectedEnvs[i].envId,
-                            userContainerArchive: selectedEnvs[i].archive,
-                            networking: selectedEnvs[i].networking,
-                            input_data: selectedEnvs[i].input_data
-                        }
-                    );
-                } else {
-                    //since we can observe only single environment, keyboardLayout and keyboardModel are not relevant
-                    component = new MachineComponentBuilder(selectedEnvs[i].envId, selectedEnvs[i].archive);
-                    component.setObject(selectedEnvs[i].objectId, selectedEnvs[i].objectArchive);
-                    component.setSoftware(selectedEnvs[i].softwareId);
-                }
-                components.push(component);
-            }
-            */
-
-            let archive = (chosenEnv) ? chosenEnv.archive : "default";
-            let environmentId= "";
-            if (chosenEnv && chosenEnv.envId)
-                environmentId = chosenEnv.envId;
-            else
-                environmentId = $stateParams.envId;
-
-            let component = null;
-            if($stateParams.uvi)
-                component = new UviMachineComponentBuilder($stateParams.uvi, environmentId, archive); 
-            else
-                component = new MachineComponentBuilder(environmentId, archive);
-
-            component.setObject( $stateParams.objectId, $stateParams.objectArchive);
-            component.setSoftware($stateParams.softwareId);
-            component.setKeyboard(kbLayoutPrefs.language.name, kbLayoutPrefs.layout.name);
-            component.setLinuxRuntime($stateParams.containerRuntime);
-
-            if ($stateParams.type == 'saveUserSession') {
-                component.lockEnvironment(true);
+           // if ($stateParams.type == 'saveUserSession') {
+           //     component.lockEnvironment(true);
                 // console.log("locking user session");
-            }
-            component.setInteractive(true);
-            
-
+           // }
+         
             $scope.$on('$locationChangeStart', function (event, newUrl, oldUrl) {
                 console.log("onStateChange");
                 if (!newUrl.endsWith("emulator")) {
@@ -181,33 +99,15 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams',
                 if ($stateParams.componentId && $stateParams.session) {
                     if (!$stateParams.session.network)
                         throw new Error("reattach requires a network session");
-                    
                     await eaasClient.attach($stateParams.session.sessionId, $("#emulator-container")[0], $stateParams.componentId);
                 } else if(networkSessionId) {
                     await eaasClient.attachNewEnv(networkSessionId, $("#emulator-container")[0], component);
                     vm.started = true;
-                } else
-                    {
-                    if ($stateParams.isNetworkEnvironment) {
-                        await startNetworkEnvironment(vm, eaasClient, chosenEnv, Environments, $http, $uibModal, localConfig);
-                    } else {
-                        await eaasClient.start([component], clientOptions);
-                    }
+                } else {
+                    console.log($stateParams.components);
+                    console.log($stateParams.clientOptions);
+                    await eaasClient.start($stateParams.components, $stateParams.clientOptions);
                     await eaasClient.connect($("#emulator-container")[0]);
-/*
-                eaasClient.realEnvId = $stateParams.realEnvId;
-
-            } else {
-                eaasClient.realEnvId = undefined;
-*/
-                    $rootScope.idsData = eaasClient.envsComponentsData;
-                    $rootScope.idsData.forEach(function (idData) {
-                        if (idData.env) {
-                            Environments.get({ envId: idData.env.data.environment }).$promise.then(function (response) {
-                                idData.title = response.title;
-                            });
-                        }
-                    });
                 }
 
                 $("#emulator-loading-container").hide();
@@ -221,11 +121,6 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams',
                 $scope.$apply();
                 $rootScope.$broadcast("emulatorStart", "success");
 
-                if (eaasClient.networkTcpInfo || eaasClient.tcpGatewayConfig) {
-                    $rootScope.networkTcpInfo = eaasClient.networkTcpInfo;
-                    $rootScope.tcpGatewayConfig = eaasClient.tcpGatewayConfig;
-                }
-
             }
             catch (e) {
                 console.error(e);
@@ -235,15 +130,12 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams',
             }
         }
         
-        if (!chosenEnv || !chosenEnv.envId || !$stateParams.envId) 
-            $state.go('admin.standard-envs-overview', {showObjects: ($stateParams.objectId != null)}, {reload: false});
+        if (!$stateParams.components) 
+            $state.go('error', {errorMsg: {title: "Invalid argument"}});
 
-        if ($stateParams.session || $stateParams.isNetworkEnvironment) {
-            vm.runEmulator();
-        } else if (!chosenEnv || !chosenEnv.networking || !chosenEnv.networking.connectEnvs) {
-            vm.runEmulator();
-        }
-        else {
+        vm.runEmulator();
+        
+        /*
             // check if there are running sessions. 
             // if we find sessions, allow ad-hoc connections 
             // if no session is found, proceed 
@@ -288,4 +180,5 @@ module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams',
             }
             f();
         }
+        */
     }];

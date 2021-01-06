@@ -1,12 +1,12 @@
 import {
     getOsLabelById
 } from '../../lib/os.js'
-module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams',
-    'localConfig', 'growl', '$translate', 'Environments',
+module.exports = ['$rootScope', '$http', '$state', '$scope', 
+    'localConfig', 'growl', '$translate', 'Environments', 'EaasClientHelper',
     '$uibModal', 
-    'REST_URLS', '$timeout', "osList",
-    function ($rootScope, $http, $state, $scope, $stateParams,
-        localConfig, growl, $translate, Environments,
+    'REST_URLS', '$timeout', "osList", "EaasClientHelper", 
+    function ($rootScope, $http, $state, $scope, 
+        localConfig, growl, $translate, Environments, EaasClientHelper,
         $uibModal, 
         REST_URLS, $timeout, osList) {
 
@@ -199,7 +199,7 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams',
             vm[selected](id);
         }
 
-        vm.run = function (id) {
+        vm.run = async function (id) {
 
             var env = {};
             for (let i = 0; i < vm.envs.length; i++) {
@@ -215,14 +215,18 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams',
                         message: "given envId: " + id + " is not found!"
                     }
                 });
-            $state.go('admin.emulator', {
-                envId: env.envId,
-                objectId: env.objectId,
-                objectArchive: env.objectArchive,
-                isNetworkEnvironment: vm.view === 4
-            }, {
-                reload: true
-            });
+
+            let components = [];
+            let machine = EaasClientHelper.createMachine(env.envId, "public");
+            if(env.objectId)
+                machine.setObject(env.objectId, env.objectArchive);
+            components.push(machine);
+
+            let clientOptions = await EaasClientHelper.clientOptions(env.envId);
+            $state.go("admin.emuView",  {
+                components: components, 
+                clientOptions: clientOptions
+            }, {}); 
         };
 
         vm.edit = function (id) {

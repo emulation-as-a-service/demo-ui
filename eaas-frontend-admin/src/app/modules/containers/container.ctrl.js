@@ -52,7 +52,7 @@ module.exports = ['$rootScope', '$scope', '$sce', '$state','$http', '$stateParam
             eaasClient.deleteOnUnload = unloadBackup;
         };
 
-        var confirmStartFn = function (inputs) {
+        var confirmStartFn = async function (inputs) {
             params.input_data = [];
             var input = {};
             input.size_mb = 512;
@@ -61,42 +61,23 @@ module.exports = ['$rootScope', '$scope', '$sce', '$state','$http', '$stateParam
             params.input_data.push(input);
             console.log("input " , input);
             if (vm.env.runtimeId) {
-                $state.go('admin.emulator', {
-                    envId: vm.env.runtimeId,
-                    containerRuntime: {
-                        userContainerEnvironment: $stateParams.envId,
-                        userContainerArchive: vm.env.archive,
-                        input_data: params.input_data,
-                        networking: vm.env.networking
-                    }
-                }, {reload: true});
+                let machine = EaasClientHelper.createMachine(vm.env.runtimeId);
+                machine.setLinuxRuntime({
+                    userContainerEnvironment: $stateParams.envId,
+                    userContainerArchive: vm.env.archive,
+                    input_data: params.input_data,
+                    networking: vm.env.networking
+                });
+                let components = [];
+                components.push(machine);
+
+                let clientOptions = await EaasClientHelper.clientOptions(_vm.envId);
+                $state.go("admin.emuView",  {
+                    components: components, 
+                    clientOptions: clientOptions
+                }, {}); 
             } else {
                 $state.go('error', { errorMsg: { title: "Error", message: "No container runtime configured" } });
-                /*
-                $("#emulator-loading-container").show();
-                eaasClient.startContainer($stateParams.envId, params).then(function () {
-                    $("#emulator-loading-container").hide();
-                    $("#container-running").show();
-
-                    eaasClient.connect().then(function () {
-                        $("#emulator-container").show();
-
-                        if (eaasClient.params.pointerLock === "true") {
-                            growl.info($translate.instant('EMU_POINTER_LOCK_AVAILABLE'));
-                            BWFLA.requestPointerLock(eaasClient.guac.getDisplay().getElement(), 'click');
-                        }
-
-                        // Fix to close emulator on page leave
-                        $scope.$on('$locationChangeStart', function (event) {
-                            eaasClient.release();
-                        });
-                    });
-
-                    $scope.$on('$locationChangeStart', function (event) {
-                        eaasClient.release();
-                    });
-                });
-                */
             }
         };
 
