@@ -1,4 +1,8 @@
 import {getOsLabelById} from '../../lib/os.js'
+import {WaitModal} from "../../lib/task.js"
+import { _fetch, ClientError } from "../../lib/utils";
+
+
 module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 
                     'localConfig', 'growl', '$translate', 'Environments', 
                     '$uibModal', 'softwareList', 
@@ -14,6 +18,7 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams',
 
         vm.landingPage = localConfig.data.landingPage;
         vm.viewArchive = 0;
+        vm.waitModal = new WaitModal($uibModal);
 
         function updateTableData(rowData){
             vm.rowCount = rowData.length;
@@ -312,6 +317,10 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams',
                   <li ng-if="data.archive !='remote'" role="menuitem dropdown-content">
                         <a class="dropdown-content" ng-click="switchAction(data.id, 'run', data.archive)">{{'CHOOSE_ENV_PROPOSAL'| translate}}</a>
                   </li>
+
+                  <li ng-if="data.archive !='remote'" role="menuitem dropdown-content">
+                    <a class="dropdown-content" ng-click="switchAction(data.id, 'hbuild', data.archive)">SWH Build</a>
+                  </li>
                   
                   <li role="menuitem">
                     <a class="dropdown-content" ng-click="switchAction(data.id, 'edit', data.archive)">{{'CHOOSE_ENV_EDIT'| translate}}</a>
@@ -364,6 +373,68 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams',
         function switchAction(id, selected, archive) {
             vm[selected](id, archive);
         }
+
+        vm.hbuild = async function (id) {
+            
+            let data = { softwareHeritage: {
+                revisionId: "3f568389763c205f8779ad75f2cf44ab9782608e",
+                extract: false,
+                scriptLocation: "/libexec/swh-downloader/main.py"
+              },
+              buildToolchain: {
+                environmentID: "44c09208-b93d-415d-81a1-1ffc127f22c4",
+                inputDirectory: "/home/user",
+                outputDirectory: "/home/user/build",
+                recipe: "asdasdasdasd",
+                prerequisites: [
+                  "Macht es Sinn, das von execFile abzugrenzen?",
+                  "Second Entry"
+                ],
+                mail: "abc@def.com",
+                mode: "interactive/background"
+              }
+            }
+            
+            vm.waitModal.show("preparing environment... please wait");
+            let envId = undefined;
+            try {
+                let result = await _fetch(`${localConfig.data.eaasBackendURL}historic-builds/api/v1/build`, 
+                    "POST", data, localStorage.getItem('id_token'));
+                console.log(result);
+            
+                let result2 = await _fetch(`${localConfig.data.eaasBackendURL}historic-builds/api/v1/waitqueue/${result.taskId}`, 
+                    "GET", null, localStorage.getItem('id_token'));
+                while(result2.status != 'Done' )
+                    result2 = await _fetch(`${localConfig.data.eaasBackendURL}historic-builds/api/v1/waitqueue/${result.taskId}`, 
+                        "GET", null, localStorage.getItem('id_token'));
+                console.log(result2);
+
+                let result3 = await _fetch(`${localConfig.data.eaasBackendURL}historic-builds/api/v1/buildresult/${result.taskId}`,
+                     "GET", null, localStorage.getItem('id_token'));
+
+                envId = result3.environmentId;
+            }
+            catch(e)
+            { 
+                console.log(e);
+            }
+            finally {
+                vm.waitModal.hide();
+            }
+
+            if(!envId)
+                $state.go('error', {errorMsg: {title: "Error ", message: "failed preparing build environment"}});
+
+            let components = [];
+            let machine = EaasClientHelper.createMachine(envId);
+            components.push(machine);
+
+            let clientOptions = await EaasClientHelper.clientOptions(envId);
+            $state.go("admin.emuView",  {
+                components: components, 
+                clientOptions: clientOptions
+            }, {}); 
+        };
 
         vm.run = async function (id) {
             if (vm.view == 2) {
