@@ -14,16 +14,20 @@ export class NetworkConfigTemplate {
 
     isDnsDefined: boolean;
     isSmbDefined: boolean;
+    isLinuxArchiveProxyDefined: boolean;
     isDnsAvailable: boolean;
     isSmbAvailable: boolean;
+    isLinuxArchiveProxyAvailable: boolean;
 
     startDate = new Date(2000, 0, 1);
 
     ngAfterViewInit() {
         this.isDnsDefined = !!this.networkingConfig.dnsServiceEnvId;
         this.isSmbDefined = !!this.networkingConfig.smbServiceEnvId;
+        this.isLinuxArchiveProxyDefined = !!this.networkingConfig.linuxArchiveProxyEnvId;
         this.isDnsAvailable = false;
         this.isSmbAvailable = false;
+        this.isLinuxArchiveProxyAvailable = false;
         
         if(this.containerList.container.find((container => container.id === 'service-dns')))
         {
@@ -33,7 +37,10 @@ export class NetworkConfigTemplate {
         }
         if(this.containerList.container.find((container => container.id === 'service-smb')))
             this.isSmbAvailable = true;
-        
+
+        if(this.containerList.container.find((container => container.id === 'service-archive-proxy')))
+            this.isLinuxArchiveProxyAvailable = true;
+
         // if the view is not interactive, environments are not passed, but dnsServiceEnv is defined: render dnsServiceEnv
         if (this.isDisabled && this.environments == undefined) {
             this.environments = [];

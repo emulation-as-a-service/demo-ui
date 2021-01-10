@@ -85,6 +85,11 @@
     <mat-checkbox [disabled]="isDisabled" class="example-section" [(ngModel)]="isSmbDefined" name="isSmbDefined"
         color="primary">Windows Network Storage Service</mat-checkbox>
 </div>
+
+<div *ngIf="isLinuxArchiveProxyAvailable">
+    <mat-checkbox [disabled]="isDisabled" class="example-section" [(ngModel)]="isLinuxArchiveProxyDefined" name="isLinuxArchiveProxyDefined"
+        color="primary">Linux Archive Proxy</mat-checkbox>
+</div>
 <!--StartUp Environment during landing page attach-->
 <!--
 <mat-checkbox [disabled]="isDisabled" class="example-section" [(ngModel)]="networkingConfig.isShared" color="primary">
