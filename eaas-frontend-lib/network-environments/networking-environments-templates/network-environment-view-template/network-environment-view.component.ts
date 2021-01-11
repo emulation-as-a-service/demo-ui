@@ -43,6 +43,7 @@ export class NetworkEnvironmentView {
         if (this.networkingConfig){
             this.networkingConfig.dnsServiceEnvId = this.environments.find((env => env.envId == this.networkingConfig.dnsServiceEnvId));
             this.networkingConfig.smbServiceEnvId = this.environments.find((env => env.envId == this.networkingConfig.smbServiceEnvId));
+            this.networkingConfig.linuxArchiveProxyEnvId = this.environments.find((env => env.envId == this.networkingConfig.linuxArchiveProxyEnvId));
             this.networkingConfig.startupEnv = this.environments.find((env => env.envId == this.networkingConfig.startupEnvId));
         }
         else

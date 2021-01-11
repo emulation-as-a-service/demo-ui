@@ -11,6 +11,12 @@
             "title" : "User Storage (SMB)",
             "imageUrl" :  "eaas/eaas-smb-storage",
             "description" : "Windows shared drive"
+        },
+        {
+            "id" : "service-archive-proxy",
+            "title" : "Linux Archives Proxy Service",
+            "imageUrl" :  "eaas/eaas-linux-archive-proxy",
+            "description" : "Linux Archives Proxy Service"
         }
     ]
 }

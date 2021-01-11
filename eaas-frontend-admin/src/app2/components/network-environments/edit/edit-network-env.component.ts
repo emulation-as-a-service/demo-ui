@@ -47,6 +47,7 @@ export class EditNetworkComponent implements AfterViewInit {
             upstream_dns: this.selectedNetworkEnvironment.upstream_dns,
             dnsServiceEnvId: this.selectedNetworkEnvironment.dnsServiceEnvId,
             smbServiceEnvId: this.selectedNetworkEnvironment.smbServiceEnvId,
+            linuxArchiveProxyEnvId: this.selectedNetworkEnvironment.linuxArchiveProxyEnvId,
             startupEnvId: this.selectedNetworkEnvironment.startupEnvId,
             isShared: !!this.selectedNetworkEnvironment.startupEnvId,
             description: this.selectedNetworkEnvironment.description,

@@ -20,6 +20,7 @@ export function saveNetworkEnv(http, method, endpoint, networkEnvironmentView, e
             networkEnvironmentView.networkingConfig.startupEnv.envId : undefined,
         dnsServiceEnvId: networkEnvironmentView.networkConfigTemplate.isDnsDefined ? "service-dns" : undefined,
         smbServiceEnvId: networkEnvironmentView.networkConfigTemplate.isSmbDefined ? "service-smb" : undefined,
+        linuxArchiveProxyEnvId: networkEnvironmentView.networkConfigTemplate.isLinuxArchiveProxyDefined ? "service-archive-proxy" : undefined,
         emilEnvironments: networkEnvironmentView.chosenEnvs,
         title: networkEnvironmentView.networkEnvironmentTitle,
         description: networkEnvironmentView.networkingConfig.description,
