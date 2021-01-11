@@ -154,7 +154,7 @@ module.exports = ['$state', '$scope', '$uibModal', 'localConfig', 'REST_URLS', '
         });
     }
 
-    async   function run (id) {
+    async function run (id) {
         var env = {};
         for (let i = 0; i < vm.envs.length; i++) {
             if (id == vm.envs[i].envId) {
