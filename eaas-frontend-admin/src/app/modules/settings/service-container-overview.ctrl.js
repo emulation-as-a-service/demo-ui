@@ -75,31 +75,13 @@ module.exports = ['$http', '$state', 'growl', 'localConfig', 'containerList', '$
 
         //Next Step
         container.import = function () {
-
-            var convertedEnv = [];
-            var convertedArgs = [];
-            var escapeEl = document.createElement('textarea');
-
-            var unescape = function (html) {
-                escapeEl.innerHTML = html;
-                return escapeEl.textContent;
-            };
-
-            for (var _e in container.env) {
-                convertedEnv.push(unescape(container.env[_e]));
-            }
-
-            for (var _a in container.args) {
-                convertedArgs.push(unescape(container.args[_a]));
-            }
-
             $http.post(localConfig.data.eaasBackendURL + REST_URLS.importContainerUrl,
                 {
                     urlString: container.selectedContainer.imageUrl,
                     runtimeID: container.runtime,
                     name: container.selectedContainer.id,
                     serviceContainerId: container.selectedContainer.id,
-                    tag: (container.tag) ? container.tag : "latest",
+                    tag: (container.selectedContainer.tag) ? container.selectedContainer.tag : "latest",
                     processArgs: container.args,
                     processEnvs: container.env,
                     inputFolder: container.imageInput,
