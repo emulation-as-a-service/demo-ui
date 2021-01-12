@@ -1,15 +1,16 @@
 import {getOsLabelById} from '../../lib/os.js'
 import {WaitModal} from "../../lib/task.js"
 import { _fetch, ClientError } from "../../lib/utils";
+import {NetworkBuilder} from "EaasClient/lib/networkBuilder.js"
 
 
 module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 
                     'localConfig', 'growl', '$translate', 'Environments', 
-                    '$uibModal', 'softwareList', 
+                    '$uibModal', 'softwareList', 'authService',
                     'REST_URLS', '$timeout', "osList", "EaasClientHelper",
     function ($rootScope, $http, $state, $scope, $stateParams,
               localConfig, growl, $translate, Environments, 
-              $uibModal, softwareList,  
+              $uibModal, softwareList, authService,
               REST_URLS, $timeout, osList, EaasClientHelper) {
         
         var vm = this;
@@ -425,14 +426,16 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams',
             if(!envId)
                 $state.go('error', {errorMsg: {title: "Error ", message: "failed preparing build environment"}});
 
-            let components = [];
+            
+            let networkBuilder = new NetworkBuilder(localConfig.data.eaasBackendURL, () => authService.getToken());
             let machine = EaasClientHelper.createMachine(envId);
-            components.push(machine);
+            networkBuilder.addComponent(machine);
+            networkBuilder.enableDhcpService(networkBuilder.getDefaultDhcpConfig());
+            networkBuilder.enableLinuxArchiveService();
 
-            let clientOptions = await EaasClientHelper.clientOptions(envId);
             $state.go("admin.emuView",  {
-                components: components, 
-                clientOptions: clientOptions
+                components: networkBuilder.getComponents(), 
+                clientOptions: networkBuilder.getDefaultClientOptions()
             }, {}); 
         };
 
