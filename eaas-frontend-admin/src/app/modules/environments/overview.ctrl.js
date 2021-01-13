@@ -383,7 +383,7 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams',
                 scriptLocation: "/libexec/swh-downloader/main.py"
               },
               buildToolchain: {
-                environmentID: "44c09208-b93d-415d-81a1-1ffc127f22c4",
+                environmentID: id,
                 inputDirectory: "/home/user",
                 outputDirectory: "/home/user/build",
                 recipe: "asdasdasdasd",
@@ -395,7 +395,7 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams',
                 mode: "interactive/background"
               }
             }
-            
+
             vm.waitModal.show("preparing environment... please wait");
             let envId = undefined;
             try {
@@ -425,13 +425,12 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams',
 
             if(!envId)
                 $state.go('error', {errorMsg: {title: "Error ", message: "failed preparing build environment"}});
-
             
             let networkBuilder = new NetworkBuilder(localConfig.data.eaasBackendURL, () => authService.getToken());
-            let machine = EaasClientHelper.createMachine(envId);
+            let machine = EaasClientHelper.createMachine(envId, "default");
             networkBuilder.addComponent(machine);
-            networkBuilder.enableDhcpService(networkBuilder.getDefaultDhcpConfig());
-            networkBuilder.enableLinuxArchiveService();
+            await networkBuilder.enableDhcpService(networkBuilder.getDefaultDhcpConfig());
+            await networkBuilder.enableLinuxArchiveService();
 
             $state.go("admin.emuView",  {
                 components: networkBuilder.getComponents(), 
