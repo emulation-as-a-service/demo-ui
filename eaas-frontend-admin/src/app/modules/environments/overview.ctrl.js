@@ -1,17 +1,18 @@
 import {getOsLabelById} from '../../lib/os.js'
 import {WaitModal} from "../../lib/task.js"
 import { _fetch, ClientError } from "../../lib/utils";
+import {NetworkBuilder} from "EaasClient/lib/networkBuilder.js"
 
 
 module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams',
-                    'localConfig', 'growl', '$translate', 'Environments', 
-                    '$uibModal', 'softwareList', 
-                    'REST_URLS', '$timeout', "osList", "EaasClientHelper",
+    'localConfig', 'growl', '$translate', 'Environments',
+    '$uibModal', 'softwareList', 'authService',
+    'REST_URLS', '$timeout', "osList", "EaasClientHelper",
     function ($rootScope, $http, $state, $scope, $stateParams,
-              localConfig, growl, $translate, Environments, 
-              $uibModal, softwareList,  
+              localConfig, growl, $translate, Environments,
+              $uibModal, softwareList, authService,
               REST_URLS, $timeout, osList, EaasClientHelper) {
-        
+
         var vm = this;
 
         vm.config = localConfig.data;
@@ -32,7 +33,7 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams',
             vm.gridOptions.api.setRowData(null);
             vm.view = index;
             let rowData = [];
-           
+
             vm.envs = Environments.query({localOnly: false}).$promise.then(function(response) {
                 vm.rowCount = 0;
                 vm.envs = response;
@@ -40,23 +41,23 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams',
                     if (vm.view == 0) {
                         if(element.envType != 'base')
                             return;
-                        
-                        if (element.linuxRuntime) 
+
+                        if (element.linuxRuntime)
                             return;
-                        
+
                         if((element.archive == 'default' && vm.viewArchive === 0) ||
                             ((element.archive == "public" || element.archive == 'emulators') && vm.viewArchive === 1) ||
                             (element.archive == "remote" && vm.viewArchive === 2))
                             rowData.push({
-                                name: element.title, 
-                                id: element.envId, 
-                                archive: element.archive, 
+                                name: element.title,
+                                id: element.envId,
+                                archive: element.archive,
                                 owner: (element.owner) ? element.owner : "shared",
                                 timestamp: element.timestamp,
                                 description: element.description,
                                 os: getOsLabelById(osList.operatingSystems, element.operatingSystem),
                             });
-                            
+
                     }
                     else if (vm.view == 1) {
                         if(element.envType != 'object')
@@ -68,8 +69,8 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams',
                             archive: element.archive,
                             owner: (element.owner) ? element.owner : "shared",
                             objectId: element.objectId
-                        });  
-                    } 
+                        });
+                    }
                     else if (vm.view == 2) {
                         if(element.envType != 'container')
                             return;
@@ -82,7 +83,7 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams',
                                 owner: (element.owner) ? element.owner : "shared",
                                 objectId: element.objectId
                             });
-                        
+
                     }
                 });
                 updateTableData(rowData);
@@ -91,9 +92,9 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams',
 
         vm.pageSize = "25";
         if($stateParams.showContainers)
-             vm.view = 2;
+            vm.view = 2;
         else if($stateParams.showObjects)
-            vm.view = 1;       
+            vm.view = 1;
         else
             vm.view = 0;
 
@@ -134,19 +135,19 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams',
                             deleteAfterExport: this.deleteAfterExport,
                             archive: archive,
                         }).then(function(response) {
-                            var taskId = response.data.taskId;
-                            var modal = $uibModal.open({
-                                animation: true,
-                                backdrop: 'static',
-                                template: require('./modals/wait.html')
-                            });
-                            vm.checkState(taskId, modal);
-                        }, function(error) {
-                            console.log(error);
-                            growl.error("Error exporting image", "tbd.");
-                        }
+                                var taskId = response.data.taskId;
+                                var modal = $uibModal.open({
+                                    animation: true,
+                                    backdrop: 'static',
+                                    template: require('./modals/wait.html')
+                                });
+                                vm.checkState(taskId, modal);
+                            }, function(error) {
+                                console.log(error);
+                                growl.error("Error exporting image", "tbd.");
+                            }
                         );
-                    } 
+                    }
                 }],
                 controllerAs: "exportDialogCtrl"
             });
@@ -233,35 +234,35 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams',
                     deleteImage: true,
                     force: false
                 });
-                
+
                 promise.then( (response) => {
                     console.log(response.data);
 
                     if (response.data.status === "0" || response.data.status === 0) {
-                    // remove env locally
-                    vm.envs = vm.envs.filter(function (env) {
-                        return env.envId !== envId;
-                    });
-                    $rootScope.chk.transitionEnable = true;
-                    growl.success($translate.instant('JS_DELENV_SUCCESS'));
-                    $state.go('admin.standard-envs-overview', {}, {reload: true});
-                } else if (response.data.status === "2") {
+                        // remove env locally
+                        vm.envs = vm.envs.filter(function (env) {
+                            return env.envId !== envId;
+                        });
+                        $rootScope.chk.transitionEnable = true;
+                        growl.success($translate.instant('JS_DELENV_SUCCESS'));
+                        $state.go('admin.standard-envs-overview', {}, {reload: true});
+                    } else if (response.data.status === "2") {
 
-                    $uibModal.open({
-                        animation: true,
-                        template: require('./modals/confirm-delete.html'),
-                        controller: ["$scope", function ($scope) {
-                            this.envId = envId;
-                            this.confirmed = confirmDeleteFn;
-                        }],
-                        controllerAs: "confirmDeleteDialogCtrl"
-                    });
-                } else {
+                        $uibModal.open({
+                            animation: true,
+                            template: require('./modals/confirm-delete.html'),
+                            controller: ["$scope", function ($scope) {
+                                this.envId = envId;
+                                this.confirmed = confirmDeleteFn;
+                            }],
+                            controllerAs: "confirmDeleteDialogCtrl"
+                        });
+                    } else {
                         $rootScope.chk.transitionEnable = true;
                         growl.error(response.data.message, {title: 'Error ' + response.data.status});
                         $state.go('admin.standard-envs-overview', {}, {reload: true});
-                }
-            });
+                    }
+                });
             } else {
                 $rootScope.chk.transitionEnable = true;
                 $state.go('admin.standard-envs-overview', {showContainers: false,
@@ -405,14 +406,15 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams',
             if(!envId)
                 $state.go('error', {errorMsg: {title: "Error ", message: "failed preparing build environment"}});
 
-            let components = [];
-            let machine = EaasClientHelper.createMachine(envId);
-            components.push(machine);
+            let networkBuilder = new NetworkBuilder(localConfig.data.eaasBackendURL, () => authService.getToken());
+            let machine = EaasClientHelper.createMachine(envId, "default");
+            networkBuilder.addComponent(machine);
+            await networkBuilder.enableDhcpService(networkBuilder.getDefaultDhcpConfig());
+            await networkBuilder.enableLinuxArchiveService();
 
-            let clientOptions = await EaasClientHelper.clientOptions(envId);
             $state.go("admin.emuView",  {
-                components: components,
-                clientOptions: clientOptions
+                components: networkBuilder.getComponents(),
+                clientOptions: networkBuilder.getDefaultClientOptions()
             }, {});
 
         }
@@ -497,25 +499,25 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams',
 
             let clientOptions = await EaasClientHelper.clientOptions(env.envId);
             $state.go("admin.emuView",  {
-                components: components, 
+                components: components,
                 clientOptions: clientOptions
-            }, {}); 
+            }, {});
         };
 
         vm.edit = function (id) {
             if (vm.view == 1)
                 $state.go('admin.edit-env', {envId: id, objEnv: true});
-           else if (vm.view == 0 || vm.view == 3)
+            else if (vm.view == 0 || vm.view == 3)
                 $state.go('admin.edit-env', {envId: id});
-           else if (vm.view == 2)
+            else if (vm.view == 2)
                 $state.go('admin.edit-container', {envId: id});
         };
 
         vm.openLandingPage = function (id) {
- //           if(vm.view ===4 ){
- //               window.open(vm.landingPage + "?id=" + id + "&isNetworkEnvironment=" + "true");
- //           } else
-                window.open("/landing-page" + "?id=" + id)
+            //           if(vm.view ===4 ){
+            //               window.open(vm.landingPage + "?id=" + id + "&isNetworkEnvironment=" + "true");
+            //           } else
+            window.open("/landing-page" + "?id=" + id)
         };
 
         $scope.onPageSizeChanged = function() {
@@ -534,10 +536,10 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams',
                 {headerName: "Name", field: "name", width: 400, sort: "asc" },
                 {headerName: "ID", field: "id", width: 100},
             ];
-            
+
             columnDefs.push({headerName: "Archive", field: "archive", hide: true});
             columnDefs.push({headerName: "Owner", field: "owner", width: 100},);
-        
+
             if(vm.view == 0)
             {
                 columnDefs.push({headerName: "Operating System", field: "os"});
@@ -548,7 +550,7 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams',
             }
 
             columnDefs.push({
-                headerName: "Actions", field: "actions", cellRenderer: actionsCellRendererFunc, 
+                headerName: "Actions", field: "actions", cellRenderer: actionsCellRendererFunc,
                 suppressMenu: true
             });
 
@@ -573,8 +575,8 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams',
             domLayout: 'autoHeight',
             suppressHorizontalScroll: true,
             onGridReady: function (params) {
-                 vm.updateTable(0);
-                 vm.gridOptions.api.redrawRows();
+                vm.updateTable(0);
+                vm.gridOptions.api.redrawRows();
             },
             pagination: true,
             paginationPageSize: Number(vm.pageSize),
