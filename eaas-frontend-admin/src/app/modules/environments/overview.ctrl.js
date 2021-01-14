@@ -3,7 +3,7 @@ import {WaitModal} from "../../lib/task.js"
 import { _fetch, ClientError } from "../../lib/utils";
 
 
-module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 
+module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams',
                     'localConfig', 'growl', '$translate', 'Environments', 
                     '$uibModal', 'softwareList', 
                     'REST_URLS', '$timeout', "osList", "EaasClientHelper",
@@ -374,48 +374,28 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams',
             vm[selected](id, archive);
         }
 
-        vm.hbuild = async function (id) {
-            
-            let data = { softwareHeritage: {
-                revisionId: "3f568389763c205f8779ad75f2cf44ab9782608e",
-                extract: false,
-                scriptLocation: "/libexec/swh-downloader/main.py"
-              },
-              buildToolchain: {
-                environmentID: "44c09208-b93d-415d-81a1-1ffc127f22c4",
-                inputDirectory: "/home/user",
-                outputDirectory: "/home/user/build",
-                recipe: "asdasdasdasd",
-                prerequisites: [
-                  "Macht es Sinn, das von execFile abzugrenzen?",
-                  "Second Entry"
-                ],
-                mail: "abc@def.com",
-                mode: "interactive/background"
-              }
-            }
-            
+        let asnycStartHistoricBuild = async function(data){
             vm.waitModal.show("preparing environment... please wait");
             let envId = undefined;
             try {
-                let result = await _fetch(`${localConfig.data.eaasBackendURL}historic-builds/api/v1/build`, 
+                let result = await _fetch(`${localConfig.data.eaasBackendURL}historic-builds/api/v1/build`,
                     "POST", data, localStorage.getItem('id_token'));
                 console.log(result);
-            
-                let result2 = await _fetch(`${localConfig.data.eaasBackendURL}historic-builds/api/v1/waitqueue/${result.taskId}`, 
+
+                let result2 = await _fetch(`${localConfig.data.eaasBackendURL}historic-builds/api/v1/waitqueue/${result.taskId}`,
                     "GET", null, localStorage.getItem('id_token'));
                 while(result2.status != 'Done' )
-                    result2 = await _fetch(`${localConfig.data.eaasBackendURL}historic-builds/api/v1/waitqueue/${result.taskId}`, 
+                    result2 = await _fetch(`${localConfig.data.eaasBackendURL}historic-builds/api/v1/waitqueue/${result.taskId}`,
                         "GET", null, localStorage.getItem('id_token'));
                 console.log(result2);
 
                 let result3 = await _fetch(`${localConfig.data.eaasBackendURL}historic-builds/api/v1/buildresult/${result.taskId}`,
-                     "GET", null, localStorage.getItem('id_token'));
+                    "GET", null, localStorage.getItem('id_token'));
 
                 envId = result3.environmentId;
             }
             catch(e)
-            { 
+            {
                 console.log(e);
             }
             finally {
@@ -431,9 +411,66 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams',
 
             let clientOptions = await EaasClientHelper.clientOptions(envId);
             $state.go("admin.emuView",  {
-                components: components, 
+                components: components,
                 clientOptions: clientOptions
-            }, {}); 
+            }, {});
+
+        }
+
+
+        vm.hbuild = function (id) {
+            console.log("HBuild called, with id" + id)
+
+            $uibModal.open({
+                animation: true,
+                template: require ('./modals/historic-build.html'),
+                controller:['$scope' , 'growl', function ($scope, growl) {
+                    this.revisionId = "3f568389763c205f8779ad75f2cf44ab9782608e";
+                    this.environmentId = id;
+                    this.inputLocation = "/";
+                    this.recipeLocation = "/";
+                    this.recipeContent = "echo This is the recipe!";
+                    this.recipeName = "recipe.sh";
+                    this.autoStart = true;
+
+
+                    this.buildMode = "Interactive";
+                    this.cronUser = "root"
+
+                    $scope.buildModes = ["Interactive", "Automatic"]
+                    $scope.cronUsers = ["root", "user"]
+
+                    this.startBuild = function () {
+                        console.log("startBuild called")
+
+                        let data = {
+                            "softwareHeritage": {
+                                "revisionId": this.revisionId,
+                                "extract": false,
+                                "scriptLocation": "/libexec/swh-downloader/main.py"
+                            },
+                            "buildToolchain": {
+                                "environmentID": this.environmentId,
+                                "inputDirectory": this.inputLocation,
+                                "outputDirectory": "/home/exampleuser/build",
+                                "recipe": this.recipeContent,
+                                "prerequisites": [
+                                    "Req 1",
+                                    "Req 2"
+                                ],
+                                "mail": "abc@def.com",
+                                "mode": this.buildMode,
+                                "autoStart" : this.autoStart,
+                                "cronUser": this.cronUser,
+                                "recipeName" : this.recipeName
+                            }
+                        }
+
+                        let x = asnycStartHistoricBuild(data)
+                    }
+
+                }],
+                controllerAs: "runHistoricBuild"})
         };
 
         vm.run = async function (id) {
