@@ -433,6 +433,7 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams',
                     this.recipeLocation = "/";
                     this.recipeContent = "echo This is the recipe!";
                     this.recipeName = "recipe.sh";
+                    this.logFileLocation = "/output.txt"
                     this.autoStart = true;
 
 
@@ -464,7 +465,8 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams',
                                 "mode": this.buildMode,
                                 "autoStart" : this.autoStart,
                                 "cronUser": this.cronUser,
-                                "recipeName" : this.recipeName
+                                "recipeName" : this.recipeName,
+                                "logFileLocation" : this.logFileLocation
                             }
                         }
 
