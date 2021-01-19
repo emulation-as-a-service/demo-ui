@@ -349,7 +349,7 @@ export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize'
       };
 
       const nodeCb = (func) => new Promise((resolve, reject) =>
-        func((err, data) => err == null ? resolve(data) : reject(data)));
+        func((err, data) => err == null ? resolve(data) : reject(err)));
 
       this.tryGetRenewedToken = async function () {
         const redirectUri = String(new URL("auth-callback.html", new URL(auth0config.REDIRECT_URL, location)));
@@ -393,6 +393,7 @@ export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize'
             console.debug("Trying to renew OAuth token");
             const newToken = await this.tryGetRenewedToken();
             console.debug("New OAuth token", newToken);
+            if (newToken == null) throw new Error("Could not renew OAuth token");
             this.updateToken({
                 id_token: newToken.idToken,
                 access_token: newToken.accessToken,
@@ -401,7 +402,7 @@ export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize'
         }, expires_at - Date.now() - 60 * 1000);
      };
 
-     this.updateToken(localStorage);
+     if (localStorage.getItem("expires_in") != null) this.updateToken(localStorage);
 })
 
 .factory('Objects', function($http, $resource, localConfig) {
