@@ -12,9 +12,16 @@ module.exports = ['$state', 'eaasClient', '$scope', 'localConfig', 'sessionId', 
             const component = new MachineComponentBuilder(connectEnv.envId, connectEnv.archive);
             component.setInteractive(true);
             
-            await eaasClient.attachNewEnv(session, $("#emulator-container")[0], component);
-            vm.started = true;
-            $scope.$apply();
+            try {
+                await eaasClient.attachNewEnv(session, $("#emulator-container")[0], component);
+                vm.started = true;
+                $scope.$apply();
+            }
+            catch(e)
+            {
+                console.log("we need to retry here");
+                // redirect to an appropriate page
+            }
         }
 
         if (connectEnv)

@@ -930,6 +930,7 @@ function($stateProvider,
             url: "/networking",
             resolve: {
                 localConfig: ($http) => $http.get(localStorage.eaasConfigURL || "config.json"),
+                eaasClient: (localConfig) => new Client(localConfig.data.eaasBackendURL, localStorage.getItem('id_token'))
             },
             views: {
                 'wizard': {

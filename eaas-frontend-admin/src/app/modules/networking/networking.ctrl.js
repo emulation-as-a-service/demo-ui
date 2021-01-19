@@ -46,6 +46,12 @@ module.exports = ['$state', '$scope', '$uibModal', 'localConfig', 'REST_URLS', '
             </span></div></div>`;
     }
 
+    function test(id)
+    {
+        let netUtils = new NetworkUtils(localConfig.data.eaasBackendURL, localStorage.getItem('id_token'));
+        let session = netUtils.connectNetworkSession(eaasClient, id, "testme");
+    }
+
     function connectBtnRenderer(params) {
         params.$scope.connect = connect;
         params.$scope.deleteSession = deleteSession;
@@ -54,6 +60,7 @@ module.exports = ['$state', '$scope', '$uibModal', 'localConfig', 'REST_URLS', '
         params.$scope.run = run;
         params.$scope.deleteNetwork = deleteNetwork;
         params.$scope.edit = edit;
+        params.$scope.test = test;
         params.$scope.landingPage = vm.landingPage;
         params.$scope.selected = $scope.selected;
         params.$scope.changeClass = function (id) {

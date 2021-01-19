@@ -118,7 +118,7 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams',
             });
         };
 
-        vm.exportEnv = function(envId, archive)
+        vm.export = function(envId, archive)
         {
             console.log("export " + envId + " " + archive);
             $uibModal.open({
@@ -293,6 +293,7 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams',
         };
         $scope.selected = "";
 
+       
 
         function actionsCellRendererFunc(params) {
 

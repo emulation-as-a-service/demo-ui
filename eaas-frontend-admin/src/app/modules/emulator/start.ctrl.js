@@ -3,8 +3,8 @@ import { _fetch } from "../../lib/utils";
 import { UviMachineComponentBuilder } from "../../../../../eaas-client/lib/componentBuilder";
 import { EaasClientHelper } from "../../lib/eaasClientHelper";
 
-module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams', '$cookies', '$translate', '$http', 'localConfig', 'growl', 'Environments', 'EmilNetworkEnvironments', 'chosenEnv', 'eaasClient',
-    function ($rootScope, $uibModal, $scope, $state, $stateParams, $cookies, $translate, $http, localConfig, growl, Environments, EmilNetworkEnvironments, chosenEnv, eaasClient) {
+module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams', '$cookies', '$translate', '$http', 'localConfig', 'growl', 'Environments', 'chosenEnv', 'eaasClient',
+    function ($rootScope, $uibModal, $scope, $state, $stateParams, $cookies, $translate, $http, localConfig, growl, Environments, chosenEnv, eaasClient) {
         var vm = this;
         vm.eaasClient = eaasClient;
 
