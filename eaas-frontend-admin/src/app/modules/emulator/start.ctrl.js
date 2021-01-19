@@ -1,18 +1,15 @@
 import {requestPointerLock, ClientError} from "EaasClient/eaas-client.js";
 import { _fetch } from "../../lib/utils";
 import { UviMachineComponentBuilder } from "../../../../../eaas-client/lib/componentBuilder";
-import { EaasClientHelper } from "../../lib/eaasClientHelper";
 
-module.exports = ['$rootScope', '$uibModal', '$scope', '$state', '$stateParams', '$cookies', '$translate', '$http', 'localConfig', 'growl', 'Environments', 'EmilNetworkEnvironments', 'chosenEnv', 'eaasClient',
-    function ($rootScope, $uibModal, $scope, $state, $stateParams, $cookies, $translate, $http, localConfig, growl, Environments, EmilNetworkEnvironments, chosenEnv, eaasClient) {
+module.exports = ['$rootScope', '$scope', '$state', '$stateParams', '$translate', 'growl', 'chosenEnv', 'eaasClient',
+    function ($rootScope, $scope, $state, $stateParams, $translate, growl, chosenEnv, eaasClient) {
         var vm = this;
         vm.eaasClient = eaasClient;
 
         window.$rootScope = $rootScope;
         $rootScope.emulator.state = '';
         vm.emulator = $rootScope.emulator;
-
-        const eaasClientHelper = new EaasClientHelper();
 
         if ($stateParams.containerRuntime != null) {
             $scope.containerRuntime = $stateParams.containerRuntime;

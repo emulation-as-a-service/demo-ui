@@ -1,4 +1,4 @@
-import {NetworkBuilder} from "EaasClient/lib/networkBuilder.js"
+import {NetworkBuilder} from "EaasClient/lib/networkBuilder.js";
 import {ClientError} from "EaasClient/eaas-client.js";
 
 module.exports = ['$state', '$scope', '$uibModal', 'localConfig', 'REST_URLS', '$http', 'Environments', "$translate", "growl", "EmilNetworkEnvironments", "authService",
@@ -194,14 +194,14 @@ module.exports = ['$state', '$scope', '$uibModal', 'localConfig', 'REST_URLS', '
         $http.get(localConfig.data.eaasBackendURL + "sessions/" + id).then((response) => {
             response.data.sessionId = id;
             //temporary, until we define which environment we want to visualize first
-            const componentId = response.data.components.find(e => {return e.type === "machine"}).componentId;
+            const componentId = response.data.components.find(e => {return e.type === "machine";}).componentId;
 
             $state.go('admin.emuView', {componentId: componentId, session: response.data}, {reload: true});
-        })
+        });
     }
 
     function openLandingPage(id) {
-        window.open(vm.landingPage + "?sessionId=" + id + "#!/attach-landing-page")
+        window.open(vm.landingPage + "?sessionId=" + id + "#!/attach-landing-page");
     }
     
     function connectEnv(id) {
@@ -223,7 +223,7 @@ module.exports = ['$state', '$scope', '$uibModal', 'localConfig', 'REST_URLS', '
                     },
                     controller: "NetworkGroupManagerCtrl as $ctrl"
                 });
-        })
+        });
     }
 
     function deleteSession(id) {
@@ -234,7 +234,7 @@ module.exports = ['$state', '$scope', '$uibModal', 'localConfig', 'REST_URLS', '
         $http.delete(localConfig.data.eaasBackendURL + "sessions/" + id).then((response) => {
             console.log(response);
             $state.go('admin.networking', {}, {reload: true});
-        })
+        });
     }
 
     function updateTableData(rowData){
@@ -257,7 +257,7 @@ module.exports = ['$state', '$scope', '$uibModal', 'localConfig', 'REST_URLS', '
                     rowData.push({
                         name: element.title,
                         id: element.envId,
-                    })
+                    });
                 });
                 updateTableData(rowData);
             });

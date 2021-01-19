@@ -1,7 +1,7 @@
 import {stopClient} from "./utils/stop-client";
-import {WaitModal} from "../../lib/task.js"
+import {WaitModal} from "../../lib/task.js";
 import { _fetch, ClientError } from "../../lib/utils";
-import {sendCtrlAltDel, sendEsc} from "EaasClient/eaas-client"
+import {sendCtrlAltDel, sendEsc, SnapshotRequestBuilder} from "EaasClient/eaas-client";
 
 module.exports = ['$rootScope', '$scope', '$state', '$uibModal', '$stateParams', 'growl', 'localConfig', 'Objects',
                         '$timeout', '$translate', 'chosenEnv', 'eaasClient',
@@ -22,7 +22,7 @@ module.exports = ['$rootScope', '$scope', '$state', '$uibModal', '$stateParams',
 
     if($stateParams.uvi)
     {
-        vm.objEnvironments = $stateParams.uvi.environments
+        vm.objEnvironments = $stateParams.uvi.environments;
     }
     else 
         vm.objEnvironments = [];
@@ -79,7 +79,7 @@ module.exports = ['$rootScope', '$scope', '$state', '$uibModal', '$stateParams',
         if(!vm.showKeys) {
             $("#emulator-keys").show();
             $("emulator-kbd").show();
-            var elem = document.querySelector('#emulator-kbd');
+            let elem = document.querySelector('#emulator-kbd');
             console.log(elem);
             elem.style.visibility = 'visible';
 
@@ -88,12 +88,12 @@ module.exports = ['$rootScope', '$scope', '$state', '$uibModal', '$stateParams',
         else {
             $("#emulator-keys").hide();
             $("emulator-kbd").hide();
-            var elem = document.querySelector('#emulator-kbd');
+            let elem = document.querySelector('#emulator-kbd');
             console.log(elem);
             elem.style.visibility = 'hidden';
             vm.showKeys = false;
         }
-    }
+    };
 
     vm.openPrintDialog = async function () {
         try {
@@ -111,7 +111,7 @@ module.exports = ['$rootScope', '$scope', '$state', '$uibModal', '$stateParams',
                         });
                         const pdfBlob = await pdf.blob();
                         window.open(URL.createObjectURL(pdfBlob));
-                    }
+                    };
                 }],
                 controllerAs: "openPrintDialogCtrl"
             });
@@ -206,7 +206,7 @@ module.exports = ['$rootScope', '$scope', '$state', '$uibModal', '$stateParams',
         });
     };
 
-    var eaasClientReadyTimer = function() {
+    var eaasClientReadyTimer = async function() {
         if (eaasClient && eaasClient.getActiveSession()) {
             if(eaasClient.getActiveSession().getRemovableMediaList()) {
                 vm.removableMediaList = eaasClient.getActiveSession().getRemovableMediaList();
@@ -218,25 +218,24 @@ module.exports = ['$rootScope', '$scope', '$state', '$uibModal', '$stateParams',
                         let mediaItem = {};
                         let element = vm.removableMediaList[i];
                         mediaItem.driveId = element.driveIndex;
-                        Objects.get({archiveId: element.archive, objectId: element.id}).$promise.then(function(response) {
-                            mediaItem.mediaCollection = response.mediaItems;
-                            mediaItem.objectId = element.id;
-                            mediaItem.archive = element.archive;
-                            if(mediaItem.mediaCollection) 
+                        let response = await Objects.get({archiveId: element.archive, objectId: element.id}).$promise;
+                        mediaItem.mediaCollection = response.mediaItems;
+                        mediaItem.objectId = element.id;
+                        mediaItem.archive = element.archive;
+                        if(mediaItem.mediaCollection) 
+                        {
+                            mediaItem.currentMediumLabel = mediaItem.mediaCollection.file.length > 0 ? mediaItem.mediaCollection.file[0].localAlias : null;
+                            mediaItem.chosen_medium_label = mediaItem.currentMediumLabel;
+                            mediaItem.media = mediaItem.mediaCollection.file;
+                            mediaItem.mediumTypes = [];
+                            for(let j = 0; j < mediaItem.media.length; j++)
                             {
-                                mediaItem.currentMediumLabel = mediaItem.mediaCollection.file.length > 0 ? mediaItem.mediaCollection.file[0].localAlias : null;
-                                mediaItem.chosen_medium_label = mediaItem.currentMediumLabel;
-                                mediaItem.media = mediaItem.mediaCollection.file;
-                                mediaItem.mediumTypes = [];
-                                for(var i = 0; i < mediaItem.media.length; i++)
+                                if(!mediaItem.mediumTypes.includes(mediaItem.media[j].type))
                                 {
-                                    if(!mediaItem.mediumTypes.includes(mediaItem.media[i].type))
-                                    {
-                                        mediaItem.mediumTypes.push(mediaItem.media[i].type);
-                                    }
+                                    mediaItem.mediumTypes.push(mediaItem.media[j].type);
                                 }
                             }
-                        });
+                        }
                         vm.mediaList.push(mediaItem);
                     }
                 }
@@ -267,7 +266,7 @@ module.exports = ['$rootScope', '$scope', '$state', '$uibModal', '$stateParams',
                              result.push(mediaItem.media[_i]);
                     }
                     return result;
-                }
+                };
                     
                 this.isChangeMediaSubmitting = false;
                 console.log("opened change media dialog, ok " + this.isChangeMediaSubmitting);
@@ -340,7 +339,7 @@ module.exports = ['$rootScope', '$scope', '$state', '$uibModal', '$stateParams',
                 $state.go('error', { errorMsg: { title: "Emulation Error", message: details } });
                 eaasClient.release();
             }       
-        }
+        };
 
         vm.switchEmulators = async function (component) {
            
@@ -444,18 +443,12 @@ module.exports = ['$rootScope', '$scope', '$state', '$uibModal', '$stateParams',
                         this.isSavingEnvironment = true;
                         window.onbeforeunload = null;
 
-                        var postReq = {};
-                        postReq.type = this.type;
-//                        if(postReq.type === 'objectEnvironment')
-//                            postReq.embeddedObject = true;
-                        // postReq.envId = (eaasClient.realEnvId) ? eaasClient.realEnvId : vm.envId;
-                        postReq.message = this.envDescription;
-                        postReq.title = this.envName;
-                        postReq.softwareId = $stateParams.softwareId;
-                        postReq.objectId = $stateParams.objectId;
-                        postReq.userId = $stateParams.userId;
-                        postReq.isRelativeMouse = this.isRelativeMouse;
-                        postReq.cleanRemovableDrives = !this.cleanRemovableDrives;
+
+                        let snapshotRequest = new SnapshotRequestBuilder(this.type);
+                        snapshotRequest.setTitle(this.envName);
+                        snapshotRequest.setMessage(this.envDescription);
+                        snapshotRequest.enableRelativeMouse(this.isRelativeMouse);
+                        snapshotRequest.removeVolatileDrives(!this.cleanRemovableDrives);
 
                         vm.waitModal.show("Saving... ", "Please wait while session data is stored. This may take a while...");
                         try {
@@ -474,7 +467,7 @@ module.exports = ['$rootScope', '$scope', '$state', '$uibModal', '$stateParams',
                             else if ($stateParams.isNewObjectEnv || $stateParams.returnToObjects)
                                 $state.go('admin.standard-envs-overview', {showObjects: true}, {reload: true});
                             else
-                                $state.go('admin.standard-envs-overview', {}, {reload: true})
+                                $state.go('admin.standard-envs-overview', {}, {reload: true});
 
                             $scope.$close();
                             window.isSavingEnvironment = false;
@@ -484,7 +477,7 @@ module.exports = ['$rootScope', '$scope', '$state', '$uibModal', '$stateParams',
 
                     this.showEmu = function() {
                         $('#emulator-container').show();
-                    }
+                    };
                 }],
                 controllerAs: "openSaveEnvironmentDialogCtrl"
             });
@@ -502,12 +495,12 @@ module.exports = ['$rootScope', '$scope', '$state', '$uibModal', '$stateParams',
                 };
                 this.showEmu = function() {
                     $('#emulator-container').show();
-                }
+                };
             }],
             controllerAs: "confirmSnapshotDialogCtrl"
         });
         // modal.closed.then(() => $('#emulator-container').show());
-    }
+    };
     /*
     var closeEmulatorOnTabLeaveTimer = null;
     var leaveWarningShownBefore = false;
