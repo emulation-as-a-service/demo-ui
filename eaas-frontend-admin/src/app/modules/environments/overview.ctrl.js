@@ -1,8 +1,8 @@
-import {getOsLabelById} from '../../lib/os.js'
-import {WaitModal} from "../../lib/task.js"
-import { _fetch, ClientError } from "../../lib/utils";
-import {NetworkBuilder} from "EaasClient/lib/networkBuilder.js"
 
+import {getOsLabelById} from '../../lib/os.js';
+import {WaitModal} from "../../lib/task.js";
+import { _fetch, ClientError } from "../../lib/utils";
+import {NetworkBuilder} from "EaasClient/lib/networkBuilder.js";
 
 module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 
                     'localConfig', 'growl', '$translate', 'Environments', 
@@ -147,7 +147,7 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams',
                             growl.error("Error exporting image", "tbd.");
                         }
                         );
-                    } 
+                    }; 
                 }],
                 controllerAs: "exportDialogCtrl"
             });
@@ -288,7 +288,7 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams',
             var selectedRowData = vm.gridOptions.api.getSelectedRows();
             if (window.confirm($translate.instant('JS_DELENV_OK')))
                 selectedRowData.forEach(selectedRowData => {
-                    vm.deleteEnvironment(selectedRowData.id, true)
+                    vm.deleteEnvironment(selectedRowData.id, true);
                 });
         };
         $scope.selected = "";
@@ -481,7 +481,7 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams',
  //           if(vm.view ===4 ){
  //               window.open(vm.landingPage + "?id=" + id + "&isNetworkEnvironment=" + "true");
  //           } else
-                window.open("/landing-page" + "?id=" + id)
+                window.open("/landing-page" + "?id=" + id);
         };
 
         $scope.onPageSizeChanged = function() {
