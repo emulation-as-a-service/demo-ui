@@ -1,20 +1,13 @@
-<<<<<<< Updated upstream
-import {getOsLabelById} from '../../lib/os.js'
-=======
 import {getOsLabelById} from '../../lib/os.js';
-import {WaitModal} from "../../lib/task.js";
 import { _fetch, ClientError } from "../../lib/utils";
-import {NetworkBuilder} from "EaasClient/lib/networkBuilder.js";
 
-
->>>>>>> Stashed changes
 module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 
                     'localConfig', 'growl', '$translate', 'Environments', 
-                    '$uibModal', 'softwareList', 
+                    '$uibModal',  
                     'REST_URLS', '$timeout', "osList", "EaasClientHelper",
     function ($rootScope, $http, $state, $scope, $stateParams,
               localConfig, growl, $translate, Environments, 
-              $uibModal, softwareList,  
+              $uibModal, 
               REST_URLS, $timeout, osList, EaasClientHelper) {
         
         var vm = this;
