@@ -452,10 +452,11 @@ module.exports = ['$rootScope', '$scope', '$state', '$uibModal', '$stateParams',
 
                         vm.waitModal.show("Saving... ", "Please wait while session data is stored. This may take a while...");
                         try {
-                            let result = await eaasClient.getActiveSession().snapshot(postReq, vm.isNetworkEnvironment ? vm.envId : undefined); 
-                            // console.log(result);
+                            let result = await eaasClient.getActiveSession().snapshot(snapshotRequest, vm.isNetworkEnvironment ? vm.envId : undefined); 
+                            console.log(result);
                         } catch(e) {
                             console.log("given error: " + e.message);
+                            vm.waitModal.hide();
                             growl.error(e.name, {title: 'Error ' + e.message});
                         }
                         finally {
