@@ -49,7 +49,7 @@ module.exports = ['$rootScope', '$scope', '$state', '$stateParams', '$translate'
                     document.body.appendChild(downloadLink);
                     downloadLink.click();
                     document.body.removeChild(downloadLink);
-                };
+                }
                 f();
             };
 
@@ -125,7 +125,7 @@ module.exports = ['$rootScope', '$scope', '$state', '$stateParams', '$translate'
                 const details = (e instanceof ClientError) ? e.toJson() : e.toString();
                 $state.go('error', { errorMsg: { title: "Emulation Error", message: details } });
             }
-        }
+        };
         
         if (!$stateParams.components) 
             $state.go('error', {errorMsg: {title: "Invalid argument"}});

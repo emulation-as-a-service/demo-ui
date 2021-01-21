@@ -1,6 +1,6 @@
 
 import { ClientOptions } from 'EaasClient/lib/clientOptions.js';
-import {_fetch} from './utils.js'
+import {_fetch} from './utils.js';
 import { MachineComponentBuilder } from "EaasClient/lib/componentBuilder.js";
 
 export class EaasClientHelper 
@@ -219,7 +219,7 @@ export class EaasClientHelper
             return clientOptions;
         }
         catch(e) {
-            return new ClientOptions()
+            return new ClientOptions();
         }
     }
     

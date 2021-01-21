@@ -1,0 +1,49 @@
+<div class="modal-header">
+    <h3 class="modal-title">Software Heritage Build</h3>
+</div>
+
+<div class="modal-body">
+    <form id="historicForm">
+
+        <div class="form-group">
+            <label>SWH revision ID <input type="text" ng-model="runHistoricBuild.revisionId"> </label>
+        </div>
+        <div class="form-group">
+            <label>Input Location <input type="text" ng-model="runHistoricBuild.inputLocation"> </label>
+        </div>
+        <div class="form-group">
+            <label>Recipe Content <textarea ng-model="runHistoricBuild.recipeContent"
+                                            placeholder="Input recipe content here"></textarea> </label>
+        </div>
+        <div class="form-group">
+            <label>Recipe Name <input type="text" ng-model="runHistoricBuild.recipeName"> </label>
+        </div>
+
+        <div class="form-group">
+            <label>Logfile (Full Path) <input type="text" ng-model="runHistoricBuild.logFileLocation"> </label>
+        </div>
+
+        <div class="form-group">
+            <label> Build Mode
+                <select ng-model="runHistoricBuild.buildMode" ng-options="x for x in buildModes">
+                </select> </label>
+        </div>
+
+        <div ng-if="runHistoricBuild.buildMode == 'Interactive'" class="form-group">
+            <label> Autostart <input type="checkbox" ng-model="runHistoricBuild.autoStart"></label>
+        </div>
+
+        <div ng-if="runHistoricBuild.buildMode == 'Automatic' || runHistoricBuild.autoStart == true" class="form-group">
+            <label>Crontab for <select ng-model="runHistoricBuild.cronUser" ng-options="x for x in cronUsers">
+            </select> </label>
+        </div>
+
+
+    </form>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="$close();runHistoricBuild.startBuild();">Start Build
+    </button>
+    <button class="btn btn-default" type="button" ng-click="$close()">{{'CONFIRM_DELETE_CANCEL' | translate}}</button>
+</div>
