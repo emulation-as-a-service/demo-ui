@@ -7,11 +7,11 @@ import {NetworkBuilder} from "EaasClient/lib/networkBuilder.js"
 module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams',
     'localConfig', 'growl', '$translate', 'Environments',
     '$uibModal', 'softwareList', 'authService',
-    'REST_URLS', '$timeout', "osList", "EaasClientHelper",
+    'REST_URLS', '$timeout', "osList", "EaasClientHelper", "Upload",
     function ($rootScope, $http, $state, $scope, $stateParams,
               localConfig, growl, $translate, Environments,
               $uibModal, softwareList, authService,
-              REST_URLS, $timeout, osList, EaasClientHelper) {
+              REST_URLS, $timeout, osList, EaasClientHelper, Upload) {
 
         var vm = this;
 
@@ -323,6 +323,10 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams',
                     <a class="dropdown-content" ng-click="switchAction(data.id, 'hbuild', data.archive)">SWH Build</a>
                   </li>
                   
+                   <li ng-if="data.archive !='remote'" role="menuitem dropdown-content">
+                    <a class="dropdown-content" ng-click="switchAction(data.id, 'injectData', data.archive)">Inject Data</a>
+                  </li>
+                  
                   <li role="menuitem">
                     <a class="dropdown-content" ng-click="switchAction(data.id, 'edit', data.archive)">{{'CHOOSE_ENV_EDIT'| translate}}</a>
                   </li>
@@ -419,9 +423,93 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams',
 
         }
 
+        vm.injectData = function (id) {
+            console.log("Inject called for env" + id)
+            $uibModal.open({
+                animation: true,
+                template: require ('./modals/inject-data.html'),
 
+                controller:['$scope' , 'growl', function ($scope, growl) {
+
+                    this.environmentId = id;
+                    this.uploadFiles = [];
+                    this.inputLocation = "/";
+                    this.urls = []
+
+                    this.onImportFilesChosen = function (files) {
+                        // The user chose files to upload
+                        // Initialize the uploadFiles list with meaningful values for destination and action.
+                        // Those are displayed in the view and can be changed by the user
+                        for (let i = 0; i < files.length; i++) {
+                            this.uploadFiles.push({
+                                file: files[i],
+                                filename: files[i].name,
+                                destination: files[i].name,
+                                action: "copy"
+                            });
+                        }
+                    };
+
+                    this.onFileUpload = function () {
+                        for (var i = 0; i < this.uploadFiles.length; i++) {
+
+                            if (/\s/.test(this.uploadFiles[i].destination)) {
+                                growl.error('File name should not contain space! Please, choose a custom name');
+                                return;
+                            }
+
+                            // Have to remember the chosen destination and action for the file
+                            Upload.upload({
+                                url: localConfig.data.eaasBackendURL + "upload",
+                                name: this.uploadFiles[i].filename,
+                                destination: this.uploadFiles[i].destination,
+                                action: this.uploadFiles[i].action,
+                                data: {file: this.uploadFiles[i].file}
+                            }).then(function (resp) {
+                                // Push the uploaded file to the input list
+                                console.log('Success ' + resp.config.data.file.name + 'uploaded. Response: ' + resp.data);
+                                $scope.injectDataCtrl.uploadFiles = [];
+                                $scope.injectDataCtrl.urls.push({
+                                    url: resp.data.uploads[0],
+                                    name: resp.config.destination,
+                                    action: resp.config.action
+                                });
+
+
+                            }, function (resp) {
+                                console.log('Error status: ' + resp.status);
+                                $state.go('error', {
+                                    errorMsg: {
+                                        title: "Load Environments Error " + resp.data.status,
+                                        message: resp.data.message
+                                    }
+                                });
+                            }, function (evt) {
+                                var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+                                console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
+                            });
+                        }
+                    };
+
+                    this.startBuild = function () {
+                        let data = {
+                            "buildToolchain": {
+                                "environmentID": this.environmentId,
+                                "inputDirectory": this.inputLocation,
+                                "injectOnly" : true,
+                                "additionalInjects" : this.urls
+                            }
+                        }
+
+                        let x = asnycStartHistoricBuild(data)
+                    }
+
+                }],
+                controllerAs: "injectDataCtrl"})
+        };
+        //TODO remove duplicate code for inject/swh build
         vm.hbuild = function (id) {
-            console.log("HBuild called, with id" + id)
+            console.log("HBuild called for env" + id)
 
             $uibModal.open({
                 animation: true,
@@ -436,12 +524,70 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams',
                     this.logFileLocation = "/output.txt"
                     this.autoStart = true;
 
-
                     this.buildMode = "Interactive";
                     this.cronUser = "root"
 
                     $scope.buildModes = ["Interactive", "Automatic"]
                     $scope.cronUsers = ["root", "user"]
+
+                    this.uploadFiles = [];
+                    this.urls = []
+
+                    this.onImportFilesChosen = function (files) {
+                        // The user chose files to upload
+                        // Initialize the uploadFiles list with meaningful values for destination and action.
+                        // Those are displayed in the view and can be changed by the user
+                        for (let i = 0; i < files.length; i++) {
+                            this.uploadFiles.push({
+                                file: files[i],
+                                filename: files[i].name,
+                                destination: files[i].name,
+                                action: "copy"
+                            });
+                        }
+                    };
+
+                    this.onFileUpload = function () {
+                        console.log("onFileUpload HistoricBuild called")
+                        for (var i = 0; i < this.uploadFiles.length; i++) {
+
+                            if (/\s/.test(this.uploadFiles[i].destination)) {
+                                growl.error('File name should not contain space! Please, choose a custom name');
+                                return;
+                            }
+
+                            // Have to remember the chosen destination and action for the file
+                            Upload.upload({
+                                url: localConfig.data.eaasBackendURL + "upload",
+                                name: this.uploadFiles[i].filename,
+                                destination: this.uploadFiles[i].destination,
+                                action: this.uploadFiles[i].action,
+                                data: {file: this.uploadFiles[i].file}
+                            }).then(function (resp) {
+                                // Push the uploaded file to the input list
+                                console.log('Success ' + resp.config.data.file.name + 'uploaded. Response: ' + resp.data);
+                                $scope.runHistoricBuild.uploadFiles = [];
+                                $scope.runHistoricBuild.urls.push({
+                                    url: resp.data.uploads[0],
+                                    name: resp.config.destination,
+                                    action: resp.config.action
+                                });
+
+
+                            }, function (resp) {
+                                console.log('Error status: ' + resp.status);
+                                $state.go('error', {
+                                    errorMsg: {
+                                        title: "Load Environments Error " + resp.data.status,
+                                        message: resp.data.message
+                                    }
+                                });
+                            }, function (evt) {
+                                var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+                                console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
+                            });
+                        }
+                    };
 
                     this.startBuild = function () {
                         console.log("startBuild called")
@@ -466,7 +612,10 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams',
                                 "autoStart" : this.autoStart,
                                 "cronUser": this.cronUser,
                                 "recipeName" : this.recipeName,
-                                "logFileLocation" : this.logFileLocation
+                                "logFileLocation" : this.logFileLocation,
+                                "injectOnly" : false,
+                                "additionalInjects" : this.urls
+
                             }
                         }
 
