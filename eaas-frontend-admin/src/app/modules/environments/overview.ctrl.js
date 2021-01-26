@@ -409,8 +409,8 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams',
             let networkBuilder = new NetworkBuilder(localConfig.data.eaasBackendURL, () => authService.getToken());
             let machine = EaasClientHelper.createMachine(envId, "default");
             networkBuilder.addComponent(machine);
-            await networkBuilder.enableDhcpService(networkBuilder.getDefaultDhcpConfig());
             await networkBuilder.enableLinuxArchiveService();
+            await networkBuilder.enableDhcpService(networkBuilder.getNetgetNetworkConfig());
 
             $state.go("admin.emuView",  {
                 components: networkBuilder.getComponents(),
