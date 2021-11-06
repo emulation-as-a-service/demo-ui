@@ -8,8 +8,8 @@ git submodule update
 cd ..
 
 cd landing-page
-npm install && \
+npm ci && \
 npm run build && \
 cd ../eaas-frontend-admin && \
-npm install && \
+npm ci && \
 npm run build
