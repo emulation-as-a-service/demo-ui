@@ -3,12 +3,9 @@
 npm install
 
 cd landing-page
-npm ci && \
+npm ci --legacy-peer-deps && \
 npm run build && \
 cd ../eaas-frontend-admin && \
-npm ci && \
+npm ci --legacy-peer-deps && \
 npm run build
 
-cd eaas-frontend-admin && \
-npm install && \
-npm run build
