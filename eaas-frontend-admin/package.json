@@ -4,7 +4,7 @@
   "description": "Admin web frontend for the EAAS REST backend",
   "scripts": {
     "build": "rimraf dist && webpack --progress",
-    "server": "webpack serve --history-api-fallback --inline --progress",
+    "server": "webpack serve --progress",
     "start": "npm run server"
   },
   "dependencies": {
@@ -51,16 +51,15 @@
     "bootstrap": "3.4.1",
     "bootstrap-ui-datetime-picker": "2.5.4",
     "chart.js": "2.6.0",
-    "copy-webpack-plugin": "^6.4.1",
+    "copy-webpack-plugin": "^11.0.0",
     "core-js": "^2.4.1",
     "datatables.net": "^1.10.21",
     "datatables.net-dt": "^1.10.21",
-    "extract-text-webpack-plugin": "^4.0.0-beta.0",
     "file-loader": "^6.2.0",
     "file-saver": "^2.0.2",
     "font-awesome": "4.6.3",
     "hammerjs": "^2.0.8",
-    "html-webpack-plugin": "^4.5.2",
+    "html-webpack-plugin": "^5.5.0",
     "jquery": "^3.6.0",
     "jquery.json-viewer": "^1.1.0",
     "ng-file-upload": "12.2.3",
@@ -72,7 +71,6 @@
     "systemjs": "0.19.40",
     "textangular": "1.5.3",
     "ts-loader": "^4.5.0",
-    "uglifyjs-webpack-plugin": "^2.2.0",
     "ui-select": "0.16.0",
     "uuid": "^8.3.2",
     "webcrypto-jwt": "^0.2.2",
@@ -90,6 +88,7 @@
     "imports-loader": "^0.7.1",
     "lite-server": "^2.6.1",
     "lodash": "^4.17.21",
+    "mini-css-extract-plugin": "^2.7.2",
     "node-libs-browser": "2.0.0",
     "postcss-loader": "1.2.2",
     "raw-loader": "^0.5.1",
@@ -99,10 +98,10 @@
     "style-loader": "^1.3.0",
     "to-string-loader": "^1.1.5",
     "tslint": "^3.15.1",
-    "typescript": "3.4.1",
-    "webpack": "^4.46.0",
-    "webpack-cli": "^4.9.2",
-    "webpack-dev-server": "^3.11.3",
-    "write-file-webpack-plugin": "^4.3.2"
+    "typescript": "^4.9.5",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1",
+    "webpack-dev-server": "^4.11.1",
+    "webpack-shell-plugin-next": "^2.3.1"
   }
 }
