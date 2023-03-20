@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-20.04
     defaults:
       run:
-        working-directory: $GITHUB_ACTION_PATH/playwright-tests
+        working-directory: ${GITHUB_ACTION_PATH}/playwright-tests
     steps:
       - name: Print branch name
         shell: bash
