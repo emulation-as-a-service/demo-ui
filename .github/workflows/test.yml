@@ -6,9 +6,6 @@ jobs:
   test:
     timeout-minutes: 15
     runs-on: ubuntu-20.04
-    defaults:
-      run:
-        working-directory: ${GITHUB_ACTION_PATH}/playwright-tests
     steps:
       - name: Print branch name
         shell: bash
@@ -21,14 +18,19 @@ jobs:
           # TODO build UI and server locally and pass the directories to installer
       - name: Install dependencies
         run: npm ci
+        working-directory: ./playwright-tests
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
+        working-directory: ./playwright-tests
       - name: Run Playwright tests
         run: npx playwright test --project=chromium
+        working-directory: ./playwright-tests
       - uses: actions/upload-artifact@v3
         with:
           path: "*.png"
+        working-directory: ./playwright-tests
       - uses: actions/upload-artifact@v3
+        working-directory: ./playwright-tests
         if: always()
         with:
           name: playwright-report
