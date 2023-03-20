@@ -1,0 +1,36 @@
+name: Playwright Tests
+on:
+  - push
+  - workflow_dispatch
+jobs:
+  test:
+    timeout-minutes: 15
+    runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: ./playwright-tests
+    steps:
+      - name: Print branch name
+        shell: bash
+        run: echo "${GITHUB_HEAD_REF}"
+      - uses: actions/checkout@v3
+      - uses: emulation-as-a-service/eaas-installer@github-actions
+        with:
+          isBackend: false
+          branch: ${GITHUB_HEAD_REF}
+          # TODO build UI and server locally and pass the directories to installer
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+      - name: Run Playwright tests
+        run: npx playwright test --project=chromium
+      - uses: actions/upload-artifact@v3
+        with:
+          path: "*.png"
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
