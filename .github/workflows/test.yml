@@ -11,6 +11,8 @@ jobs:
         shell: bash
         run: echo "${GITHUB_HEAD_REF}"
       - uses: actions/checkout@v3
+        with:
+          submodules: 'true'
       - name: Build Frontend
         run: ./build.sh
         # TODO check if eaas installer can see build dir
