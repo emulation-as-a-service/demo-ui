@@ -5,7 +5,7 @@ on:
 
 jobs:
   test:
-    timeout-minutes: 15
+    timeout-minutes: 13
     runs-on: ubuntu-20.04
     steps:
       - name: Print branch name
@@ -15,9 +15,7 @@ jobs:
         with:
           submodules: 'true'
       - name: Build Frontend
-#        run: ./build.sh
-        run: touch testfile.txt
-        # TODO check if eaas installer can see build dir
+        run: ./build.sh
       - uses: emulation-as-a-service/eaas-installer@github-actions
         with:
           isBackend: false
