@@ -13,12 +13,21 @@ jobs:
         run: echo "${GITHUB_HEAD_REF}"
       - uses: actions/checkout@v3
         with:
-          submodules: 'true'
+          submodules: 'true' # TODO recursive? True seems to work however
       - uses: actions/setup-node@v3
         with:
           node-version: 16
       - name: Build Frontend
         run: ./build.sh
+
+      # TODO check if branch exists (script) and use it, otherwise use HEAD (eaas-server@branch-name)
+      - uses: actions/checkout@v3
+        with:
+          repository: emulation-as-a-service/eaas-server
+          path: ./eaas-server
+      - name: Build Server
+        run: ./compile-locally.sh
+        working-directory: ./eaas-server
       - uses: emulation-as-a-service/eaas-installer@github-actions
         with:
           isBackend: false
