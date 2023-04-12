@@ -21,18 +21,28 @@ jobs:
         run: ./build.sh
 
       # TODO check if branch exists (script) and use it, otherwise use HEAD (eaas-server@branch-name)
+      - name: Check if backend branch with same name exists
+        run: |
+          check_branch=$(git ls-remote --heads https://github.com/emulation-as-a-service/eaas-server.git ${{ github.ref_name }})
+          echo "Branch:"
+          echo "$check_branch"
+          if [[ -z ${check_branch} ]]; then
+              echo "SERVER_BRANCH=HEAD" >> $GITHUB_ENV
+          else
+              echo "SERVER_BRANCH=${{ github.ref_name }}" >> $GITHUB_ENV
+          fi
       - uses: actions/checkout@v3
         with:
-          repository: emulation-as-a-service/eaas-server
+          repository: emulation-as-a-service/eaas-server@${{env.SERVER_BRANCH}}
           path: ./eaas-server
       - name: Build Server
-        run: ./compile-locally.sh
+        run: ./compile-locally.sh # eaas-server/src/ear/target/eaas-server.ear
         working-directory: ./eaas-server
       - uses: emulation-as-a-service/eaas-installer@github-actions
         with:
           isBackend: false
           branch: ${GITHUB_HEAD_REF}
-          # TODO build UI and server locally and pass the directories to installer
+          # TODO Installer should use eaas-frontend-admin/dist and eaas-server/src/ear/target/eaas-server.ear for deployment
       - name: Install dependencies
         run: npm ci
         working-directory: ./playwright-tests
