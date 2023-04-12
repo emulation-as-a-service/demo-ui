@@ -27,13 +27,13 @@ jobs:
           echo "Branch:"
           echo "$check_branch"
           if [[ -z ${check_branch} ]]; then
-              echo "SERVER_BRANCH=HEAD" >> $GITHUB_ENV
+              echo "SERVER_BRANCH=emulation-as-a-service/eaas-server" >> $GITHUB_ENV
           else
-              echo "SERVER_BRANCH=${{ github.ref_name }}" >> $GITHUB_ENV
+              echo "SERVER_BRANCH=emulation-as-a-service/eaas-server@${{ github.ref_name }}" >> $GITHUB_ENV
           fi
       - uses: actions/checkout@v3
         with:
-          repository: emulation-as-a-service/eaas-server@${{env.SERVER_BRANCH}}
+          repository: ${{env.SERVER_BRANCH}}
           path: ./eaas-server
       - name: Build Server
         run: ./compile-locally.sh # eaas-server/src/ear/target/eaas-server.ear
