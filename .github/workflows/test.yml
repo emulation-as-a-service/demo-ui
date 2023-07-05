@@ -19,6 +19,7 @@ jobs:
           node-version: 16
       - name: Build Frontend
         run: ./build.sh
+        #TODO zip ui artifacts here
 
       # TODO check if branch exists (script) and use it, otherwise use HEAD (eaas-server@branch-name)
       - name: Check if backend branch with same name exists
