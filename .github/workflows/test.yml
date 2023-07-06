@@ -32,7 +32,7 @@ jobs:
           echo "Branch:"
           echo "$check_branch"
           if [[ -z ${check_branch} ]]; then
-              echo "SERVER_BRANCH='HEAD'" >> "$GITHUB_ENV"
+              echo "SERVER_BRANCH='master'" >> "$GITHUB_ENV"
           else
               echo "SERVER_BRANCH=${{ github.ref_name }}" >> "$GITHUB_ENV"
           fi
