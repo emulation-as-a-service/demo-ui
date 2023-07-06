@@ -28,7 +28,7 @@ jobs:
 
       - name: Check if backend branch with same name exists
         run: |
-          check_branch="$"(git ls-remote --heads https://github.com/emulation-as-a-service/eaas-server.git ${{ github.ref_name }})"
+          check_branch="$(git ls-remote --heads https://github.com/emulation-as-a-service/eaas-server.git ${{ github.ref_name }})"
           echo "Branch:"
           echo "$check_branch"
           if [[ -z ${check_branch} ]]; then
