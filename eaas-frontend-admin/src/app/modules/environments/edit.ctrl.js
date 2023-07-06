@@ -5,11 +5,11 @@ import {NetworkBuilder} from "EaasClient/lib/networkBuilder.js";
 import { _fetch, ClientError, confirmDialog } from "../../lib/utils";
 
 module.exports = ["$http", "$rootScope", "$scope", "$state", "$stateParams", "Environments", "localConfig",
-            "growl", "$translate", "objectDependencies", "helperFunctions", "osList", "softwareList", "$uibModal",
-             "$timeout", "nameIndexes", "REST_URLS", "Objects", "Images", "userInfo", "authService", "EaasClientHelper",
+            "growl", "$translate", "objectDependencies", "helperFunctions", "softwareList", "$uibModal",
+             "$timeout", "nameIndexes", "REST_URLS", "Objects", "Images", "userInfo", "authService", "EaasClientHelper", "operatingSystemsMetadata",
     function ($http, $rootScope, $scope, $state, $stateParams, Environments, localConfig,
-            growl, $translate, objectDependencies, helperFunctions, osList, softwareList, $uibModal,
-            $timeout, nameIndexes, REST_URLS, Objects, Images, userInfo, authService, EaasClientHelper) {
+            growl, $translate, objectDependencies, helperFunctions, softwareList, $uibModal,
+            $timeout, nameIndexes, REST_URLS, Objects, Images, userInfo, authService, EaasClientHelper, operatingSystemsMetadata) {
 
        const replicateImage = publisher($http, $uibModal, $state, $timeout, growl, localConfig, REST_URLS, helperFunctions);
        let handlePrefix = "11270/";
@@ -35,7 +35,7 @@ module.exports = ["$http", "$rootScope", "$scope", "$state", "$stateParams", "En
 
        vm.isObjectEnv = $stateParams.objEnv;
 
-       vm.osList = osList.operatingSystems;
+       vm.osList = operatingSystemsMetadata.data.operatingSystemInformations;
 
        this.dependencies = objectDependencies.data;
        vm.isObjectEnv = $stateParams.objEnv;
@@ -94,9 +94,9 @@ module.exports = ["$http", "$rootScope", "$scope", "$state", "$stateParams", "En
 
             vm.run = async function()
             {
-                if($scope.form.$dirty) {
+                if($scope.form.$dirty || vm.drives._dirty) {
                     try {
-                        await confirmDialog($uibModal, "Unsaved settings", `There are unsaved modifications. Proceed anyway?` );
+                        await confirmDialog($uibModal, "Unsaved settings", `There are unsaved modifications, which will be discarded. Proceed anyway?` );
                     }
                     catch(e)
                     {
@@ -113,7 +113,7 @@ module.exports = ["$http", "$rootScope", "$scope", "$state", "$stateParams", "En
                 vm.startComponent(machine);
             };
 
-            vm.os = getOsById(osList.operatingSystems, vm.env.os);
+            vm.os = getOsById(vm.osList, vm.env.os);
             if(localConfig.data.features.handle) {
                 $http.get(localConfig.data.eaasBackendURL + REST_URLS.getHandleList).then(function (response) {
                      if (response.data.handles.includes(handlePrefix + vm.env.envId.toUpperCase())) {

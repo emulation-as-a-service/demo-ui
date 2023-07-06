@@ -225,7 +225,7 @@
   "EDITENV_XPRA": "XPRA Video (Beta)",
   "EDITENV_WEBRTC" : "WebRTC Audio (Beta)",
   "EDITENV_XPRA_ENCODING": "XPRA Encoding",
-  "EDITENV_TIMESTAMP" : "Erstellungsdatum",
+  "EDITENV_TIMESTAMP" : "Änderungsdatum",
 
   "EDITENV_CANCONNECTENVS": "Umgebung verbinden (Experimental)",
   "EDITENV_ENABLE_INTERNET" : "Internetzugang aktivieren",

@@ -3,6 +3,7 @@ export class Drives
     constructor(drives) {
         this.drives = drives;
         this.driveUpdates = [];
+        this._dirty = false;
     }
 
     getList()
@@ -148,6 +149,7 @@ export class Drives
                 this.objectList = objectList;
 
                 this.save = () => {
+                    _this._dirty = true;
                     if(this.virtio && this.drive.type === "disk")
                         this.drive.iface = "virtio";
                     else

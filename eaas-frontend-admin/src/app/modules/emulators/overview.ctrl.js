@@ -52,8 +52,8 @@ module.exports = ['$http', '$state', '$scope', '$stateParams', 'localConfig', 'g
         function editBtnRenderer2(params) {
             params.$scope.selected = $scope.selected;
             params.$scope.importLatest = importLatest;
-            return `<div ng-if="data.emulatorInfo.repositoryName"> <a href="" ng-click="importLatest(data.emulatorInfo)">install latest</a></div>
-                    <div ng-if="!data.emulatorInfo.repositoryName">not avialable</div>
+            return `<div ng-if="data.emulatorInfo.repositoryName"> <button class="dropbtn" type="button" ng-click="importLatest(data.emulatorInfo)">Install latest</button></div>
+                    <div ng-if="!data.emulatorInfo.repositoryName">Not avialable</div>
             `;
         }
 

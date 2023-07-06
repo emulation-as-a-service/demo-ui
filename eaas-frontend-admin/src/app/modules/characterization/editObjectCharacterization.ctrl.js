@@ -1,20 +1,27 @@
-module.exports = ['$scope', '$state', '$stateParams', '$uibModal', '$http', 'Objects', 'softwareObj', 'osList',
-                     'localConfig', 'Environments', 'growl', '$translate', 'helperFunctions', 'REST_URLS', '$timeout', 'EaasClientHelper',
-                      function ($scope, $state, $stateParams, $uibModal, $http, Objects, softwareObj, osList,
-                      localConfig, Environments, growl, $translate, helperFunctions, REST_URLS, $timeout, EaasClientHelper) {
+module.exports = ['$scope', '$state', '$stateParams', '$uibModal', '$http', 'Objects', 'softwareObj',
+                     'localConfig', 'Environments', 'growl', '$translate', 'helperFunctions', 'REST_URLS', '$timeout', 'EaasClientHelper', 'operatingSystemsMetadata',
+                      function ($scope, $state, $stateParams, $uibModal, $http, Objects, softwareObj,
+                      localConfig, Environments, growl, $translate, helperFunctions, REST_URLS, $timeout, EaasClientHelper, operatingSystemsMetadata) {
      var vm = this;
-    console.log("$stateParams.userDescription", $stateParams.userDescription);
+
+    console.log("State Params: ", $stateParams);
+    console.log("OS Metadata:", operatingSystemsMetadata)
 
      vm.objectId = $stateParams.objectId;
-     vm.objectArchive = $stateParams.objectArchive ? $stateParams.objectArchive : null;
+     vm.objectArchive = $stateParams.objectArchive ? $stateParams.objectArchive : "default";
      vm.isSoftware = !($stateParams.swId === "-1");
+     vm.isPublic = $stateParams.isPublic;
      vm.softwareObj = softwareObj.data;
-     vm.osList = osList;
+     vm.osList = operatingSystemsMetadata.data.operatingSystemInformations;
      vm.objEnvironments = [];
 
      vm.editName = false;
      vm.labelChanged = false;
 
+     // backend "default" archive is zero conf and not "default" - "default" will use the user archive if it exists!
+     if(vm.isPublic){
+         vm.objectArchive = "zero conf"
+     }
 
      Objects.get({archiveId: vm.objectArchive, objectId: vm.objectId}).$promise.then(function(response) {
         vm.metadata = response.metadata;
@@ -47,13 +54,12 @@ module.exports = ['$scope', '$state', '$stateParams', '$uibModal', '$http', 'Obj
                         console.log("Classification result:", classificationResult)
                         vm.suggested = classificationResult.suggested;
                         vm.fileFormatMap = classificationResult.fileFormatMap;
-                        classificationResult.environmentList.forEach( entry => {
-                            let ids = vm.objEnvironments.map(env => env.id);
-                            if  (ids.includes(entry.id)){
-                                growl.success("Added environment " + entry.label + " to rendering environments!")
-                            }
-                        })
-                        vm.objEnvironments.push.apply(vm.objEnvironments, classificationResult.environmentList);
+
+                        let ids = vm.objEnvironments.map(env => env.id);
+
+                        let newEnvs = classificationResult.environmentList.filter(env => !ids.includes(env.id));
+                        newEnvs.forEach( entry => growl.success("Added environment " + entry.label + " to rendering environments!"))
+                        vm.objEnvironments.push.apply(vm.objEnvironments, newEnvs);
                     }
                 }
                 else
@@ -215,7 +221,7 @@ module.exports = ['$scope', '$state', '$stateParams', '$uibModal', '$http', 'Obj
    vm.updateLabelIfChanged = function(){
         if(vm.labelChanged){
             console.log("Updating label")
-            let url = `${localConfig.data.eaasBackendURL}objects/${$stateParams.objectArchive}/${$stateParams.objectId}/label`
+            let url = `${localConfig.data.eaasBackendURL}objects/${vm.objectArchive}/${$stateParams.objectId}/label`
             $http.put(url, {"label" : vm.metadata.title})
                 .then(function (response){
                     console.log("got: ", response)

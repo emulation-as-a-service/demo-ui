@@ -4,13 +4,13 @@ import {
 
 import {Drives} from '../../lib/drives.js';
 
-module.exports = ["$http", "$state", "systemList", "softwareList", "localConfig", "$uibModal", "os", "Objects", "Images",
-    function ($http,  $state, systemList, softwareList, localConfig, $uibModal, os, Objects, Images) {
+module.exports = ["$http", "$state", "systemList", "softwareList", "localConfig", "$uibModal", "operatingSystemsMetadata", "Objects", "Images",
+    function ($http,  $state, systemList, softwareList, localConfig, $uibModal, operatingSystemsMetadata, Objects, Images) {
         var vm = this;
 
         vm.systems = systemList.data;
         vm.softwareList = softwareList.data.descriptions; 
-        vm.osPresets = os.operatingSystems;
+        vm.osPresets = operatingSystemsMetadata.data.operatingSystemInformations;
 
         vm.native_config = "";
         vm.uiOptions = {};
@@ -56,7 +56,7 @@ module.exports = ["$http", "$state", "systemList", "softwareList", "localConfig"
 
         vm.getOsPresets = function()
         {
-            const result =  os.operatingSystems.filter(
+            const result =  vm.osPresets.filter(
                 (element, i) => { 
                     let templates = vm.systems.find(o => o.id === element.template);
                     if(element.id.startsWith("os:" +  vm._preSelectedSystem) && templates)
@@ -82,7 +82,7 @@ module.exports = ["$http", "$state", "systemList", "softwareList", "localConfig"
             vm.selectedOs = item;
             vm.config.kvm_available = vm.selectedOs.kvm_available;
             vm.config.template = vm.selectedOs.template;
-            vm.config.template_params = vm.selectedOs.template_params;
+            vm.config.template_params = vm.selectedOs.templateParameters;
             
             vm.osId = vm.selectedOs.id;
             vm.template = vm.systems.find(o => o.id === vm.selectedOs.template);

@@ -7,6 +7,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const WebpackShellPluginNext = require('webpack-shell-plugin-next');
+
+const TerserPlugin = require("terser-webpack-plugin");
 const path = require('path');
 
 /**
@@ -53,11 +55,14 @@ module.exports = function makeWebpackConfig() {
 
         // Filename for entry points
         // Only adds hash in build mode
-        filename: isProd ? '[name].[hash].js' : '[name].bundle.js',
+        filename: isProd ? '[name].[contenthash].js' : '[name].bundle.js',
 
         // Filename for non-entry points
         // Only adds hash in build mode
-        chunkFilename: isProd ? '[name].[hash].js' : '[name].bundle.js'
+        chunkFilename: isProd ? '[name].[contenthash].js' : '[name].bundle.js',
+
+        // HACK: Work around https://gitlab.com/emulation-as-a-service/demo-ui/-/issues/4
+        hashFunction: "sha256",
     };
 
     /**
@@ -70,29 +75,37 @@ module.exports = function makeWebpackConfig() {
     }
 
     config.optimization = {
-        minimize: isProd,
-        splitChunks: {
+        minimize: true,
+        minimizer: [
+            new TerserPlugin({
+                exclude: [/guacamole\/*/, /xpra\/xpra-html5\/*/, /contrib\/*/]
+            }),
+        ],
+       splitChunks: {
             chunks: 'all',
-            minSize: 1000,
-            minRemainingSize: 0,
+            minSize: 3000000,
+            maxSize: 5000000,
             minChunks: 1,
-            maxAsyncRequests: 30,
-            maxInitialRequests: 30,
-            enforceSizeThreshold: 3000,
-            cacheGroups: {
-                defaultVendors: {
-                    test: /[\\/]node_modules[\\/]/,
-                    priority: -10,
-                    reuseExistingChunk: true,
-                },
-                default: {
-                    minChunks: 4,
-                    priority: -20,
-                    reuseExistingChunk: true,
-                },
-            },
-        },
+            maxAsyncRequests: 4,
+            maxInitialRequests: 4,
+            cacheGroups : {
+                default : false,
+            }
+            // cacheGroups: {
+            //     defaultVendors: {
+            //         test: /[\\/]node_modules[\\/]/,
+            //         priority: -10,
+            //         reuseExistingChunk: true,
+            //     },
+            //     default: {
+            //         minChunks: 1,
+            //         priority: -20,
+            //         reuseExistingChunk: true,
+            //     },
+            // },
+        }
     };
+
 
     /**
      * Loaders
@@ -142,7 +155,8 @@ module.exports = function makeWebpackConfig() {
                 test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)$/,
                 loader: 'file-loader',
                 options: {
-                    publicPath: ADMIN_PATH
+                    publicPath: ADMIN_PATH,
+                    name: '[sha256:contenthash:20].[ext]'
                 },
             }, {
                 // HTML LOADER
@@ -204,12 +218,7 @@ module.exports = function makeWebpackConfig() {
 
         isProd ? new WebpackShellPluginNext({
                 onBuildStart: {
-                    scripts: ['echo "Webpack Start (Production Mode)"'],
-                    blocking: true,
-                    parallel: false
-                },
-                onBuildExit: {
-                    scripts: ['echo "Executing cleanup scripts..."',
+                    scripts: ['echo "Webpack Start (Production Mode), Executing cleanup scripts..."',
                         '../eaas-client/delete-unneeded-files.sh',
                         '../eaas-client/write-version-json.sh',
                         'echo "Done with cleanup scripts!"'],

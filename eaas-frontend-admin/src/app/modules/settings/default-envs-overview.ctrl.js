@@ -9,6 +9,8 @@ module.exports = ['$http', '$state', '$scope', '$stateParams',
 
         var vm = this;
 
+        console.log(operatingSystemsMetadata)
+
         vm.config = localConfig.data;
         vm.operatingSystemsMetadata = operatingSystemsMetadata.data.operatingSystemInformations;
 
@@ -41,7 +43,7 @@ module.exports = ['$http', '$state', '$scope', '$stateParams',
                             }
                         }
                         rowData.push({
-                            osid: element.id,
+                            osid: element.qid,
                             os: element.label,
                             id: id,
                             title: title

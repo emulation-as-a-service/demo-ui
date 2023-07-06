@@ -1,4 +1,5 @@
 import {_fetch} from '../../lib/utils'
+import {WaitModal} from '../../lib/task.js';
 
 module.exports = ['$state', '$http', '$scope',  'localConfig', '$uibModal', 'kbLayouts', 'REST_URLS', 'userInfo',
     function ($state, $http, $scope, localConfig, $uibModal, kbLayouts, REST_URLS, userInfo) {
@@ -19,6 +20,14 @@ module.exports = ['$state', '$http', '$scope',  'localConfig', '$uibModal', 'kbL
         if(vm.userInfo && vm.userInfo.role === 'ADMIN')
             vm.isAdmin = true;
 
+        async function executeSyncAction(subresource) {
+            const token = localStorage.getItem('id_token');
+            const result = await _fetch(localConfig.data.eaasBackendURL + subresource, "POST", null, token);
+            if (result.status !== "0") {
+                $state.go('error', {});
+            }
+        };
+
         vm.showSetKeyboardLayoutDialog = function () {
             $uibModal.open({
                 animation: true,
@@ -32,13 +41,22 @@ module.exports = ['$state', '$http', '$scope',  'localConfig', '$uibModal', 'kbL
             });
         };
 
-        vm.syncImages = function () {
-            $http.get(localConfig.data.eaasBackendURL + REST_URLS.syncImagesUrl).then(function (response) {
-                    if (response.data.status === "0") {
-                        $state.go('admin.standard-envs-overview', {}, {reload: true});
-                    }
-                }
-            );
+        vm.syncArchives = async function () {
+            const modal = new WaitModal($uibModal);
+            modal.show("Synchronizing archives", "Please wait");
+            try {
+                await executeSyncAction(REST_URLS.syncImagesUrl);
+                await executeSyncAction(REST_URLS.syncObjectsUrl);
+                await executeSyncAction(REST_URLS.syncSoftwareUrl);
+                $state.go('admin.standard-envs-overview', {}, {reload: true});
+            }
+            catch(e) {
+                console.log(e);
+                $state.go('error', {});
+            }
+            finally {
+                modal.hide();
+            }
         };
 
         vm.migrateDb = async function () {

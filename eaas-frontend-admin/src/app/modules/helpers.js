@@ -8,7 +8,6 @@ emilAdminUIHelpersModule.service('REST_URLS', function () {
     this.getHandleList = "handles/";
     this.pushUploadUrl = "objects/pushUpload";
     this.repositoriesListUrl = "objects/archives";
-    this.syncObjectsUrl = "objects/syncObjects";
     this.getObjectImportTaskState = "objects/objectImportTaskState?taskId={0}";
 
     this.getHandleValue = "handles/";
@@ -30,7 +29,6 @@ emilAdminUIHelpersModule.service('REST_URLS', function () {
 
     this.forkRevisionUrl = "EmilEnvironmentData/forkRevision";
     this.revertRevisionUrl = "EmilEnvironmentData/revertRevision";
-    this.syncImagesUrl = "EmilEnvironmentData/sync";
     this.exportEnvironmentUrl = "EmilEnvironmentData/export";
     this.overrideObjectCharacterizationUrl = "classification/overrideObjectCharacterization";
     this.getObjectDependencies = "EmilEnvironmentData/objectDependencies?envId={0}";
@@ -58,6 +56,11 @@ emilAdminUIHelpersModule.service('REST_URLS', function () {
     this.getSoftwarePackageDescriptions = "EmilSoftwareData/getSoftwarePackageDescriptions";
     this.saveSoftwareUrl = "EmilSoftwareData/saveSoftwareObject";
     this.getSoftwareObjectURL = "EmilSoftwareData/getSoftwareObject?softwareId={0}";
+
+    // sync endpoints
+    this.syncImagesUrl = "environment-repository/actions/sync";
+    this.syncObjectsUrl = "object-repository/actions/sync";
+    this.syncSoftwareUrl = "software-repository/actions/sync";
 });
 
 emilAdminUIHelpersModule.service('helperFunctions', function () {

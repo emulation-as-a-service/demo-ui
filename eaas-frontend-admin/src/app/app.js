@@ -104,7 +104,6 @@ import {AddNetworkComponent} from '../app2/components/network-environments/add/a
 import {EditNetworkComponent} from "../app2/components/network-environments/edit/edit-network-env.component.ts";
 import {StartedNetworkOverview} from "EaasLibs/network-environments/run/started-network-overview.component.ts";
 
-import { osLocalList } from './lib/os.js';
 import { EaasClientHelper } from './lib/eaasClientHelper.js';
 
 export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize', 'ngAnimate', 'ngCookies', 'ngResource', 'ui.router', 'ui.bootstrap',
@@ -665,8 +664,7 @@ function($stateProvider,
                 },
                 patches: function($http, localConfig, REST_URLS) {
                     return $http.get(localConfig.data.eaasBackendURL + REST_URLS.getPatches);
-                },
-                os: () => osLocalList(),
+                }
             },
             views: {
                 'wizard': {
@@ -743,9 +741,6 @@ function($stateProvider,
                 showContainers: false,
                 showNetworkEnvs: false
             },
-            resolve : {
-                osList : () => osLocalList()
-            },
             views: {
                 'wizard': {
                     template: require('./modules/environments/overview.html'),
@@ -776,7 +771,6 @@ function($stateProvider,
             resolve: {
                 objectDependencies: ($http, localConfig, $stateParams, helperFunctions, REST_URLS) =>
                      $http.get(localConfig.data.eaasBackendURL + helperFunctions.formatStr(REST_URLS.getObjectDependencies, $stateParams.envId)),
-                     osList : () => osLocalList(),
                 nameIndexes : ($http, localConfig, REST_URLS) =>
                      $http.get(localConfig.data.eaasBackendURL + REST_URLS.getNameIndexes)
             },
@@ -891,9 +885,8 @@ function($stateProvider,
         })
         .state('admin.edit-object-characterization', {
             url: "/edit-object-characterization?objectId&objectArchive",
-            params: {userDescription: null, swId: "-1"},
+            params: {userDescription: null, swId: "-1", isPublic: null},
             resolve: {
-                osList : () => osLocalList(),
                 softwareObj: function($stateParams, $http, localConfig, helperFunctions, REST_URLS) {
                     // return empty object for new software
                     if ($stateParams.swId === "-1") {
@@ -973,7 +966,6 @@ function($stateProvider,
             url: "/runtimes",
             params: {},
             resolve: {
-                osList : () => osLocalList(),
                 systemList: ($http, localConfig)  => {
                     return $http.get(localConfig.data.eaasBackendURL + "environment-repository/templates");
                 },
@@ -991,7 +983,6 @@ function($stateProvider,
             url: "/defaults",
             params: {},
             resolve: {
-                osList : () => osLocalList(),
                 defaultEnvironments: ($http, localConfig ) => $http.get(`${localConfig.data.eaasBackendURL}/environment-repository/default-environments`)
             },
             views: {

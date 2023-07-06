@@ -170,8 +170,8 @@
                         <ui-select-match
                             placeholder="{{'SW_INGEST_CHOOSE_OS_PH' | translate}}">{{$select.selected.id}}</ui-select-match>
                         <ui-select-choices
-                            repeat="os in editObjectCharacterizationCtrl.osList.data.operatingSystems | filter: $select.search">
-                            <b><span ng-bind-html="os.id | highlight: $select.search"></span></b>
+                            repeat="os in editObjectCharacterizationCtrl.osList | filter: $select.search">
+                            <b><span ng-bind-html="os.label | highlight: $select.search"></span></b>
                             <br>
                             <span ng-bind-html="os.id | highlight: $select.search"></span>
                         </ui-select-choices> </ui-select>

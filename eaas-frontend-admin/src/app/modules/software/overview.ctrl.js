@@ -38,13 +38,13 @@ module.exports = ['softwareList', '$scope', '$http', '$state', "localConfig", "$
               
              <li role="menuitem dropdown-content">
                     <a class="dropdown-content" 
-                        ui-sref="admin.edit-object-characterization({swId: data.id, objectId: data.id, objectArchive: data.archiveId})">
+                        ui-sref="admin.edit-object-characterization({swId: data.id, objectId: data.id, objectArchive: data.archiveId, isPublic: data.isPublic})">
                         {{'SW_OVERVIEW_SW_EDIT'| translate}}
                     </a>
               </li>
               <li role="menuitem">
                 <a class="dropdown-content" 
-                    ng-click="switchAction(data.id, \'delete\')">delete</a>
+                    ng-click="switchAction(data.id, \'delete\')">Delete</a>
                 </li>
             </ul>
             
@@ -87,18 +87,17 @@ module.exports = ['softwareList', '$scope', '$http', '$state', "localConfig", "$
         }
         else if(vm.view === 1) {
              vm.swList.forEach(element => {
-                 console.log(element);
                 if(element.archive !== "Remote Objects" && element.isPublic)
                 {
-                    rowData.push({id: element.id, label: element.label, isOperatingSystem : element.isOperatingSystem});
+                    rowData.push({id: element.id, label: element.label, isOperatingSystem : element.isOperatingSystem, isPublic: element.isPublic});
                 }
             });
         }
         else {
             vm.swList.forEach(element => {
-                if(element.archive !== "Remote Objects")
+                if(element.archive !== "Remote Objects" &&! element.isPublic)
                 {
-                    rowData.push({id: element.id, label: element.label, isOperatingSystem : element.isOperatingSystem});
+                    rowData.push({id: element.id, label: element.label, isOperatingSystem : element.isOperatingSystem, isPublic: element.isPublic});
                 }
             });
         }
@@ -126,6 +125,7 @@ module.exports = ['softwareList', '$scope', '$http', '$state', "localConfig", "$
         animateRows: true,
         onGridReady: function (params) {
             vm.gridOptions.api.sizeColumnsToFit();
+            vm.updateTable(0);
         },
         pagination: true,
         paginationPageSize: Number(vm.pageSize),

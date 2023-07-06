@@ -5,11 +5,11 @@ import {NetworkBuilder} from "EaasClient/lib/networkBuilder.js";
 module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams', 
                     'localConfig', 'growl', '$translate', 'Environments', 
                     '$uibModal', 
-                    'REST_URLS', '$timeout', "osList", "authService", "EaasClientHelper",
+                    'REST_URLS', '$timeout', "authService", "EaasClientHelper", "operatingSystemsMetadata",
     function ($rootScope, $http, $state, $scope, $stateParams,
               localConfig, growl, $translate, Environments, 
               $uibModal,  
-              REST_URLS, $timeout, osList, authService, EaasClientHelper) {
+              REST_URLS, $timeout, authService, EaasClientHelper, operatingSystemsMetadata) {
         
         var vm = this;
 
@@ -17,6 +17,8 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams',
 
         vm.landingPage = localConfig.data.landingPage;
         vm.viewArchive = 0;
+
+        vm.osList = operatingSystemsMetadata.data.operatingSystemInformations;
 
         function updateTableData(rowData){
             vm.rowCount = rowData.length;
@@ -52,7 +54,7 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams',
                                 owner: (element.owner) ? element.owner : "shared",
                                 timestamp: element.timestamp,
                                 description: element.description,
-                                os: getOsLabelById(osList.operatingSystems, element.operatingSystem),
+                                os: getOsLabelById(vm.osList, element.operatingSystem),
                             });
                             
                     }
@@ -322,7 +324,7 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams',
 
                   <li role="menuitem">
                     <a class="dropdown-content" ng-click="switchAction(data.id, 'export', data.archive)">
-                            export
+                            Export
                     </a>
                   </li>
                   

@@ -18,16 +18,18 @@ import {
 module.exports = ['$rootScope', '$http', '$state', '$scope', 
     'localConfig', 'growl', '$translate', 'Environments', 'EaasClientHelper', "Images",
     '$uibModal', 'containerList',
-    'REST_URLS', '$timeout', "osList", "systemList", 
+    'REST_URLS', '$timeout', "systemList", "operatingSystemsMetadata",
     function ($rootScope, $http, $state, $scope, 
         localConfig, growl, $translate, Environments, EaasClientHelper, Images,
         $uibModal, containerList,
-        REST_URLS, $timeout, osList, systemList) {
+        REST_URLS, $timeout, systemList, operatingSystemsMetadata) {
 
         var vm = this;
         vm.systems = systemList.data;
         vm.config = localConfig.data;
         vm.containerList = containerList.container;
+
+        vm.osList = operatingSystemsMetadata.data.operatingSystemInformations;
 
         function updateTableData(rowData) {
             vm.rowCount = rowData.length;
@@ -59,7 +61,7 @@ module.exports = ['$rootScope', '$http', '$state', '$scope',
                         owner: (element.owner) ? element.owner : "shared",
                         timestamp: element.timestamp,
                         description: element.description,
-                        os: getOsLabelById(osList.operatingSystems, element.operatingSystem),
+                        os: getOsLabelById(vm.osList, element.operatingSystem),
                     });
                 });
                 updateTableData(rowData);

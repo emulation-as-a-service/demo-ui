@@ -241,7 +241,7 @@
   "EDITENV_NO_SOFTWARE" : "No software installed",
   "EDITENV_DELETE_ENV": "Delete Environment",
   "EDITENV_RESET" : "Discard changes",
-  "EDITENV_TIMESTAMP" : "Creation date",
+  "EDITENV_TIMESTAMP" : "Modification date",
 
   "EDITENV_CANCONNECTENVS": "Can be connected with other environments (Experimental)",
   "EDITENV_ENABLE_INTERNET" : "Enable Internet access",

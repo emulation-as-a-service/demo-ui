@@ -431,6 +431,7 @@ module.exports = ['$rootScope', '$scope', '$state', '$uibModal', '$stateParams',
 
                     this.isSavingEnvironment = false;
                     this.isRelativeMouse = false;
+                    this.envDescription = `<p>Revision date: ${new Date().toISOString()}</p><p><br></p>`;
 
                     this.saveEnvironment = async function() {
                         this.isSavingEnvironment = true;

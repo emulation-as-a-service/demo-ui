@@ -262,8 +262,8 @@
         <div class="panel panel-default">
             <div class="panel-body">
                 <div >
-                    <span ng-if="!editEnvCtrl.editConfig">{{editEnvCtrl.nativeConfig}} <a href="" ng-click="editEnvCtrl.editConfig=true"><i
-                        class="glyphicon glyphicon-pencil"></i></a></span>
+                    <pre ng-if="!editEnvCtrl.editConfig">{{editEnvCtrl.nativeConfig}} <a href="" ng-click="editEnvCtrl.editConfig=true"><i
+                        class="glyphicon glyphicon-pencil"></i></a></pre>
                 </div>
                 <textarea ng-if="editEnvCtrl.editConfig" type="text" class="form-control"
                     ng-model="editEnvCtrl.nativeConfig"></textarea>
@@ -279,20 +279,28 @@
         <p>
             <label>{{'EDITENV_REVS' | translate}}:</label>
         </p>
-        <ul id="editEnvSoftwareList">
-            <li>current version <a href="#" ng-click="editEnvCtrl.fork(editEnvCtrl.env.envId)"> [ fork ] </a></li>
+        <div id="editEnvSoftwareList">
+            <div class="panel panel-default">
+                <div class="panel-heading">Current version</div>
+                <div class="panel-body">
+                    <ng-bind-html ng-bind-html="editEnvCtrl.envDescription"></ng-bind-html>
+                </div>
+                <div class="panel-footer">
+                    <button type=button" class="btn btn-default" ng-click="editEnvCtrl.fork(editEnvCtrl.env.envId)">Fork</button>
+                </div>
+            </div>
 
-            <li ng-repeat="revision in editEnvCtrl.env.revisions">
-                <ng-bind-html ng-bind-html="revision.text">
-                </ng-bind-html>
-                <a href="#" ng-click="editEnvCtrl.fork(revision.id)"> [ fork ] </a>
-
-                <a ng-if="editEnvCtrl.env.archive === 'default'"
-                    style="cursor: pointer;" ng-click="editEnvCtrl.revert(editEnvCtrl.env.envId, revision.id)"> [
-                    revert to this version ] </a>
-
-            </li>
-        </ul>
+            <div class="panel panel-default" ng-repeat="revision in editEnvCtrl.env.revisions">
+                <div class="panel-body">
+                    <ng-bind-html ng-bind-html="revision.text"></ng-bind-html>
+                </div>
+                <div class="panel-footer">
+                    <button type="button" class="btn btn-default" ng-click="editEnvCtrl.fork(revision.id)">Fork</button>
+                    <button type="button" class="btn btn-default" ng-if="editEnvCtrl.env.archive === 'default'"
+                        ng-click="editEnvCtrl.revert(editEnvCtrl.env.envId, revision.id)">Revert to this version</button>
+                </div>
+            </div>
+        </div>
     </div>
 </uib-tab>
 </uib-tabset>

@@ -1,4 +1,4 @@
-{  
-  "presets": ["es2015"],
-  "plugins": ["angularjs-annotate"]
+{
+  "presets":["@babel/preset-env"],
+  "plugins": ["angularjs-annotate", ["@babel/plugin-proposal-decorators", { "legacy": true } ], "@babel/plugin-transform-modules-commonjs"],
 }

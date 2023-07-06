@@ -176,11 +176,11 @@ module.exports = ['$state', '$scope', 'localConfig', '$uibModal', 'Images', 'gro
                 <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="single-button">
                   <li role="menuitem">
                     <a class="dropdown-content"
-                        ng-click="ctrl.patchDlg(data.imageId)">generalize</a></li>
+                        ng-click="ctrl.patchDlg(data.imageId)">Generalize</a></li>
             
                   <li role="menuitem">
                     <a class="dropdown-content"
-                        ng-click="ctrl._delete(data.imageId)">delete</a></li>
+                        ng-click="ctrl._delete(data.imageId)">Delete</a></li>
                 </ul>
              </div>`;
         return imageActions;
