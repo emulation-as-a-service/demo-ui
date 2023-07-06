@@ -19,17 +19,22 @@ jobs:
           node-version: 16
       - name: Build Frontend
         run: ./build.sh
+      - name: Zip Frontend
+        run: zip eaas_ui.zip eaas-frontend-admin/dist landing-page/dist
+        shell: bash
+      - name: Add UI location to env
+        run: echo "ui_artifact_url=$(pwd)/eaas_ui.zip" >> "$GITHUB_ENV"
+        shell: bash
 
-      # TODO check if branch exists (script) and use it, otherwise use HEAD (eaas-server@branch-name)
       - name: Check if backend branch with same name exists
         run: |
-          check_branch=$(git ls-remote --heads https://github.com/emulation-as-a-service/eaas-server.git ${{ github.ref_name }})
+          check_branch="$"(git ls-remote --heads https://github.com/emulation-as-a-service/eaas-server.git ${{ github.ref_name }})"
           echo "Branch:"
           echo "$check_branch"
           if [[ -z ${check_branch} ]]; then
-              echo "SERVER_BRANCH=''" >> $GITHUB_ENV
+              echo "SERVER_BRANCH=''" >> "$GITHUB_ENV"
           else
-              echo "SERVER_BRANCH=${{ github.ref_name }}" >> $GITHUB_ENV
+              echo "SERVER_BRANCH=${{ github.ref_name }}" >> "$GITHUB_ENV"
           fi
       - uses: actions/checkout@v3
         with:
@@ -39,11 +44,10 @@ jobs:
       - name: Build Server
         run: ./compile-locally.sh # eaas-server/src/ear/target/eaas-server.ear
         working-directory: ./eaas-server
+      - name: Add EAR location to env
+        run: echo "eaas_server_ear_url=$(pwd)/eaas-server/src/ear/target/eaas-server.ear" >> "$GITHUB_ENV"
+        shell: bash
       - uses: emulation-as-a-service/eaas-installer@github-actions
-        with:
-          isBackend: false
-          branch: ${GITHUB_HEAD_REF}
-          # TODO Installer should use eaas-frontend-admin/dist and eaas-server/src/ear/target/eaas-server.ear for deployment
       - name: Install dependencies
         run: npm ci
         working-directory: ./playwright-tests
@@ -55,10 +59,6 @@ jobs:
         working-directory: ./playwright-tests
       - uses: actions/upload-artifact@v3
         with:
-          path: "./playwright-tests/*.png"
-      - uses: actions/upload-artifact@v3
-        if: always()
-        with:
           name: playwright-report
-          path: playwright-report/
+          path: "./playwright-tests/*.png"
           retention-days: 30
