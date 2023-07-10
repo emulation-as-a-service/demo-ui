@@ -65,3 +65,10 @@ jobs:
           name: playwright-report
           path: "./playwright-tests/*.png"
           retention-days: 30
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: playwright trace
+          path: "./playwright-tests/trace.zip"
+          retention-days: 30
+
