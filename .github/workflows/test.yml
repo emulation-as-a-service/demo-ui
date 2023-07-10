@@ -69,6 +69,6 @@ jobs:
         if: always()
         with:
           name: playwright trace
-          path: "*/trace.zip"
+          path: "./playwright-tests/test-results/start-emulator-Example-Test-1-chromium/trace.zip"
           retention-days: 30
 
