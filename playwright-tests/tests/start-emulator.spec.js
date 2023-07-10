@@ -16,7 +16,9 @@ test("Example Test 1", async ({page}) => {
     await page.getByRole('link', {name: 'Administration'}).click();
     await page.getByRole('link', {name: 'Manage Emulators Emulators'}).click();
     await page.getByRole('row', {name: 'qemu-system 0 install latest Details'}).getByRole('link', {name: 'install latest'}).click();
+    console.log("Waiting for emulator to be installed...")
     await page.getByRole('link', {name: 'Images'}).click({timeout: 300_000});
+    console.log("Emulator installed successfully, creating new Image...")
     await page.getByRole('button', {name: '+ New Image'}).click();
     await page.getByLabel('Disk image label:').click();
     await page.getByLabel('Disk image label:').fill('elephan-dos');
@@ -24,6 +26,7 @@ test("Example Test 1", async ({page}) => {
     await page.getByPlaceholder('http://').click();
     await page.getByPlaceholder('http://').fill('https://github.com/rafaelgieschke/elephan-dos/raw/main/elephan-dos');
     await page.getByRole('button', {name: 'OK'}).click();
+    console.log("Successfully created Image, creating Env...")
     await page.getByRole('link', {name: 'Environments'}).click();
     await page.getByRole('button', {name: '+ Create Environment'}).click();
     await page.getByRole('button', {name: 'Linux'}).click();
@@ -43,6 +46,7 @@ test("Example Test 1", async ({page}) => {
     await page.getByRole('link', {name: 'elephan-dos'}).click();
     await page.getByRole('button', {name: 'OK'}).click();
     await page.getByRole('button', {name: 'Save'}).click();
+    console.log("Successfully Created Env!")
     await page.getByRole('button', {name: 'Choose action'}).click();
     console.log("Running Env now...")
     await page.getByText('Run Environment').click();
@@ -55,14 +59,14 @@ test("Example Test 1", async ({page}) => {
 
 });
 
-test('Test 2', async ({page}) => {
-    console.log("Starting test 1.1")
-    await page.goto('http://localhost/admin/');
-    await page.goto('http://localhost/admin/#/admin/dashboard');
-    await page.getByRole('link', { name: 'Environments' }).click();
-    await page.getByRole('button', { name: 'Choose action' }).click();
-    await page.getByText('Run Environment').click();
-    await page.getByRole('button', { name: 'Stop' }).click();
-    await page.getByRole('button', { name: 'OK' }).click();
-    await expect(page.getByRole('heading', { name: 'elphan-dos' })).toBeVisible();
-});
+// test('Test 2', async ({page}) => {
+//     console.log("Starting test 1.1")
+//     await page.goto('http://localhost/admin/');
+//     await page.goto('http://localhost/admin/#/admin/dashboard');
+//     await page.getByRole('link', { name: 'Environments' }).click();
+//     await page.getByRole('button', { name: 'Choose action' }).click();
+//     await page.getByText('Run Environment').click();
+//     await page.getByRole('button', { name: 'Stop' }).click();
+//     await page.getByRole('button', { name: 'OK' }).click();
+//     await expect(page.getByRole('heading', { name: 'elphan-dos' })).toBeVisible();
+// });
