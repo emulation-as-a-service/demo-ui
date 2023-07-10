@@ -14,8 +14,14 @@ test("Example Test 1", async ({page}) => {
     console.log("Installing Emulator...")
     await page.getByRole('link', {name: 'Environments'}).click();
     await page.getByRole('link', {name: 'Administration'}).click();
+    let buffer = await page.screenshot();
+    console.log("Before manage emus:", buffer.toString('base64'));
     await page.getByRole('link', {name: 'Manage Emulators Emulators'}).click();
+    buffer = await page.screenshot();
+    console.log("Before details:", buffer.toString('base64'));
     await page.getByRole('row', {name: 'qemu-system 0 install latest Details'}).getByRole('link', {name: 'install latest'}).click();
+    buffer = await page.screenshot();
+    console.log("After details:", buffer.toString('base64'));
     console.log("Waiting for emulator to be installed...")
     await page.getByRole('link', {name: 'Images'}).click({timeout: 300_000});
     console.log("Emulator installed successfully, creating new Image...")
