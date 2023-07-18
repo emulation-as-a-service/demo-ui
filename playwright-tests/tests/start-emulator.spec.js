@@ -19,7 +19,7 @@ test("Example Test 1", async ({page}) => {
     await page.getByRole('link', {name: 'Manage Emulators Emulators'}).click();
     buffer = await page.screenshot();
     console.log("Before details:", buffer.toString('base64'));
-    await page.getByRole('row', {name: 'qemu-system 0 install latest Details'}).getByRole('link', {name: 'install latest'}).click();
+    await page.getByRole('row', {name: 'qemu-system 0 install latest Details'}).getByRole('button', {name: 'install latest'}).click();
     buffer = await page.screenshot();
     console.log("After details:", buffer.toString('base64'));
     console.log("Waiting for emulator to be installed...")
@@ -65,14 +65,14 @@ test("Example Test 1", async ({page}) => {
 
 });
 
-// test('Test 2', async ({page}) => {
-//     console.log("Starting test 1.1")
-//     await page.goto('http://localhost/admin/');
-//     await page.goto('http://localhost/admin/#/admin/dashboard');
-//     await page.getByRole('link', { name: 'Environments' }).click();
-//     await page.getByRole('button', { name: 'Choose action' }).click();
-//     await page.getByText('Run Environment').click();
-//     await page.getByRole('button', { name: 'Stop' }).click();
-//     await page.getByRole('button', { name: 'OK' }).click();
-//     await expect(page.getByRole('heading', { name: 'elphan-dos' })).toBeVisible();
-// });
+test('Test 2', async ({page}) => {
+    console.log("Starting test 1.1")
+    await page.goto('http://localhost/admin/');
+    await page.goto('http://localhost/admin/#/admin/dashboard');
+    await page.getByRole('link', { name: 'Environments' }).click();
+    await page.getByRole('button', { name: 'Choose action' }).click();
+    await page.getByText('Run Environment').click();
+    await page.getByRole('button', { name: 'Stop' }).click();
+    await page.getByRole('button', { name: 'OK' }).click();
+    await expect(page.getByRole('heading', { name: 'elphan-dos' })).toBeVisible();
+});
