@@ -7,7 +7,7 @@ const origin = new URL(domain).origin;
 const timeout = time_ms => new Promise(r => setTimeout(r, time_ms));
 
 
-test("Example Test 1", async ({page}) => {
+test("Test Setup Emulator, Image and Environment", async ({page}) => {
     console.log("Starting tests...")
     await page.goto(`${origin}/admin/`);
     await page.goto(`${origin}/admin/#/admin/dashboard`);
@@ -65,7 +65,7 @@ test("Example Test 1", async ({page}) => {
 
 });
 
-test('Test 2', async ({page}) => {
+test('Test Environment can be run', async ({page}) => {
     console.log("Starting test 1.1")
     await page.goto('http://localhost/admin/');
     await page.goto('http://localhost/admin/#/admin/dashboard');
@@ -77,7 +77,7 @@ test('Test 2', async ({page}) => {
     await expect(page.getByRole('heading', { name: 'elphan-dos' })).toBeVisible();
 });
 
-test('Test 2', async ({page}) => {
+test('Test Ghost Cursor Field', async ({page}) => {
     console.log("Starting test 1.2 (Hide ghust cursor setting)")
     await page.goto('http://localhost/admin/');
     await page.goto('http://localhost/admin/#/admin/dashboard');
