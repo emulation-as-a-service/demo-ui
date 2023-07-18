@@ -76,3 +76,17 @@ test('Test 2', async ({page}) => {
     await page.getByRole('button', { name: 'OK' }).click();
     await expect(page.getByRole('heading', { name: 'elphan-dos' })).toBeVisible();
 });
+
+test('Test 2', async ({page}) => {
+    console.log("Starting test 1.2 (Hide ghust cursor setting)")
+    await page.goto('http://localhost/admin/');
+    await page.goto('http://localhost/admin/#/admin/dashboard');
+    await page.getByRole('link', { name: 'Environments' }).click();
+    await page.getByRole('button', { name: 'Choose action' }).click();
+    await page.getByRole('menuitem', { name: 'Details' }).locator('a').click();
+    await page.locator('div:nth-child(6) > .ng-pristine').check();
+    await page.getByRole('link', { name: 'Save' }).click();
+    await expect(page.locator('div:nth-child(6) > .ng-pristine')).toBeChecked();
+
+});
+
