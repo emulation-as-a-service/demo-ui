@@ -62,13 +62,11 @@ jobs:
         working-directory: ./playwright-tests
       - uses: actions/upload-artifact@v3
         with:
-          name: playwright-report
+          name: screenshots
           path: "./playwright-tests/*.png"
           retention-days: 30
       - uses: actions/upload-artifact@v3
-        if: always()
         with:
-          name: playwright trace
-          path: "./playwright-tests/test-results/start-emulator-Example-Test-1-chromium/trace.zip"
+          name: playwright-report
+          path: "./playwright-tests/playwright-report"
           retention-days: 30
-
