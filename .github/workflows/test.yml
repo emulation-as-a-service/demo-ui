@@ -76,5 +76,5 @@ jobs:
         if: always()
         with:
           name: json-report
-          path: "./playwright-tests/json-report/"
+          path: "./playwright-tests/json-report.json"
           retention-days: 30

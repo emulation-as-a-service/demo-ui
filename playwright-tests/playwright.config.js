@@ -7,10 +7,7 @@ const {defineConfig, devices} = require('@playwright/test');
  */
 // require('dotenv').config();
 
-/**
- * @see https://playwright.dev/docs/test-configuration
- */
-module.exports = defineConfig({
+let config = {
     testDir: './tests',
     /* Maximum time one test can run for. */
     timeout: 800 * 1000,
@@ -30,10 +27,10 @@ module.exports = defineConfig({
     /* Opt out of parallel tests on CI. */
     workers: process.env.CI ? 1 : undefined,
     /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-    reporter: [+
+    reporter: [
         ['html', {outputFolder: 'html-report'}],
-        ['json', {outputFolder: 'json-report'}],
-        [process.env.CI ? 'github' : undefined]],
+        ['json', {outputFile: 'json-report.json'}]
+    ],
     /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
     use: {
         /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
@@ -91,5 +88,17 @@ module.exports = defineConfig({
     //   command: 'npm run start',
     //   port: 3000,
     // },
-});
+};
+
+if (process.env.CI) {
+    config.reporter.push(['github']);
+}
+
+/**
+ * @see https://playwright.dev/docs/test-configuration
+ */
+module.exports = defineConfig(config);
+
+
+
 
