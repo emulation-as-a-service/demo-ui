@@ -10,7 +10,7 @@ const {defineConfig, devices} = require('@playwright/test');
 let config = {
     testDir: './tests',
     /* Maximum time one test can run for. */
-    timeout: 800 * 1000,
+    timeout: 600 * 1000,
     expect: {
         /**
          * Maximum time expect() should wait for the condition to be met.
@@ -22,8 +22,8 @@ let config = {
     fullyParallel: true,
     /* Fail the build on CI if you accidentally left test.only in the source code. */
     forbidOnly: !!process.env.CI,
-    /* Retry on CI only  FIXME dont retry at all*/
-    retries: process.env.CI ? 1 : 0,
+    /* Retry on CI only  FIXME Testing = no retries, Finalized CI should retry!*/
+    retries: process.env.CI ? 0 : 0,
     /* Opt out of parallel tests on CI. */
     workers: process.env.CI ? 1 : undefined,
     /* Reporter to use. See https://playwright.dev/docs/test-reporters */

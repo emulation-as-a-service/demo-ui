@@ -80,7 +80,7 @@ test('Test Ghost Cursor Field', async ({page}) => {
     await page.getByRole('link', { name: 'Environments' }).click();
     await page.getByRole('button', { name: 'Choose action' }).click();
     await page.getByRole('menuitem', { name: 'Details' }).locator('a').click();
-    await page.screenshot({path: "test-results/env_overview.png"});
+    await page.screenshot({path: "test-results/env_overview.png", fullPage: true});
     await page.locator('div:nth-child(6) > .ng-pristine').check();
     await page.getByRole('link', { name: 'Save' }).click();
     await expect(page.locator('div:nth-child(6) > .ng-pristine')).toBeChecked();
