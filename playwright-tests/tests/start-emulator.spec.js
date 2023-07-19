@@ -14,14 +14,10 @@ test("Test Setup Emulator, Image and Environment", async ({page}) => {
     console.log("Installing Emulator...")
     await page.getByRole('link', {name: 'Environments'}).click();
     await page.getByRole('link', {name: 'Administration'}).click();
-    let buffer = await page.screenshot();
-    console.log("Before manage emus:", buffer.toString('base64'));
+    await page.screenshot({path: "test-results/administration.png"});
     await page.getByRole('link', {name: 'Manage Emulators Emulators'}).click();
-    buffer = await page.screenshot();
-    console.log("Before details:", buffer.toString('base64'));
+    await page.screenshot({path: "test-results/emulators.png"});
     await page.getByRole('row', {name: 'qemu-system 0 install latest Details'}).getByRole('button', {name: 'install latest'}).click();
-    buffer = await page.screenshot();
-    console.log("After details:", buffer.toString('base64'));
     console.log("Waiting for emulator to be installed...")
     await page.getByRole('link', {name: 'Images'}).click({timeout: 300_000});
     console.log("Emulator installed successfully, creating new Image...")
@@ -58,7 +54,7 @@ test("Test Setup Emulator, Image and Environment", async ({page}) => {
     await page.getByText('Run Environment').click();
 
     await timeout(40_000);
-    await page.screenshot({path: "environment.png"});
+    await page.screenshot({path: "test-results/environment.png"});
     await page.getByRole('button', { name: 'Stop' }).click();
     await page.getByRole('button', { name: 'OK' }).click();
     console.log("Successfully stopped...")
@@ -84,6 +80,7 @@ test('Test Ghost Cursor Field', async ({page}) => {
     await page.getByRole('link', { name: 'Environments' }).click();
     await page.getByRole('button', { name: 'Choose action' }).click();
     await page.getByRole('menuitem', { name: 'Details' }).locator('a').click();
+    await page.screenshot({path: "test-results/env_overview.png"});
     await page.locator('div:nth-child(6) > .ng-pristine').check();
     await page.getByRole('link', { name: 'Save' }).click();
     await expect(page.locator('div:nth-child(6) > .ng-pristine')).toBeChecked();
