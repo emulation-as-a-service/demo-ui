@@ -11,9 +11,6 @@ jobs:
       - name: Print branch name
         shell: bash
         run: echo "${GITHUB_HEAD_REF}"
-      - uses: actions/checkout@v3
-        with:
-          submodules: 'true' # TODO recursive? True seems to work however
       - uses: actions/setup-node@v3
         with:
           node-version: 16
