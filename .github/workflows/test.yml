@@ -48,7 +48,7 @@ jobs:
         run: ./compile-locally.sh # eaas-server/src/ear/target/eaas-server.ear
         working-directory: ./eaas-server
       - name: Add EAR location to env
-        run: echo "eaas_server_ear_url=file://$(pwd)/eaas-server/src/ear/target/eaas-server.ear" >> "$GITHUB_ENV"
+        run: echo "eaas_server_ear_url=$(pwd)/eaas-server/src/ear/target/eaas-server.ear" >> "$GITHUB_ENV"
         shell: bash
       - uses: emulation-as-a-service/eaas-installer@github-actions
       - name: Install dependencies
