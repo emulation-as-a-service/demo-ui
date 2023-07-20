@@ -74,7 +74,7 @@ test('Test Environment can be run', async ({page}) => {
 });
 
 test('Test Ghost Cursor Field', async ({page}) => {
-    console.log("Starting test 1.2 (Hide ghust cursor setting)")
+    console.log("Starting test 1.2 (Hide ghost cursor setting)")
     await page.goto('http://localhost/admin/');
     await page.goto('http://localhost/admin/#/admin/dashboard');
     await page.getByRole('link', { name: 'Environments' }).click();

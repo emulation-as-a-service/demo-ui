@@ -78,3 +78,9 @@ jobs:
           name: json-report
           path: "./playwright-tests/json-report.json"
           retention-days: 30
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: eaas-server-logs
+          path: "/eaas-home/log/server/server.log"
+          retention-days: 30
