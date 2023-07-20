@@ -20,7 +20,7 @@ jobs:
       - name: Build Frontend
         run: ./build.sh
       - name: Zip Frontend
-        run: zip eaas_ui.zip eaas-frontend-admin/dist landing-page/dist
+        run: zip -r eaas_ui.zip eaas-frontend-admin/dist landing-page/dist
         shell: bash
       - name: Add UI location to env
         run: echo "ui_artifact_url=$(pwd)/eaas_ui.zip" >> "$GITHUB_ENV"
