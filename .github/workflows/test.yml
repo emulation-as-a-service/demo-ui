@@ -51,9 +51,11 @@ jobs:
 #        run: echo "eaas_server_ear_url=$(pwd)/eaas-server/src/ear/target/eaas-server.ear" >> "$GITHUB_ENV"
 #        shell: bash
       - uses: emulation-as-a-service/eaas-installer@github-actions
-        with:
+        env:
           eaas_server_url: "./eaas-server/src/ear/target/eaas-server.ear"
           eaas_ui_url: "./eaas_ui.zip"
+          wait_for_eaas_server: true
+
       - name: Install dependencies
         run: npm ci
         working-directory: ./playwright-tests
