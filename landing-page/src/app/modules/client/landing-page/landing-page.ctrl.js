@@ -375,17 +375,24 @@ module.exports = ['$state', '$sce', '$http', '$stateParams', '$translate', '$uib
                         return;
                     }
 
+                    const sparams = new URLSearchParams({
+                        'filename': vm.uploadFiles[i].filename,
+                    });
+
                     // Have to remember the chosen destination and action for the file
-                    Upload.upload({
-                        url: localConfig.data.eaasBackendURL + "upload",
+                    Upload.http({
+                        url: localConfig.data.eaasBackendURL + "upload?" + sparams,
+                        headers : {
+                            'content-type': "application/octet-stream",
+                        },
                         name: vm.uploadFiles[i].filename,
                         destination: vm.uploadFiles[i].destination,
                         action: vm.uploadFiles[i].action,
                         compression_format: vm.uploadFiles[i].compression_format,
-                        data: {file: vm.uploadFiles[i].file}
+                        data: vm.uploadFiles[i].file
                     }).then(function (resp) {
                         // Push the uploaded file to the input list
-                        console.log('Success ' + resp.config.data.file.name + 'uploaded. Response: ' + resp.data);
+                        console.log('Success ' + resp.config.data.name + 'uploaded. Response: ' + resp.data);
                         if (vm.env.isContainer)
                             $scope.containerLandingCtrl.inputs.push({
                                 url: resp.data.uploads[0],
@@ -411,7 +418,7 @@ module.exports = ['$state', '$sce', '$http', '$stateParams', '$translate', '$uib
                         });
                     }, function (evt) {
                         var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-                        console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
+                        console.log('progress: ' + progressPercentage + '% ' + evt.config.data.name);
                     });
                 }
             };

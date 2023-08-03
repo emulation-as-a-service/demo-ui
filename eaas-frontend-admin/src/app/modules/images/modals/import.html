@@ -29,9 +29,9 @@
                 <hr>
 
                 <div class="form-group">
-                    <input type="radio" name="mode" ng-model="importDlgCtrl.mode" value="upload" id="_upload"> <label for="_upload">Import image</label>
+                    <input type="radio" name="mode" ng-model="importDlgCtrl.mode" value="import" id="_import"> <label for="_import">Import image</label>
                 </div>
-                <div class="form-group" ng-if="importDlgCtrl.mode === 'upload'">
+                <div class="form-group" ng-if="importDlgCtrl.mode === 'import'">
                     Supported disk image formats:<br>
                     <ul>
                         <li>RAW disk images</li>
@@ -46,8 +46,8 @@
                         <span>{{'SW_NEW_IMAGE_HD_URL_LBL' | translate}}</span>
                     </label>
                     <input placeholder="http://" type="text" class="form-control" ng-model="importDlgCtrl.hdurl" id="_hdurl"
-                        ng-disabled="importDlgCtrl.mode !== 'upload'"
-                        ng-required="importDlgCtrl.mode == 'upload'" />
+                        ng-disabled="importDlgCtrl.mode !== 'import'"
+                        ng-required="importDlgCtrl.mode == 'import'" />
                 </div>
                 <hr>
                 <div class="form-group">
@@ -61,7 +61,21 @@
                         ng-disabled="importDlgCtrl.mode !== 'rom'"
                         ng-required="importDlgCtrl.mode == 'rom'"/>
                 </div>
-            
+                <hr>
+                <div class="form-group">
+                    <input type="radio" name="mode" ng-model="importDlgCtrl.mode" value="upload" id="_upload"> <label for="_upload">Upload image</label>
+                </div>
+
+                <div class="form-group" ng-if="importDlgCtrl.mode === 'upload'">
+                <button type="button" class="btn btn-default"
+                        ngf-select=""
+                        ng-model="importDlgCtrl.localFile" ngf-multiple="false">
+                    Choose
+                </button>
+                <label ng-if="importDlgCtrl.localFile"> File: {{importDlgCtrl.localFile.name}} </label>
+                </div>
+
+
             </div>
         </div>
 </div>

@@ -81,6 +81,7 @@ module.exports = ["$http", "$rootScope", "$scope", "$state", "$stateParams", "En
             vm.uiOptions.useWebRTC = vm.env.useWebRTC;
             vm.uiOptions.canProcessAdditionalFiles = vm.env.canProcessAdditionalFiles;
             vm.uiOptions.shutdownByOs = vm.env.shutdownByOs;
+            vm.uiOptions.disableGhostCursor = vm.env.disableGhostCursor;
             vm.userTag = vm.env.userTag;
             vm.drives = new Drives(vm.env.drives);
             vm.linuxRuntime = vm.env.linuxRuntime;
@@ -237,6 +238,7 @@ module.exports = ["$http", "$rootScope", "$scope", "$state", "$stateParams", "En
                    enablePrinting: vm.uiOptions.enablePrinting,
                    enableRelativeMouse: this.uiOptions.enableRelativeMouse,
                    shutdownByOs: this.uiOptions.shutdownByOs,
+                   disableGhostCursor: this.uiOptions.disableGhostCursor,
                    os: this.os ? this.os.id : null,
                    userTag: this.userTag,
                    useXpra : this.uiOptions.useXpra,

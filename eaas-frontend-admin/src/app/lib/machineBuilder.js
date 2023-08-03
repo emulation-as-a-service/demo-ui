@@ -16,7 +16,8 @@ export class MachineBuilder {
             useXpra : false,
             enableRelativeMouse :false,
             xpraEncoding : null,
-            shutdownByOs : false
+            shutdownByOs : false,
+            disableGhostCursor: false
         };
         this.rom = undefined;
         this.romLabel = undefined;
@@ -57,6 +58,8 @@ export class MachineBuilder {
                 useXpra: this.uiOptions.useXpra,
                 xpraEncoding: this.uiOptions.xpraEncoding,
                 shutdownByOs: this.uiOptions.shutdownByOs,
+                disableGhostCursor: this.uiOptions.disableGhostCursor
+
             }, this.idToken);
         return result;
     }

@@ -237,6 +237,10 @@ export class EaasClientHelper
                 }
             }
             clientOptions.setXpraEncoding(emilEnvironment.xpraEncoding);
+            if (emilEnvironment.disableGhostCursor){
+                console.log("Disabling ghost cursor!")
+                clientOptions.ghostCursor = "none";
+            }
             console.log("Successfully configured clientOptions!");
             return clientOptions;
         }

@@ -59,7 +59,7 @@ module.exports = [ '$scope', '$state','$http', '$stateParams', 'eaasClient', 'ch
 
             for(let i of inputs)
                 input.addContent(i);
-            
+
             if (vm.env.runtimeId) {
                 let machine = EaasClientHelper.createMachine(vm.env.runtimeId, "public");
                 machine.setLinuxRuntime({
@@ -74,9 +74,9 @@ module.exports = [ '$scope', '$state','$http', '$stateParams', 'eaasClient', 'ch
 
                 let clientOptions = await EaasClientHelper.clientOptions(vm.env.runtimeId);
                 $state.go("admin.emuView",  {
-                    components: components, 
+                    components: components,
                     clientOptions: clientOptions
-                }, {}); 
+                }, {});
             } else {
                 $state.go('error', { errorMsg: { title: "Error", message: "No container runtime configured" } });
             }
@@ -132,17 +132,27 @@ module.exports = [ '$scope', '$state','$http', '$stateParams', 'eaasClient', 'ch
                                 return;
                             }
 
-                            // Have to remember the chosen destination and action for the file
-                            Upload.upload({
-                                url: localConfig.data.eaasBackendURL + "upload",
-                                name: this.uploadFiles[i].filename,
-                                destination: this.uploadFiles[i].destination,
-                                action: this.uploadFiles[i].action,
-                                data: {file: this.uploadFiles[i].file}
+                            //TODO not selecting runtime -> cant store env, needs popup
+
+                            const sparams = new URLSearchParams({
+                                'filename': this.uploadFiles[i].file.name,
+                            });
+
+                            Upload.http({
+                                url: localConfig.data.eaasBackendURL + "upload?" + sparams,
+                                headers : {
+                                    'content-type': "application/octet-stream",
+                                },
+                                data: this.uploadFiles[i].file,
+                                // Have to remember the chosen destination and action for the file
+                                destination : this.uploadFiles[i].destination,
+                                action : this.uploadFiles[i].action,
+                                name : this.uploadFiles[i].filename
+
                             }).then(function (resp) {
                                 // Push the uploaded file to the input list
-                                console.log('Success ' + resp.config.data.file.name + 'uploaded. Response: ' + resp.data);
-                                
+                                console.log('Success ' + name + 'uploaded. Response: ', resp);
+
                                 let contentBuilder = new InputContentBuilder(resp.data.uploads[0]);
                                 contentBuilder.setName(resp.config.destination);
                                 contentBuilder.setAction(resp.config.action);
@@ -159,7 +169,7 @@ module.exports = [ '$scope', '$state','$http', '$stateParams', 'eaasClient', 'ch
                                 });
                             }, function (evt) {
                                 var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-                                console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
+                                console.log('progress: ' + progressPercentage + '% ' + evt.config.name);
                             });
                         }
                     };

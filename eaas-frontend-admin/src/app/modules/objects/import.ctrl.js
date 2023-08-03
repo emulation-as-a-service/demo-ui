@@ -17,7 +17,6 @@ module.exports = ["$http", "$scope", "$state", "$stateParams", "growl", "localCo
 
         $scope.getMediaTypeLabel = function(t)
         {
-            console.log("xxx");
             console.log(mediaTypes[t]);
             return mediaTypes[t];
         }
@@ -177,16 +176,25 @@ module.exports = ["$http", "$scope", "$state", "$stateParams", "growl", "localCo
                var uploadCnt = 0;
                for (var i = 0; i < vm.selectedFiles.length; i++) {
                  uploadCnt++;
-                 Upload.upload({
-                   url: localConfig.data.eaasBackendURL + "upload",
-                         data: {file: vm.selectedFiles[i].file, uploadId: i}
-                     })
+
+                 const sparams = new URLSearchParams({
+                   'filename': vm.selectedFiles[i].file.name,
+                 });
+
+                 Upload.http({
+                   url: localConfig.data.eaasBackendURL + "upload?" + sparams,
+                   headers : {
+                     'content-type': "application/octet-stream",
+                   },
+                   data: vm.selectedFiles[i].file
+                   })
                      .then(function (resp) {
-                         console.log('Success ' + resp.config.data.file.name + 'uploaded. Response: ' + resp.data.userDataUrl);
+                         console.log("Response", resp);
+                         console.log('Success ' + resp.config.data.name + 'uploaded. Response: ' + resp.data.userDataUrl);
                          uploadCnt--;
-                         let deviceId =  vm.selectedFiles.find(x => x.file.name === resp.config.data.file.name).mediaType;
+                         let deviceId =  vm.selectedFiles.find(x => x.file.name === resp.config.data.name).mediaType;
                          let fileInfo = { 
-                             filename: resp.config.data.file.name, 
+                             filename: resp.config.data.name,
                              url: resp.data.uploads[0], 
                              deviceId: deviceId, 
                             };
@@ -197,12 +205,13 @@ module.exports = ["$http", "$scope", "$state", "$stateParams", "growl", "localCo
                      }, function (resp) {
                          console.log('Error status: ' + resp.status);
                          modal.close();
-                         $state.go('error', {errorMsg: {title: "Load Environments Error " + resp.data.status, message: resp.data.message}});
+                         $state.go('error', {errorMsg: {title: "Load Environments Error " + resp.load.data.status, message: resp.load.data.message}});
                      }, function (evt) {
+                         console.log("EVT:", evt)
                          var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-                         console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
-                         uploadInfo.title = "Uploading Object(s) " + evt.config.data.file.name;
-                         uploadInfo.msg = 'upload: ' + evt.config.data.file.name + ' (' + progressPercentage + '%)';
+                         console.log('progress: ' + progressPercentage + '% ' + evt.config.data.name);
+                         uploadInfo.title = "Uploading Object(s) " + evt.config.data.name;
+                         uploadInfo.msg = 'upload: ' + evt.config.data.name + ' (' + progressPercentage + '%)';
                      });
                }
            }

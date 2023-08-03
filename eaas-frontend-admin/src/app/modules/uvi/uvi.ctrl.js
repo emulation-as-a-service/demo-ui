@@ -131,13 +131,20 @@ module.exports = ["$http", "$state", "localConfig", "$timeout", "Upload", "$uibM
     vm.uploadJob = function(_filename, _uploadInfo)
     {
         let promise = new Promise(function(resolve, reject) {
-            Upload.upload({
-                url: localConfig.data.eaasBackendURL + "upload",
-                    data: {file: _filename}
-                })
+            const sparams = new URLSearchParams({
+                'filename': _filename.name,
+            });
+
+            Upload.http({
+                url: localConfig.data.eaasBackendURL + "upload?" + sparams,
+                data: _filename,
+                headers : {
+                    'content-type': "application/octet-stream",
+                },
+            })
                 .then(function (resp) {
                     let fileInfo = {
-                        filename: resp.config.data.file.name,
+                        filename: resp.config.data.name,
                         url: resp.data.uploads[0],
                     }
                     resolve(fileInfo);
@@ -147,8 +154,8 @@ module.exports = ["$http", "$state", "localConfig", "$timeout", "Upload", "$uibM
                 }, function (evt) {
                     if(_uploadInfo) {
                         var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-                        _uploadInfo.title = "Uploading Object(s) " + evt.config.data.file.name;
-                        _uploadInfo.msg = 'upload: ' + evt.config.data.file.name + ' (' + progressPercentage + '%)';
+                        _uploadInfo.title = "Uploading Object(s) " + evt.config.data.name;
+                        _uploadInfo.msg = 'upload: ' + evt.config.data.name + ' (' + progressPercentage + '%)';
                     }       
                 }
                 );
