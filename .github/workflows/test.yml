@@ -5,7 +5,7 @@ on:
 
 jobs:
   test:
-    timeout-minutes: 60
+    timeout-minutes: 45
     runs-on: ubuntu-20.04
     steps:
       - name: Print branch name
@@ -13,18 +13,18 @@ jobs:
         run: echo "${GITHUB_HEAD_REF}"
       - uses: actions/checkout@v3
         with:
-          submodules: 'true' # TODO recursive? True seems to work however
+          submodules: 'true'
       - uses: actions/setup-node@v3
         with:
           node-version: 16
       - name: Build Frontend
         run: ./build.sh
       - name: Zip Frontend
-        run: zip eaas_ui.zip eaas-frontend-admin/dist landing-page/dist
+        run: zip -r eaas_ui.zip eaas-frontend-admin/dist landing-page/dist
         shell: bash
-      - name: Add UI location to env
-        run: echo "ui_artifact_url=$(pwd)/eaas_ui.zip" >> "$GITHUB_ENV"
-        shell: bash
+#      - name: Add UI location to env
+#        run: echo "ui_artifact_url=$(pwd)/eaas_ui.zip" >> "$GITHUB_ENV"
+#        shell: bash
 
       - name: Check if backend branch with same name exists
         run: |
@@ -47,10 +47,15 @@ jobs:
       - name: Build Server
         run: ./compile-locally.sh # eaas-server/src/ear/target/eaas-server.ear
         working-directory: ./eaas-server
-      - name: Add EAR location to env
-        run: echo "eaas_server_ear_url=$(pwd)/eaas-server/src/ear/target/eaas-server.ear" >> "$GITHUB_ENV"
-        shell: bash
+#      - name: Add EAR location to env
+#        run: echo "eaas_server_ear_url=$(pwd)/eaas-server/src/ear/target/eaas-server.ear" >> "$GITHUB_ENV"
+#        shell: bash
       - uses: emulation-as-a-service/eaas-installer@github-actions
+        env:
+          eaas_server_url: "./eaas-server/src/ear/target/eaas-server.ear"
+          eaas_ui_url: "./eaas_ui.zip"
+          wait_for_eaas_server: true
+
       - name: Install dependencies
         run: npm ci
         working-directory: ./playwright-tests
@@ -77,4 +82,10 @@ jobs:
         with:
           name: json-report
           path: "./playwright-tests/json-report.json"
+          retention-days: 30
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: eaas-server-logs
+          path: "/eaas-home/log/server/server.log"
           retention-days: 30

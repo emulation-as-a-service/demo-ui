@@ -7,21 +7,17 @@ const origin = new URL(domain).origin;
 const timeout = time_ms => new Promise(r => setTimeout(r, time_ms));
 
 
-test("Example Test 1", async ({page}) => {
+test("Test Setup Emulator, Image and Environment", async ({page}) => {
     console.log("Starting tests...")
     await page.goto(`${origin}/admin/`);
     await page.goto(`${origin}/admin/#/admin/dashboard`);
     console.log("Installing Emulator...")
     await page.getByRole('link', {name: 'Environments'}).click();
     await page.getByRole('link', {name: 'Administration'}).click();
-    let buffer = await page.screenshot();
-    console.log("Before manage emus:", buffer.toString('base64'));
+    await page.screenshot({path: "test-results/administration.png"});
     await page.getByRole('link', {name: 'Manage Emulators Emulators'}).click();
-    buffer = await page.screenshot();
-    console.log("Before details:", buffer.toString('base64'));
+    await page.screenshot({path: "test-results/emulators.png"});
     await page.getByRole('row', {name: 'qemu-system 0 install latest Details'}).getByRole('button', {name: 'install latest'}).click();
-    buffer = await page.screenshot();
-    console.log("After details:", buffer.toString('base64'));
     console.log("Waiting for emulator to be installed...")
     await page.getByRole('link', {name: 'Images'}).click({timeout: 300_000});
     console.log("Emulator installed successfully, creating new Image...")
@@ -58,14 +54,14 @@ test("Example Test 1", async ({page}) => {
     await page.getByText('Run Environment').click();
 
     await timeout(40_000);
-    await page.screenshot({path: "environment.png"});
+    await page.screenshot({path: "test-results/environment.png"});
     await page.getByRole('button', { name: 'Stop' }).click();
     await page.getByRole('button', { name: 'OK' }).click();
     console.log("Successfully stopped...")
 
 });
 
-test('Test 2', async ({page}) => {
+test('Test Environment can be run', async ({page}) => {
     console.log("Starting test 1.1")
     await page.goto('http://localhost/admin/');
     await page.goto('http://localhost/admin/#/admin/dashboard');
@@ -76,3 +72,18 @@ test('Test 2', async ({page}) => {
     await page.getByRole('button', { name: 'OK' }).click();
     await expect(page.getByRole('heading', { name: 'elphan-dos' })).toBeVisible();
 });
+
+test('Test Ghost Cursor Field', async ({page}) => {
+    console.log("Starting test 1.2 (Hide ghost cursor setting)")
+    await page.goto('http://localhost/admin/');
+    await page.goto('http://localhost/admin/#/admin/dashboard');
+    await page.getByRole('link', { name: 'Environments' }).click();
+    await page.getByRole('button', { name: 'Choose action' }).click();
+    await page.getByRole('menuitem', { name: 'Details' }).locator('a').click();
+    await page.screenshot({path: "test-results/env_overview.png", fullPage: true});
+    await page.locator('div:nth-child(6) > .ng-pristine').check();
+    await page.getByRole('link', { name: 'Save' }).click();
+    await expect(page.locator('div:nth-child(6) > .ng-pristine')).toBeChecked();
+
+});
+
