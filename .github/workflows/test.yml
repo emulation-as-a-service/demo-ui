@@ -42,7 +42,7 @@ jobs:
       - name: Build Server
         run: ./compile-locally.sh # result: eaas-server/src/ear/target/eaas-server.ear
         working-directory: ./eaas-server
-      - uses: emulation-as-a-service/eaas-installer
+      - uses: emulation-as-a-service/eaas-installer@master #@HEAD does not work, needs to be changed to main eventually
         env:
           eaas_server_url: "./eaas-server/src/ear/target/eaas-server.ear"
           eaas_ui_url: "./eaas_ui.zip"
