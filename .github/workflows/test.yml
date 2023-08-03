@@ -17,15 +17,11 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
-      - name: Build Frontend
+      - name: Build Frontend # result: eaas-frontend-admin/dist landing-page/dist
         run: ./build.sh
       - name: Zip Frontend
         run: zip -r eaas_ui.zip eaas-frontend-admin/dist landing-page/dist
         shell: bash
-#      - name: Add UI location to env
-#        run: echo "ui_artifact_url=$(pwd)/eaas_ui.zip" >> "$GITHUB_ENV"
-#        shell: bash
-
       - name: Check if backend branch with same name exists
         run: |
           check_branch=$(git ls-remote --heads https://github.com/emulation-as-a-service/eaas-server.git ${{ github.ref_name }})
@@ -38,19 +34,15 @@ jobs:
           fi
       - name: Print Used Server branch
         run: echo ${{env.SERVER_BRANCH}} && echo "$SERVER_BRANCH"
-
       - uses: actions/checkout@v3
         with:
           repository: emulation-as-a-service/eaas-server
           ref: ${{env.SERVER_BRANCH}}
           path: ./eaas-server
       - name: Build Server
-        run: ./compile-locally.sh # eaas-server/src/ear/target/eaas-server.ear
+        run: ./compile-locally.sh # result: eaas-server/src/ear/target/eaas-server.ear
         working-directory: ./eaas-server
-#      - name: Add EAR location to env
-#        run: echo "eaas_server_ear_url=$(pwd)/eaas-server/src/ear/target/eaas-server.ear" >> "$GITHUB_ENV"
-#        shell: bash
-      - uses: emulation-as-a-service/eaas-installer@github-actions
+      - uses: emulation-as-a-service/eaas-installer@HEAD
         env:
           eaas_server_url: "./eaas-server/src/ear/target/eaas-server.ear"
           eaas_ui_url: "./eaas_ui.zip"
