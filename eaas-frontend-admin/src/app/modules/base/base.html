@@ -21,6 +21,8 @@
                     <div uib-collapse="isCollapsed" >
                         <ul class="nav navbar-nav">
                             <!-- <li><a ng-click="baseCtrl.open()" href="">{{'BASE_MENU_HELP'| translate}}</a></li>  -->
+                            <li><a ui-sref="admin.dashboard" href="">Dashboard</a></li>
+                            <hr>
                             <li><a ui-sref="admin.standard-envs-overview({showObjects: false, showContainers: false})" data-ui-sref-opts="{reload: true}" href="">{{'BASE_MENU_ENVS'| translate}}</a></li>
 
                             <li ng-if="baseCtrl.config.features.software"><a ui-sref="admin.sw-overview" href="">{{'BASE_MENU_SW'| translate}}</a></li>
