@@ -65,6 +65,9 @@ module.exports = ['$http', '$state', '$scope', '$stateParams', 'localConfig', 'g
 
         const importEmulatorFromRegistry = async (url, tag) =>
         {
+            if (!tag) {
+                [url, tag] = url.split(":");
+            }
             const api = localConfig.data.eaasBackendURL;
             const idToken = localStorage.getItem('id_token');
             try {
