@@ -323,7 +323,7 @@ module.exports = ['$rootScope', '$http', '$state', '$scope', '$stateParams',
                   </li>
 
                   <li role="menuitem">
-                    <a class="dropdown-content" ng-click="switchAction(data.id, 'export', data.archive)">
+                    <a class="dropdown-content" ng-click="switchAction(data.id, 'exportEnv', data.archive)">
                             Export
                     </a>
                   </li>
