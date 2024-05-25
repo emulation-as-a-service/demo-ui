@@ -314,7 +314,8 @@ module.exports = ["$http", "$rootScope", "$scope", "$state", "$stateParams", "En
 
                $state.go("admin.emuView",  {
                    components: components,
-                   clientOptions: clientOptions
+                   clientOptions: clientOptions,
+                   envId: vm.env.envId
                }, {});
            };
 

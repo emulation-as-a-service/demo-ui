@@ -578,7 +578,8 @@ function($stateProvider,
             url: "/error",
             templateUrl: "partials/error.html",
             params: {
-                errorMsg: {title: "", message: ""}
+                errorMsg: {title: "", message: ""},
+                returnState: ""
             },
             controller: ['$state', '$stateParams', 'localConfig', '$rootScope', 
                 function($state, $stateParams, localConfig, $rootScope) {
@@ -589,6 +590,7 @@ function($stateProvider,
                 $rootScope.loaded = true;
                 this.downloadLogUrl = localConfig.data.eaasBackendURL + "error-report";
                 this.errorMsg = $stateParams.errorMsg;
+                this.returnState = $stateParams.returnState || "admin.dashboard";
             }],
             controllerAs: "errorCtrl"
         })
@@ -802,7 +804,7 @@ function($stateProvider,
             }
         })
         .state('admin.emuView', {
-            url: "/emulator",
+            url: "/emulator?envId",
             resolve: {
                 chosenEnv: function($stateParams, Environments, EmilNetworkEnvironments) {
                     if($stateParams.isNetworkEnvironment){
@@ -819,9 +821,9 @@ function($stateProvider,
             params: {
                 components: [],
                 type: 'saveRevision',
-                clientOptions: null
+                clientOptions: null,
+                envId: null
                  /*
-                envId: null,
                 isNetworkEnvironment: null,                
                 type: 'saveRevision',
                 softwareId: null,

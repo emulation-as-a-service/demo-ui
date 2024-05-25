@@ -122,7 +122,7 @@ module.exports = ['$rootScope', '$scope', '$state', '$stateParams', '$translate'
                 console.error(e);
 
                 const details = (e instanceof ClientError) ? e.toJson() : e.toString();
-                $state.go('error', { errorMsg: { title: "Emulation Error", message: details } });
+                $state.go('error', { errorMsg: { title: "Emulation Error", message: details }, returnState: $stateParams.envId && `admin.edit-env({envId: "${$stateParams.envId}"})` });
             }
         }
         
