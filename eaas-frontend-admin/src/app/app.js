@@ -130,6 +130,10 @@ export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize'
             Object.assign(localStorage, {access_token, expires_at});
             console.log({id_token, expires_at});
             console.log({access_token, expires_at});
+
+            const returnUrl = sessionStorage.returnUrl;
+            delete sessionStorage.returnUrl;
+            if (returnUrl && new URL(returnUrl).origin === location.origin) location = returnUrl;
         }
 
         const xhr = new XMLHttpRequest();
@@ -347,6 +351,7 @@ export default angular.module('emilAdminUI', ['angular-loading-bar','ngSanitize'
       const auth0config = localConfig.data.auth0Config || {};
       this.login = function (data) {
           data.redirectUri = String( new URL(auth0config.REDIRECT_URL, location));
+          sessionStorage.returnUrl = location;
           angularAuth0.authorize(data);
       };
 
