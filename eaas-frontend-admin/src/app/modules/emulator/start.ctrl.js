@@ -81,7 +81,7 @@ module.exports = ['$rootScope', '$scope', '$state', '$stateParams', '$translate'
          
             $scope.$on('$locationChangeStart', function (event, newUrl, oldUrl) {
                 console.log("onStateChange");
-                if (!newUrl.endsWith("emulator")) {
+                if (!newUrl.replace(/\?.*$/, "").endsWith("emulator")) {
                     eaasClient.release();
                     window.onbeforeunload = null;
                 }
