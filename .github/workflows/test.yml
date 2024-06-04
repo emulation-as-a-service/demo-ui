@@ -11,7 +11,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-22.04, ubuntu-20.04]
+        os: [ubuntu-20.04]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
@@ -46,7 +46,7 @@ jobs:
         run: npx playwright test --project=chromium
         working-directory: ./test
         env:
-          trace: ${{ github.run_attempt > 1 && 'on' || '' }}
+          trace: ${{ github.run_attempt > 0 && 'on' || '' }}
       - uses: actions/upload-artifact@v3
         if: always()
         with:
