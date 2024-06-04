@@ -85,6 +85,10 @@ test("Test Setup Emulator, Image and Environment", async ({ page }) => {
 
     await timeout(40_000);
     await page.screenshot({ path: "test-results/environment.png" });
+    await timeout(300_000);
+    await page.screenshot({ path: "test-results/environment2.png" });
+    await timeout(1_000);
+    await page.screenshot({ path: "test-results/environment3.png" });
     await page.getByRole("button", { name: "Stop" }).click();
     await page.getByRole("button", { name: "OK" }).click();
     console.log("Successfully stopped...");
