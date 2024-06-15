@@ -290,6 +290,8 @@ module.exports = ['$state', '$scope', '$uibModal', 'localConfig', 'REST_URLS', '
         enableSorting: true,
         enableFilter: true,
         enableCellChangeFlash: true,
+        enableCellTextSelection: true,
+        ensureDomOrder: true,
         suppressRowClickSelection: true,
         domLayout: 'autoHeight',
         suppressHorizontalScroll: true,

@@ -182,6 +182,8 @@ module.exports = ['$http', '$state', '$scope', '$stateParams', 'localConfig', 'g
             enableSorting: true,
             enableFilter: true,
             enableCellChangeFlash: true,
+            enableCellTextSelection: true,
+            ensureDomOrder: true,
             suppressRowClickSelection: true,
             domLayout: 'autoHeight',
             suppressHorizontalScroll: true,

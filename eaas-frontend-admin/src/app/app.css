@@ -571,3 +571,7 @@ abbr[title] {
     font-size: 10px; 
     line-height: 1.1em;
 }
+
+.ag-cell-value {
+    width: 100%;
+}

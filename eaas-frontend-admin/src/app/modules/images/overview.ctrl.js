@@ -243,6 +243,8 @@ module.exports = ['$state', '$scope', 'localConfig', '$uibModal', 'Images', 'gro
         enableSorting: true,
         enableFilter: true,
         enableCellChangeFlash: true,
+        enableCellTextSelection: true,
+        ensureDomOrder: true,
         suppressRowClickSelection: true,
         domLayout: 'autoHeight',
         suppressHorizontalScroll: true,
