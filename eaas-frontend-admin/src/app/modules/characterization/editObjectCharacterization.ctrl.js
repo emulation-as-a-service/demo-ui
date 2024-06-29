@@ -195,7 +195,7 @@ module.exports = ['$scope', '$state', '$stateParams', '$uibModal', '$http', 'Obj
             vm.softwareObj.label = vm.metadata.title;
 
         vm.softwareObj.isPublic = vm.isPublic;
-        vm.softwareObj.archiveId = $stateParams.objectArchive;
+        vm.softwareObj.archiveId = vm.objectArchive;
 
         if(vm.softwareObj.isOperatingSystem && vm.operatingSystemId)
         {
